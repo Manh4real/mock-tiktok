@@ -1,0 +1,20 @@
+.popper {
+  min-width: 223px;
+  width: 100%;
+  padding-top: 8px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: rgb(0 0 0 / 12%) 0px 2px 12px;
+
+  max-height: 80vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--grey-200);
+    border-radius: 3px;
+  }
+}

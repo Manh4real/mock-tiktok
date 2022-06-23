@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+@import "./reset.scss";
+
+:root {
+  --pink: #fe2c55;
+  --white: #fff;
+  --grey: #161823bf;
+  --grey-200: #16182380;
+  --grey-100: #16182308;
+
+  --primary-layout-main-width: 1150px;
+  --header-height: 60px;
+}
+
+.pink-font {
+  color: var(--pink);
+}
