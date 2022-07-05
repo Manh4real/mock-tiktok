@@ -1,13 +1,15 @@
 import React from "react";
 
+// icons
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
+// styles
 import styles from "./Spinner.module.scss";
 
 function Spinner() {
   return (
     <div className={styles["spinner"]}>
-      <div></div>
-      <div></div>
-      <div></div>
+      <AiOutlineLoading3Quarters />
     </div>
   );
 }

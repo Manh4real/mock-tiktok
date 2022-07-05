@@ -2,15 +2,11 @@ import React from "react";
 import "./GlobalStyles.scss";
 
 interface Props {
-    children: string | number | JSX.Element | JSX.Element[]
+  children: React.ReactNode;
 }
 
-function GlobalStyles({children}: Props) {
-    return (
-        <React.Fragment>
-            {children}
-        </React.Fragment>
-    );
+function GlobalStyles({ children }: Props) {
+  return <React.Fragment>{children}</React.Fragment>;
 }
 
-export default GlobalStyles
+export default GlobalStyles;

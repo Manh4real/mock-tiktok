@@ -1,31 +1,30 @@
 import React from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import Tippy from "@tippyjs/react";
 
-import { FiMoreVertical } from "react-icons/fi";
+// icons
+import { Logo, Plus } from "_/components/icons";
 
-import {
-  Logo,
-  Plus,
-  PaperPlane,
-  Inbox,
-  Language,
-  QuestionMark,
-  RoundedKeyboard,
-} from "_/components/icons";
-
-import SearchBar from "./Search";
+// components
+import LoggedInSection from "./LoggedInSection";
 import CustomButton from "_/components/CustomButton";
-import Popper from "_/components/Popper";
+import SearchBar from "_/components/Search";
+import More from "./More";
 
+// styles
 import styles from "./Header.module.scss";
 
+// variables
+import routes from "_/config/routes";
+
+// types
 interface Props {
   isFullWidth: boolean;
 }
 
 function Header({ isFullWidth }: Props) {
+  const isLoggedIn = true;
+
   return (
     <div className={styles["header__container"]}>
       <div
@@ -33,69 +32,25 @@ function Header({ isFullWidth }: Props) {
           [styles["header--fullWidth"]]: isFullWidth,
         })}
       >
-        <Link to="/" className={styles["header__logo"]}>
+        <Link to={routes.root} className={styles["header__logo"]}>
           <Logo />
         </Link>
         <SearchBar />
         <div className={styles["header__rightContainer"]}>
-          <Link to="/upload" className={styles["header__upload"]}>
+          <Link to={routes.upload} className={styles["header__upload"]}>
             <Plus /> Upload
           </Link>
-          {/* <LoggedInSection /> */}
-          <CustomButton primary>Log in</CustomButton>
-
-          <More />
+          {isLoggedIn && <LoggedInSection />}
+          {!isLoggedIn && (
+            <>
+              <CustomButton primary>Log in</CustomButton>
+              <More />
+            </>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-const MorePopup = () => {
-  return (
-    <Popper>
-      <ul className={styles["more-popup"]}>
-        <li>
-          <Language /> English
-        </li>
-        <li>
-          <QuestionMark /> Feedback and help
-        </li>
-        <li>
-          <RoundedKeyboard /> Keyboard shortcuts
-        </li>
-      </ul>
-    </Popper>
-  );
-};
-
-const More = () => {
-  return (
-    <Tippy
-      interactive={true}
-      placement="bottom-end"
-      delay={[0, 800]}
-      content={<MorePopup />}
-    >
-      <CustomButton unset>
-        <FiMoreVertical />
-      </CustomButton>
-    </Tippy>
-  );
-};
-
-const LoggedInSection = () => {
-  return (
-    <>
-      <Link to="/message" className={styles["header__message"]}>
-        <PaperPlane />
-      </Link>
-      <button className={styles["header__inbox"]}>
-        <Inbox />
-      </button>
-      <button className={styles["header__profile"]}>Profile</button>
-    </>
-  );
-};
 
 export default Header;

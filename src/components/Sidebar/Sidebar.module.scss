@@ -3,11 +3,12 @@
   height: calc(100vh - var(--header-height));
   // background: #eee;
 
-  padding: 6px;
+  padding: 6px 0 6px 6px;
   padding-top: 20px;
 
-  overflow-y: auto;
-  // scrollbar-width: none;  /* Firefox */
+  position: sticky;
+  top: var(--header-height);
+  overflow-y: overlay;
 
   &:hover::-webkit-scrollbar-thumb {
     display: block;
@@ -21,6 +22,14 @@
     background-color: #e5e5e580;
     border-radius: 3px;
     display: none;
+  }
+
+  &.is--compact {
+    width: 232px;
+
+    .sidebar__acc-username span {
+      max-width: 147px;
+    }
   }
 }
 .sidebar__delimiter {
@@ -77,9 +86,10 @@
 }
 .sidebar__acc-avatar {
   width: 32px;
+  min-width: 32px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: #e5e5e5;
+  background: var(--grey-100);
 }
 .sidebar__accs-link:hover,
 .sidebar__accs-link:focus-within {
@@ -88,11 +98,23 @@
 .sidebar__accs-link + .sidebar__accs-link {
   margin-top: 10px;
 }
+.sidebar__accs-link .sidebar__accs-text {
+  flex: 1;
+}
 .sidebar__acc-username {
   display: flex;
   align-items: center;
   gap: 5px;
   font-weight: bold;
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    // max-width: calc(151.6px - 20px);
+    // max-width: 145px;
+    max-width: 256px;
+  }
 }
 .sidebar__acc-user-desc {
   font-weight: 300;

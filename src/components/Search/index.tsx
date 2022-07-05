@@ -1,37 +1,62 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react/headless";
 
+// api
+import { getUsers } from "_/services/search";
+
+// icons
 import {
   MagnifyingGlass,
   Cancel as CancelIcon,
   Spinner,
-  VerifyBadge,
 } from "_/components/icons";
-import Popper from "_/components/Popper";
 
+// components
+import Results from "./Results";
+
+// styles
 import styles from "./Search.module.scss";
 
+// types
+import { SearchResult } from "_/types";
+
 function Search() {
-  const [value, setValue] = useState<string>("");
-  const [results, setResults] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const [inputValue, setInputValue] = useState<string>(
+    (location.pathname === "/search" && searchParams.get("q")) || ""
+  );
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const resultsElementRef = useRef<HTMLDivElement | null>(null);
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
 
+  // handling functions
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setInputValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (!inputValue.trim()) return;
+    setVisible(false);
+    navigate("/search?q=" + inputValue);
   };
 
   const clearInput = () => {
-    setValue("");
+    setInputValue("");
     setResults([]);
     inputRef.current?.focus();
   };
 
+  // indicator
   const indicator = () => {
-    if (value !== "") {
+    if (inputValue !== "") {
       if (loading) {
         return (
           <div className={styles["header__search-loading"]}>
@@ -50,32 +75,35 @@ function Search() {
     } else return "";
   };
 
-  // fake loading
+  // effects
   useEffect(() => {
-    setLoading(true);
+    if (!inputValue.trim()) {
+      setResults([]);
+      return;
+    }
+
+    const getResults = async () => {
+      setLoading(true);
+
+      try {
+        const res = await getUsers(inputValue);
+        setResults(res.data);
+      } catch {
+        console.log("Something went wrong when searching users...");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const timeID = setTimeout(() => {
-      // setResults([
-      //   "gang",
-      //   "mexicanomexicanomexicanomexicanomexicanomexicanomexicanomexicanomexicano",
-      //   "gang",
-      //   "mexicano",
-      //   "gang",
-      //   "mexicano",
-      //   "gang",
-      //   "mexicano",
-      //   "gang",
-      //   "mexicano",
-      //   "gang",
-      //   "mexicano",
-      // ]);
-      setLoading(false);
-    }, 1000);
+      getResults();
+    }, 600);
 
     return () => clearTimeout(timeID);
-  }, [value]);
+  }, [inputValue]);
 
-  // styles
   useEffect(() => {
+    // styles
     if (resultsElementRef.current && searchContainerRef.current) {
       const pWidth = searchContainerRef.current.offsetWidth;
       resultsElementRef.current.style.width = pWidth + "px";
@@ -86,9 +114,9 @@ function Search() {
   return (
     <div ref={searchContainerRef} className={styles["header__search-ctn"]}>
       <Tippy
-        interactive={true}
-        visible={results.length !== 0}
-        placement="bottom"
+        interactive
+        onClickOutside={() => setVisible(false)}
+        visible={visible && results.length > 0}
         render={(attrs) => (
           <div
             ref={resultsElementRef}
@@ -96,32 +124,11 @@ function Search() {
             tabIndex={-1}
             {...attrs}
           >
-            <div className={styles["results__wrapper"]}>
-              <Popper>
-                <React.Fragment>
-                  <h5 className={styles["results__title"]}>Accounts</h5>
-                  <div className={styles["results__cont"]}>
-                    {results.map((r, i) => (
-                      <div key={i} className={styles["results__item"]}>
-                        <span className={styles["results__item-image"]}>
-                          <img src="https://picsum.photos/200" alt="" />
-                        </span>
-                        <div className={styles["results__item-accNames"]}>
-                          <div
-                            className={styles["results__item-accDisplayName"]}
-                          >
-                            <span>{r}</span> <VerifyBadge w={12} h={12} />
-                          </div>
-                          <div className={styles["results__item-accUsername"]}>
-                            {r}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </React.Fragment>
-              </Popper>
-            </div>
+            <Results
+              results={results}
+              search={inputValue}
+              handleSearch={handleSearch}
+            />
           </div>
         )}
       >
@@ -130,14 +137,19 @@ function Search() {
             ref={inputRef}
             type="text"
             id="search"
-            value={value}
+            value={inputValue}
             onChange={handleChange}
+            onFocus={() => setVisible(true)}
             placeholder="Search accounts and videos"
             className={styles["header__search-input"]}
+            autoComplete="off"
           />
           {indicator()}
           <span className={styles["header__search-delimiter"]}></span>
-          <button className={styles["header__search-button"]}>
+          <button
+            className={styles["header__search-button"]}
+            onClick={handleSearch}
+          >
             <MagnifyingGlass />
           </button>
           <div

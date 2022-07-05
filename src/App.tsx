@@ -1,34 +1,41 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home, Following, Profile, Upload, Search } from "./pages";
+// pages
+import { Home, Following, Profile, Upload, Search, NotFound } from "./pages";
 
+// layouts
 import { DefaultLayout, HeaderLayout, FullWidthLayout } from "./layouts";
+
+// variables
+import routes from "_/config/routes";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<DefaultLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/following" element={<Following />} />
-          <Route path="/search" element={<Search />} />
-          <Route
-            path="/live"
-            element={
-              <div>
-                <h1>Live</h1>
-              </div>
-            }
-          />
+          <Route path={routes.root} element={<Home />} />
+          <Route path={routes.following} element={<Following />} />
+          <Route path={routes.search} element={<Search />} />
+          <Route path={routes.live} element={<h1>Live</h1>} />
           <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
         <Route element={<HeaderLayout />}>
-          <Route path="/upload" element={<Upload />} />
+          <Route path={routes.upload} element={<Upload />} />
         </Route>
         <Route element={<FullWidthLayout />}>
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/test" element={<h1>FYTB</h1>} />
         </Route>
+        <Route
+          path={routes.profile}
+          element={
+            <FullWidthLayout>
+              <Profile />
+            </FullWidthLayout>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

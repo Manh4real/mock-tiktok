@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "../icons";
+import { Logo } from "_/components/icons";
 
 import styles from "./Footer.module.scss";
 
@@ -126,7 +126,9 @@ function Footer() {
           <option value="fr">France</option>
         </select>
 
-        <div className={styles["footer__copyright-text"]}>© 2022 Tiktok</div>
+        <div className={styles["footer__copyright-text"]}>
+          © {new Date().getFullYear()} Tiktok
+        </div>
       </div>
     </div>
   );

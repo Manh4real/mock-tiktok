@@ -1,6 +1,5 @@
-.container {
-    width: var(--primary-layout-main-width);
-    margin-inline: auto;
+@import "./common.module.scss";
 
-    display: flex;
+.container {
+  width: var(--primary-layout-main-width);
 }

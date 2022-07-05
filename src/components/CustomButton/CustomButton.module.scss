@@ -1,3 +1,14 @@
+.btn,
+.btn.unset {
+  padding: 6px 8px;
+  border-radius: 4px;
+
+  font-weight: 600;
+  font-size: 16px;
+
+  min-height: 36px;
+  border: 1px solid transparent;
+}
 .btn {
   min-width: 100px;
 
@@ -36,16 +47,9 @@
       background: #fe2c550f;
     }
   }
-}
 
-.btn,
-.btn.unset {
-  padding: 6px 8px;
-  border-radius: 4px;
-
-  font-weight: 600;
-  font-size: 16px;
-
-  min-height: 36px;
-  border: 1px solid transparent;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }

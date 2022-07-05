@@ -11,12 +11,14 @@ interface Props {
   rounded?: boolean;
   centered?: boolean;
   disabled?: boolean;
-  onClick?: () => any;
+  to?: string;
+  href?: string;
+  onClick?: (e: React.MouseEvent) => void;
   style?: {
     [index: string]: string | number;
   };
   className?: string;
-  children: JSX.Element | string;
+  children: React.ReactNode;
 }
 
 function CustomButton(
@@ -30,6 +32,7 @@ function CustomButton(
     disabled = false,
     className,
     style,
+    onClick,
     children,
   }: Props,
   ref: React.LegacyRef<HTMLButtonElement> | undefined
@@ -39,6 +42,7 @@ function CustomButton(
       ref={ref}
       disabled={disabled}
       style={style}
+      onClick={onClick}
       className={clsx(
         styles["btn"],
         {

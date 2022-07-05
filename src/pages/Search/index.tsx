@@ -1,7 +1,10 @@
 import React from "react";
+import { useSearchParams } from "react-router-dom";
 
 function Search() {
-  return <h1>Search page</h1>;
+  const [searchParams] = useSearchParams();
+
+  return <h1>Search page - {searchParams.get("q")}</h1>;
 }
 
 export default Search;

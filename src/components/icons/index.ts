@@ -13,3 +13,5 @@ export { default as VerifyBadge } from "./VerifyBadge";
 export { default as Language } from "./Language";
 export { default as QuestionMark } from "./QuestionMark";
 export { default as RoundedKeyboard } from "./RoundedKeyboard";
+export { default as TiktokCoin } from "./TiktokCoin";
+export { default as Close } from "./Close";

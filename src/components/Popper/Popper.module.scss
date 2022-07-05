@@ -6,8 +6,8 @@
   border-radius: 8px;
   box-shadow: rgb(0 0 0 / 12%) 0px 2px 12px;
 
-  max-height: 80vh;
-  overflow-y: auto;
+  max-height: 400px;
+  overflow-y: overlay;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -16,5 +16,91 @@
   &::-webkit-scrollbar-thumb {
     background-color: var(--grey-200);
     border-radius: 3px;
+  }
+}
+
+// menu
+.menuPopupList {
+  padding-bottom: 10px;
+  position: relative;
+  overflow-x: hidden;
+
+  overflow-y: overlay;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--grey-200);
+    border-radius: 3px;
+  }
+  & li {
+    display: block;
+    width: 100%;
+  }
+  .menu-popup__title {
+    margin-top: -8px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 11px 16px;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 25px;
+
+    position: sticky;
+    top: 0;
+  }
+  .menu-popup__item {
+    font-size: 14px;
+    font-weight: 400;
+
+    &.delimited {
+      border-top: 1px solid #e5e5e5;
+    }
+  }
+  .menu-popup__items {
+    max-height: 300px;
+
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--grey-200);
+      border-radius: 3px;
+    }
+  }
+  .menu-popup__items--titled {
+    .menu-popup__item {
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+  .menuPopupList li {
+    padding-left: 18px;
+  }
+
+  .menu-popup__item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 11px 16px;
+    cursor: pointer;
+    line-height: 1;
+    width: 100%;
+    color: #161823;
+    outline: none;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    &:hover,
+    &:focus-within {
+      background: var(--grey-100);
+    }
   }
 }
