@@ -7,6 +7,9 @@ import { Home, Following, Profile, Upload, Search, NotFound } from "./pages";
 // layouts
 import { DefaultLayout, HeaderLayout, FullWidthLayout } from "./layouts";
 
+// components
+import ToTopButton from "_/components/ToTopButton";
+
 // variables
 import routes from "_/config/routes";
 
@@ -18,7 +21,6 @@ function App() {
           <Route path={routes.root} element={<Home />} />
           <Route path={routes.following} element={<Following />} />
           <Route path={routes.search} element={<Search />} />
-          <Route path={routes.live} element={<h1>Live</h1>} />
           <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
           <Route path="*" element={<NotFound />} />
         </Route>
@@ -26,6 +28,7 @@ function App() {
           <Route path={routes.upload} element={<Upload />} />
         </Route>
         <Route element={<FullWidthLayout />}>
+          <Route path={routes.live} element={<h1>Live</h1>} />
           <Route path="/test" element={<h1>FYTB</h1>} />
         </Route>
         <Route
@@ -37,6 +40,7 @@ function App() {
           }
         />
       </Routes>
+      <ToTopButton />
     </BrowserRouter>
   );
 }

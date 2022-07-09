@@ -9,6 +9,7 @@ interface Props {
   unset?: boolean;
   large?: boolean;
   rounded?: boolean;
+  circle?: boolean;
   centered?: boolean;
   disabled?: boolean;
   to?: string;
@@ -26,6 +27,7 @@ function CustomButton(
     unset = false,
     primary = false,
     outlined = false,
+    circle = false,
     large = false,
     rounded = false,
     centered = true,
@@ -49,6 +51,7 @@ function CustomButton(
           [styles["centered"]]: centered,
           [styles["large"]]: large,
           [styles["rounded"]]: rounded,
+          [styles["circle"]]: circle,
           [styles["disabled"]]: disabled,
           [styles["unset"]]: unset,
           [styles["primary"]]: primary,

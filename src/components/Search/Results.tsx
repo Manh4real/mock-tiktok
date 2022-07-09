@@ -8,12 +8,12 @@ import { VerifyBadge } from "_/components/icons";
 import styles from "./Results.module.scss";
 
 // types
-import { SearchResult } from "_/types";
+import { Account } from "_/types";
 
 // components
 
 interface Props {
-  results: SearchResult[];
+  results: Account[];
   search: string;
   handleSearch: () => void;
 }

@@ -11,7 +11,7 @@ import styles from "./Image.module.scss";
 type ImageProps = React.ImgHTMLAttributes<HTMLImageElement>;
 
 function Image({
-  src,
+  src = "",
   alt = "",
   width = 32,
   height = 32,

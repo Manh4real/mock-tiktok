@@ -38,16 +38,13 @@
     width: 100%;
   }
   .menu-popup__title {
-    margin-top: -8px;
     font-size: 16px;
     font-weight: 500;
-    padding: 11px 16px;
+    padding: 1.5px 16px 11px 16px;
+    height: 50px;
     width: 100%;
     justify-content: flex-start;
     gap: 25px;
-
-    position: sticky;
-    top: 0;
   }
   .menu-popup__item {
     font-size: 14px;
@@ -56,6 +53,9 @@
     &.delimited {
       border-top: 1px solid #e5e5e5;
     }
+  }
+  .item--active {
+    background: var(--grey-100);
   }
   .menu-popup__items {
     max-height: 300px;

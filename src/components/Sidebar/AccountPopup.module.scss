@@ -1,0 +1,65 @@
+.AccountPopup {
+  // margin: -8px -18px;
+  margin: -8px 0;
+  padding: 8px;
+  width: 320px;
+  box-sizing: border-box;
+  padding: 20px;
+  background: var(--white);
+  box-shadow: rgb(0 0 0 / 12%) 0px 4px 16px;
+  border-radius: 8px;
+
+  h4 {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+
+    > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 256px;
+    }
+  }
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 12px;
+
+  .avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    width: 44px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+.username {
+  font-size: 18px;
+}
+.desc {
+  font-size: 14px;
+  font-weight: 500;
+}
+.numbers {
+  margin-top: 8px;
+  display: flex;
+  gap: 15px;
+  font-size: 17px;
+  color: var(--grey-200);
+
+  strong {
+    font-weight: 600;
+    color: var(--black);
+  }
+}
+.text {
+  line-height: 1.6;
+}

@@ -4,9 +4,29 @@ import clsx from "clsx";
 // icons
 import { SidebarDelimiter } from "./common";
 
+// components
+import Account from "./Account";
+
 // styles
 import styles from "./Sidebar.module.scss";
-import Account from "./Account";
+
+// types
+import { Account as AccountInterface } from "_/types";
+
+const FOLLOWING_DATA: Partial<AccountInterface>[] = [
+  {
+    id: 1,
+    nickname: "squatuniversity",
+    full_name: "Squat University",
+    tick: true,
+  },
+  {
+    id: 2,
+    nickname: "thejoestanek",
+    full_name: "Joe Stanek",
+    tick: true,
+  },
+];
 
 const FollowingAccountsSection = () => {
   const isLoggedIn = true;
@@ -24,8 +44,9 @@ const FollowingAccountsSection = () => {
         <h5 className={styles["sidebar__header-title"]}>Following accounts</h5>
         <div className={styles["sidebar__accs__cnt"]}>
           <div>
-            <Account username="squatuniversity" desc="Squat University" tick />
-            <Account username="thejoestanek" desc="Joe Stanek" tick />
+            {FOLLOWING_DATA.map((acc) => (
+              <Account key={acc.id} account={acc} />
+            ))}
           </div>
           <button className={clsx("pink-font", styles["sidebar__more-btn"])}>
             See more

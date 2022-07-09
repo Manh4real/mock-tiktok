@@ -20,9 +20,11 @@ const Modal = React.forwardRef(({ children }: Props, ref) => {
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     setVisible(false);
+    document.body.style.overflow = "overlay";
   };
   const handleOpen = () => {
     setVisible(true);
+    document.body.style.overflow = "hidden";
   };
   const handleCloseByKey = function (e: KeyboardEvent) {
     if (e.key === "Escape") setVisible(false);

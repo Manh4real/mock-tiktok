@@ -19,8 +19,10 @@ function FullWidthLayout({ children }: Props) {
       <Header isFullWidth={true} />
       <div className={styles["container"]}>
         <CompactSideBar />
-        {children}
-        <Outlet />
+        <main>
+          {children}
+          <Outlet />
+        </main>
       </div>
     </React.Fragment>
   );

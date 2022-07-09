@@ -6,6 +6,15 @@ const routes = {
     profile: "/@:usernameParam",
     upload: "/upload",
     logout: "/logout",
-} 
+}
+
+export const pagesTitle = {
+    [routes.root]: "Tiktok | Make Your Day",
+    [routes.following]: "Following | Watch videos from creators you follow | Tiktok",
+    [routes.live]: "Tiktok LIVE | Tiktok",
+    [routes.search]: (search: string) => `Find '${search}' on Tiktok | Tiktok Search`,
+    [routes.profile]: (name: string, username: string) => `${name} (@${username}) Tiktok | Watch ${name}'s Newest Tiktok Videos`,
+    [routes.upload]: "Upload | Tiktok",
+}
 
 export default routes;

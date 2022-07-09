@@ -19,7 +19,7 @@ import Results from "./Results";
 import styles from "./Search.module.scss";
 
 // types
-import { SearchResult } from "_/types";
+import { Account } from "_/types";
 
 function Search() {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ function Search() {
   const [inputValue, setInputValue] = useState<string>(
     (location.pathname === "/search" && searchParams.get("q")) || ""
   );
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<Account[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 

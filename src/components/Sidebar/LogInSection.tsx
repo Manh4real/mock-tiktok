@@ -21,7 +21,7 @@ const LogInSection = () => {
         large
         outlined
       >
-        <>Log in</>
+        Log in
       </CustomButton>
     </div>
   );

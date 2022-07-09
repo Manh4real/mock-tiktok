@@ -12,7 +12,9 @@ function DefaultLayout() {
       <Header isFullWidth={false} />
       <div className={styles["container"]}>
         <Sidebar />
-        <Outlet />
+        <main>
+          <Outlet />
+        </main>
       </div>
     </React.Fragment>
   );

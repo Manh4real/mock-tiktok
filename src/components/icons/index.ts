@@ -15,3 +15,6 @@ export { default as QuestionMark } from "./QuestionMark";
 export { default as RoundedKeyboard } from "./RoundedKeyboard";
 export { default as TiktokCoin } from "./TiktokCoin";
 export { default as Close } from "./Close";
+export { default as TiktoksLoading } from "./TiktoksLoading";
+export { default as OnLiveIndicator } from "./OnLiveIndicator";
+export { default as MusicNote } from "./MusicNote";

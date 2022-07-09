@@ -5,33 +5,41 @@ import { Link } from "react-router-dom";
 import Image from "_/components/Image";
 
 // icons
-import { VerifyBadge } from "_/components/icons";
+import { OnLiveIndicator, VerifyBadge } from "_/components/icons";
 
 // styles
 import styles from "./Sidebar.module.scss";
 
 // types
+import { Account as AccountInterface } from "_/types";
+
 interface Props {
-  username: string;
-  desc: string;
-  tick?: boolean;
+  account: Partial<AccountInterface>;
 }
 
-function Account({ username, desc, tick = false }: Props) {
+function Account({ account }: Props, ref: React.Ref<HTMLDivElement>) {
+  const { nickname, avatar, full_name, tick = false, onLive = false } = account;
+  const onLiveImageStyle = onLive ? { width: "26px", height: "26px" } : {};
+
   return (
-    <Link to={"/@" + username} className={styles["sidebar__accs-link"]}>
-      <div className={styles["sidebar__acc-avatar"]}>
-        <Image src="" />
-      </div>
-      <div className={styles["sidebar__accs-text"]}>
-        <div className={styles["sidebar__acc-username"]}>
-          <span>{username}</span>
-          {tick && <VerifyBadge />}
+    <div ref={ref}>
+      <Link to={"/@" + nickname} className={styles["sidebar__accs-link"]}>
+        <div className={styles["sidebar__acc-avatar"]}>
+          <div className={styles["avatar__image-ctn"]} style={onLiveImageStyle}>
+            <Image src={avatar} />
+          </div>
+          {onLive && <OnLiveIndicator className={styles["onlive-indicator"]} />}
         </div>
-        <div className={styles["sidebar__acc-user-desc"]}>{desc}</div>
-      </div>
-    </Link>
+        <div className={styles["sidebar__accs-text"]}>
+          <div className={styles["sidebar__acc-username"]}>
+            <span>{nickname}</span>
+            {tick && <VerifyBadge />}
+          </div>
+          <div className={styles["sidebar__acc-user-desc"]}>{full_name}</div>
+        </div>
+      </Link>
+    </div>
   );
 }
 
-export default Account;
+export default React.forwardRef(Account);

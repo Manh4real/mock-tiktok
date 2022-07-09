@@ -17,7 +17,18 @@
   box-shadow: rgb(0 0 0 / 6%) 0px 2px 8px;
 
   position: relative;
+  animation: scaleUp 0.2s ease-out;
 }
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .closeBtn {
   width: 25px;
   height: 25px;

@@ -89,7 +89,7 @@ function getItem(
   modalRef: React.RefObject<ModalRefObject>,
   current: PopupMenuItem,
   onNext: (item: PopupMenuItem) => void,
-  key: number
+  i: number
 ) {
   // outer content
   let content: JSX.Element;
@@ -132,16 +132,14 @@ function getItem(
 
     // content
     content = (
-      <CustomButton {...props} onClick={handleClick}>
-        <>
-          {itemContent}
-          {Modal && <Modal ref={modalRef} />}
-        </>
-      </CustomButton>
+      <div {...props} onClick={handleClick}>
+        {itemContent}
+        {Modal && <Modal ref={modalRef} />}
+      </div>
     );
   }
 
-  return <li key={key}>{content}</li>;
+  return <li key={current.title}>{content}</li>;
 }
 
 export default Popup;
