@@ -5,6 +5,8 @@ const routes = {
     search: "/search",
     profile: "/@:usernameParam",
     upload: "/upload",
+    signup: "/signup",
+    login: "/login",
     logout: "/logout",
 }
 

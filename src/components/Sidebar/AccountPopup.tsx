@@ -4,7 +4,7 @@ import Tippy from "@tippyjs/react/headless";
 
 // components
 import Image from "_/components/Image";
-import CustomButton from "_/components/CustomButton";
+import FollowButton from "_/components/FollowButton";
 
 // icons
 import { VerifyBadge } from "_/components/icons";
@@ -43,6 +43,11 @@ function numberCompact(number: number | undefined) {
 }
 
 function AccountPopup({ account, children }: Props) {
+  // handle click follow button
+  const handleClick = (e: React.MouseEvent) => {
+    console.log("Clicked Follow button of " + account.nickname);
+  };
+
   return (
     //
     <div>
@@ -50,24 +55,19 @@ function AccountPopup({ account, children }: Props) {
         appendTo={document.body}
         interactive
         placement="bottom-start"
-        delay={[300, 100]}
+        delay={[500, 100]}
         render={(attrs) => (
           <div className={styles["AccountPopup"]} tabIndex={-1} {...attrs}>
             <div className={styles["header"]}>
               <Link to={"/@" + account.nickname} className={styles["avatar"]}>
                 <Image src={account.avatar} width={44} height={44} />
               </Link>
-              <CustomButton primary>Follow</CustomButton>
+              <FollowButton onClick={handleClick} />
             </div>
             <Link to={"/@" + account.nickname}>
               <div className={styles["text"]}>
                 <h4>
-                  <span
-                    className={styles["username"]}
-                    style={{ marginRight: "10px" }}
-                  >
-                    {account.nickname}
-                  </span>
+                  <span className={styles["username"]}>{account.nickname}</span>
                   {account.tick && <VerifyBadge />}
                 </h4>
                 <small className={styles["desc"]}>{account.full_name}</small>
@@ -81,7 +81,7 @@ function AccountPopup({ account, children }: Props) {
                 Followers
               </span>
               <span>
-                <strong>{numberCompact(account.likes_count) || "--"}</strong>{" "}
+                <strong>{numberCompact(account.likes_count) || "--"}</strong>
                 Likes
               </span>
             </div>

@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
 @import "./reset.scss";
 
 :root {
@@ -7,8 +6,8 @@
   --pink: #fe2c55;
   --white: #fff;
   --grey: #161823bf;
-  --grey-200: #16182380;
   --grey-100: #16182308;
+  --grey-200: #16182380;
 
   --primary-layout-main-width: 1150px;
   --header-height: 60px;
@@ -31,12 +30,21 @@ body {
   }
 }
 
+img,
+*::placeholder {
+  user-select: none;
+}
+select {
+  cursor: pointer;
+}
+
 .pink-font {
   color: var(--pink);
 }
 
 .tippy-box {
   background-color: transparent;
+
   .tippy-content {
     text-align: left;
     text-decoration: none;
@@ -49,8 +57,4 @@ body {
   .tippy-arrow {
     color: rgba(84, 84, 84, 0.92);
   }
-}
-img,
-*::placeholder {
-  user-select: none;
 }

@@ -1,3 +1,11 @@
+.container {
+  padding: 40px 32px 32px;
+  height: 100%;
+
+  min-width: 400px;
+  min-height: 280px;
+}
+
 .title {
   text-transform: capitalize;
   font-weight: 600;
@@ -8,4 +16,44 @@
   text-align: center;
   color: rgb(22, 24, 35);
   white-space: nowrap;
+
+  margin-bottom: 16px;
+}
+
+.content {
+  border-top: 1px solid #1618231f;
+}
+.content-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 40px;
+  border-bottom: 1px solid #1618231f;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+}
+.content-item__icon {
+  display: flex;
+  position: relative;
+}
+
+.content-item__icon[data-content]::before {
+  content: attr(data-content);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 2.3px solid currentColor;
+  color: currentColor;
+  margin-right: 1px;
+
+  font-weight: 700;
+  font-size: 14px;
 }

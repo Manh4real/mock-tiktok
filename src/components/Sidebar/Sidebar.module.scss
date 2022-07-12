@@ -4,8 +4,7 @@
   height: calc(100vh - var(--header-height));
   // background: #eee;
 
-  padding: 6px 0 6px 6px;
-  padding-top: 20px;
+  padding: 20px 0 6px 6px;
 
   position: sticky;
   top: var(--header-height);
@@ -60,21 +59,25 @@
 }
 .sidebar__nav-link:hover,
 .sidebar__nav-link:focus-within {
-  background: #16182308;
-}
-.sidebar__nav-link--active > svg {
-  fill: #fe2c55;
+  background: var(--grey-100);
 }
 .sidebar__nav-link--active {
-  color: #fe2c55;
+  color: var(--pink);
+
+  > svg {
+    fill: currentColor;
+  }
 }
 
 .sidebar__section {
-  margin: 15px 0;
-  padding-left: var(--offset);
+  padding-block: 15px;
+  padding-inline: var(--offset);
+}
+.sidbar__logInSection {
+  padding: 12px;
 }
 .sidebar__header-title {
-  color: #161823bf;
+  color: var(--grey);
   font-weight: 500;
   margin-bottom: 12px;
 }
@@ -114,7 +117,7 @@
 }
 .sidebar__accs-link:hover,
 .sidebar__accs-link:focus-within {
-  background: #16182308;
+  background: var(--grey-100);
 }
 .sidebar__accs-link + .sidebar__accs-link {
   margin-top: 10px;
@@ -138,7 +141,7 @@
 .sidebar__acc-user-desc {
   font-weight: 300;
   font-size: 12px;
-  color: #161823bf;
+  color: var(--grey);
 }
 .sidebar__more-btn {
   background: transparent;
@@ -179,14 +182,14 @@
   }
 }
 .sidebar__discover-tag:hover {
-  background: #16182308;
+  background: var(--grey-100);
 }
 .sidebar__discover-tag svg {
-  fill: black;
+  fill: var(--black);
 }
 
 .sidebar__footer {
-  color: rgba(22, 24, 35, 0.5);
+  color: var(--grey-200);
   font-weight: 500;
   font-size: 12px;
 }
@@ -201,7 +204,7 @@
 }
 .sidebar__footer-link {
   font-size: 12px;
-  color: rgba(22, 24, 35, 0.5);
+  color: var(--grey-200);
   font-weight: 500;
 
   &:hover {

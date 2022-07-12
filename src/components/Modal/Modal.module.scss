@@ -12,8 +12,7 @@
   min-height: 280px;
   border-radius: 8px;
   background: #fff;
-  padding: 40px 32px 32px;
-  border: 1px solid rgba(22, 24, 35, 0.03);
+  border: 1px solid var(--grey-100);
   box-shadow: rgb(0 0 0 / 6%) 0px 2px 8px;
 
   position: relative;
@@ -30,8 +29,8 @@
 }
 
 .closeBtn {
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   padding: 3px;
   border-radius: 50%;
   display: flex;
@@ -39,7 +38,13 @@
   align-items: center;
   border: none;
 
+  background: var(--grey-100);
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 24px;
+  right: 24px;
+
+  > svg {
+    width: 15px;
+    height: 15px;
+  }
 }

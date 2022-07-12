@@ -9,6 +9,7 @@ import styles from "./ToTopButton.module.scss";
 
 function ToTopButton() {
   const [visible, setVisible] = useState<boolean>(false);
+
   const handleClick = () => {
     window.scrollTo(0, 0);
   };

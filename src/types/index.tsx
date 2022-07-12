@@ -12,11 +12,12 @@ export interface PopupMenuItem {
     content: PopupMenuItem[];
   };
   delimited?: boolean;
-  modal?: React.ForwardRefExoticComponent<React.RefAttributes<unknown>>;
+  modal?: React.ForwardRefExoticComponent<React.RefAttributes<ModalRefObject>>;
 }
 
 export interface ModalRefObject {
   handleOpen: () => void;
+  handleClose: (e: React.MouseEvent) => void;
 }
 
 export interface Account {

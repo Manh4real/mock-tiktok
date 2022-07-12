@@ -37,8 +37,8 @@ const SUGGESTED_DATA: SuggestedItem[] = [
   {
     nickname: "manh4real",
     full_name: "Nguyen Van Manh",
-    followers_count: 1000,
-    likes_count: 302340,
+    followers_count: 1,
+    likes_count: 0,
   },
   {
     nickname: "4Lgang",

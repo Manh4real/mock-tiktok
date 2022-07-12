@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./CustomButton.module.scss";
 
 interface Props {
+  type?: "button" | "submit" | "reset" | undefined;
   primary?: boolean;
   outlined?: boolean;
   unset?: boolean;
@@ -24,6 +25,7 @@ interface Props {
 
 function CustomButton(
   {
+    type = "button",
     unset = false,
     primary = false,
     outlined = false,
@@ -42,6 +44,7 @@ function CustomButton(
   return (
     <button
       ref={ref}
+      type={type}
       disabled={disabled}
       style={style}
       onClick={onClick}

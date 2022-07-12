@@ -18,3 +18,6 @@ export { default as Close } from "./Close";
 export { default as TiktoksLoading } from "./TiktoksLoading";
 export { default as OnLiveIndicator } from "./OnLiveIndicator";
 export { default as MusicNote } from "./MusicNote";
+export { default as Person } from "./Person";
+export { default as KeyboardUp } from "./KeyboardUp";
+export { default as Eye } from "./Eye";

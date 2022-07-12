@@ -1,15 +1,32 @@
 import React from "react";
 import clsx from "clsx";
 
+// hoc
+import { withLoggedIn } from "_/hoc";
+
 // components
 import CustomButton from "_/components/CustomButton";
 
 // styles
 import styles from "./Sidebar.module.scss";
 
-const LogInSection = () => {
+// types
+import { WithLoggedIn } from "_/hoc/withLoggedIn";
+
+interface Props extends WithLoggedIn {}
+
+const LogInSection = ({ handleLoggedInFuncClick }: Props) => {
+  const handleClick = () => {
+    handleLoggedInFuncClick();
+  };
+
   return (
-    <div className={clsx(styles["sidebar__section"])}>
+    <div
+      className={clsx(
+        styles["sidebar__section"],
+        styles["sidbar__logInSection"]
+      )}
+    >
       <p style={{ color: "var(--grey-200)" }}>
         Log in to follow creators, like videos, and view comments.
       </p>
@@ -20,6 +37,7 @@ const LogInSection = () => {
         }}
         large
         outlined
+        onClick={handleClick}
       >
         Log in
       </CustomButton>
@@ -27,4 +45,4 @@ const LogInSection = () => {
   );
 };
 
-export default LogInSection;
+export default withLoggedIn(LogInSection);

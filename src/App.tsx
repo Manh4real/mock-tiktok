@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // pages
@@ -13,35 +13,44 @@ import ToTopButton from "_/components/ToTopButton";
 // variables
 import routes from "_/config/routes";
 
+export const LoginContext = React.createContext({ isLoggedIn: false });
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    JSON.parse(localStorage.getItem("isLoggedIn") || "")
+  );
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<DefaultLayout />}>
-          <Route path={routes.root} element={<Home />} />
-          <Route path={routes.following} element={<Following />} />
-          <Route path={routes.search} element={<Search />} />
-          <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-        <Route element={<HeaderLayout />}>
-          <Route path={routes.upload} element={<Upload />} />
-        </Route>
-        <Route element={<FullWidthLayout />}>
-          <Route path={routes.live} element={<h1>Live</h1>} />
-          <Route path="/test" element={<h1>FYTB</h1>} />
-        </Route>
-        <Route
-          path={routes.profile}
-          element={
-            <FullWidthLayout>
-              <Profile />
-            </FullWidthLayout>
-          }
-        />
-      </Routes>
-      <ToTopButton />
-    </BrowserRouter>
+    <LoginContext.Provider value={{ isLoggedIn }}>
+      <BrowserRouter>
+        <button onClick={() => setIsLoggedIn((prev) => !prev)}>Toggle</button>
+
+        <Routes>
+          <Route element={<DefaultLayout />}>
+            <Route path={routes.root} element={<Home />} />
+            <Route path={routes.following} element={<Following />} />
+            <Route path={routes.search} element={<Search />} />
+            <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+          <Route element={<HeaderLayout />}>
+            <Route path={routes.upload} element={<Upload />} />
+          </Route>
+          <Route element={<FullWidthLayout />}>
+            <Route path={routes.live} element={<h1>Live</h1>} />
+            <Route path="/test" element={<h1>FYTB</h1>} />
+          </Route>
+          <Route
+            path={routes.profile}
+            element={
+              <FullWidthLayout>
+                <Profile />
+              </FullWidthLayout>
+            }
+          />
+        </Routes>
+        <ToTopButton />
+      </BrowserRouter>
+    </LoginContext.Provider>
   );
 }
 
