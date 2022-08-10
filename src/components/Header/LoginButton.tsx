@@ -1,19 +1,19 @@
 import React from "react";
 
 // hoc
-import { withLoggedIn } from "_/hoc";
+import { withLoginModal } from "_/hoc";
 
 // components
 import CustomButton from "_/components/CustomButton";
 
 // types
-import { WithLoggedIn } from "_/hoc/withLoggedIn";
+import { WithLoginModal } from "_/hoc/withLoginModal";
 
-interface LoginButtonProps extends WithLoggedIn {}
-const LoginButton = ({ handleLoggedInFuncClick }: LoginButtonProps) => (
-  <CustomButton primary onClick={handleLoggedInFuncClick}>
+interface LoginButtonProps extends WithLoginModal {}
+const LoginButton = ({ showLoginModal }: LoginButtonProps) => (
+  <CustomButton primary onClick={showLoginModal}>
     Log in
   </CustomButton>
 );
 
-export default withLoggedIn(LoginButton);
+export default withLoginModal(LoginButton);

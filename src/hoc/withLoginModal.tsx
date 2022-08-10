@@ -6,14 +6,14 @@ import LoginModal from "_/components/LoginModal";
 // types
 import { ModalRefObject } from "_/types";
 
-export interface WithLoggedIn {
-  handleLoggedInFuncClick: () => void;
+export interface WithLoginModal {
+  showLoginModal: () => void;
 }
 
-function withLoggedIn<T extends WithLoggedIn = WithLoggedIn>(
+function withLoginModal<T extends WithLoginModal = WithLoginModal>(
   WrappedComponent: React.ComponentType<T>
 ) {
-  const ReturnedComponent = (props: Omit<T, keyof WithLoggedIn>) => {
+  const ReturnedComponent = (props: Omit<T, keyof WithLoginModal>) => {
     const loginModalRef = useRef<ModalRefObject>(null);
 
     const handleClick = () => {
@@ -22,10 +22,7 @@ function withLoggedIn<T extends WithLoggedIn = WithLoggedIn>(
 
     return (
       <>
-        <WrappedComponent
-          {...(props as T)}
-          handleLoggedInFuncClick={handleClick}
-        />
+        <WrappedComponent {...(props as T)} showLoginModal={handleClick} />
         <LoginModal ref={loginModalRef} />
       </>
     );
@@ -33,9 +30,9 @@ function withLoggedIn<T extends WithLoggedIn = WithLoggedIn>(
 
   ReturnedComponent.displayName =
     (WrappedComponent.displayName || WrappedComponent.name || "Component") +
-    "WithLoggedIn";
+    "WithLoginModal";
 
   return ReturnedComponent;
 }
 
-export default withLoggedIn;
+export default withLoginModal;

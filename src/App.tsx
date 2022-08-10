@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // pages
@@ -9,20 +9,18 @@ import { DefaultLayout, HeaderLayout, FullWidthLayout } from "./layouts";
 
 // components
 import ToTopButton from "_/components/ToTopButton";
+import ToggleButton from "_/ToggleButton";
+
+import { LoginContextProvider } from "_/contexts/AppContext";
 
 // variables
 import routes from "_/config/routes";
 
-export const LoginContext = React.createContext({ isLoggedIn: false });
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-    JSON.parse(localStorage.getItem("isLoggedIn") || "")
-  );
-
   return (
-    <LoginContext.Provider value={{ isLoggedIn }}>
+    <LoginContextProvider>
       <BrowserRouter>
-        <button onClick={() => setIsLoggedIn((prev) => !prev)}>Toggle</button>
+        <ToggleButton />
 
         <Routes>
           <Route element={<DefaultLayout />}>
@@ -50,7 +48,7 @@ function App() {
         </Routes>
         <ToTopButton />
       </BrowserRouter>
-    </LoginContext.Provider>
+    </LoginContextProvider>
   );
 }
 

@@ -19,7 +19,7 @@ function FullWidthLayout({ children }: Props) {
       <Header isFullWidth={true} />
       <div className={styles["container"]}>
         <CompactSideBar />
-        <main>
+        <main style={{ marginLeft: 232 }}>
           {children}
           <Outlet />
         </main>

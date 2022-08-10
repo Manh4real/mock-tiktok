@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 
 // hoc
-import { withLoggedIn } from "_/hoc";
+import { withLoginModal } from "_/hoc";
 
 // components
 import CustomButton from "_/components/CustomButton";
@@ -11,13 +11,13 @@ import CustomButton from "_/components/CustomButton";
 import styles from "./Sidebar.module.scss";
 
 // types
-import { WithLoggedIn } from "_/hoc/withLoggedIn";
+import { WithLoginModal } from "_/hoc/withLoginModal";
 
-interface Props extends WithLoggedIn {}
+interface Props extends WithLoginModal {}
 
-const LogInSection = ({ handleLoggedInFuncClick }: Props) => {
+const LogInSection = ({ showLoginModal }: Props) => {
   const handleClick = () => {
-    handleLoggedInFuncClick();
+    showLoginModal();
   };
 
   return (
@@ -45,4 +45,4 @@ const LogInSection = ({ handleLoggedInFuncClick }: Props) => {
   );
 };
 
-export default withLoggedIn(LogInSection);
+export default withLoginModal(LogInSection);

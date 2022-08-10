@@ -12,34 +12,15 @@ import { VerifyBadge } from "_/components/icons";
 // styles
 import styles from "./AccountPopup.module.scss";
 
+//
+import { numberCompact } from "_/utils";
+
 // types
-import { SuggestedItem } from "./Suggested";
+import { Account as AccountInterface } from "_/types";
 
 interface Props {
-  account: SuggestedItem;
+  account: Partial<AccountInterface>;
   children: JSX.Element;
-}
-
-function numberCompact(number: number | undefined) {
-  if (number === undefined) return null;
-
-  const a = ["", "K", "M", "B", "T"];
-  const thou = Math.pow(10, 3);
-
-  let temp = number;
-  let affix = a[0];
-  let i = 0;
-
-  while (Math.floor(Math.abs(temp / thou)) > 0) {
-    if (i >= a.length - 1) break;
-    temp = temp / thou;
-
-    affix = a[++i];
-  }
-
-  if (temp % 1 === 0) return temp + affix;
-
-  return temp.toFixed(1) + affix;
 }
 
 function AccountPopup({ account, children }: Props) {

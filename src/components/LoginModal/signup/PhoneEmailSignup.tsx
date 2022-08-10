@@ -43,15 +43,17 @@ function PhoneEmailSignup() {
           {state === State.WITH_PHONE && <WithPhoneSignup />}
           {state === State.WITH_EMAIL && <WithEmailSignup />}
 
-          <div className={styles["row"]}>
-            <div className={styles["form__checkbox"]}>
-              <input type="checkbox" id="cb" />
-              <label htmlFor="cb" className={styles["form__label"]}>
-                Get trending content, newsletters, promotions, recommendations,
-                and account updates sent to your email
-              </label>
+          {state === State.WITH_EMAIL && (
+            <div className={styles["row"]}>
+              <div className={styles["form__checkbox"]}>
+                <input type="checkbox" id="cb" />
+                <label htmlFor="cb" className={styles["form__label"]}>
+                  Get trending content, newsletters, promotions,
+                  recommendations, and account updates sent to your email
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           <CustomButton
             primary

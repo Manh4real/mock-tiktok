@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 
-// context
-import { LoginContext } from "_/App";
+// hooks
+import { useLoginContext } from "_/contexts/AppContext";
 
 // components
 import CommonSidebar from "./common";
@@ -9,7 +9,7 @@ import LogInSection from "./LogInSection";
 import Suggested from "./Suggested";
 
 function Sidebar() {
-  const { isLoggedIn } = useContext(LoginContext);
+  const { isLoggedIn } = useLoginContext();
 
   return (
     <CommonSidebar>

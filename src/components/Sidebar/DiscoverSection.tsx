@@ -26,6 +26,10 @@ const DISCOVER_DATA = [
     type: "tag",
   },
   {
+    title: "gym",
+    type: "tag",
+  },
+  {
     title: "Me or Sum (feat. Future & Lil Baby) - Nardo Wick",
     type: "music",
   },
@@ -39,6 +43,10 @@ const DISCOVER_DATA = [
   },
   {
     title: "ELEMENT. - Kendrick Lamar",
+    type: "music",
+  },
+  {
+    title: "Secure The Vibe (feat. Young Thug) - Gunna",
     type: "music",
   },
 ];

@@ -13,7 +13,9 @@ function HeaderLayout() {
     <>
       <Header isFullWidth={true} />
       <div className={styles["container"]}>
-        <Outlet />
+        <main>
+          <Outlet />
+        </main>
       </div>
       <Footer />
     </>

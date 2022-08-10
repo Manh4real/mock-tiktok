@@ -31,7 +31,8 @@ function LoginStart() {
           <Link
             to="/"
             className={styles["box"]}
-            onClick={() => {
+            onClick={(e: React.MouseEvent) => {
+              e.preventDefault();
               pushHistory(<WithPhoneLogin />);
             }}
           >

@@ -12,7 +12,7 @@ function DefaultLayout() {
       <Header isFullWidth={false} />
       <div className={styles["container"]}>
         <Sidebar />
-        <main>
+        <main style={{ marginLeft: 356 }}>
           <Outlet />
         </main>
       </div>

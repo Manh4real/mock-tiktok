@@ -2,13 +2,15 @@
   --offset: 8px;
   width: 356px;
   height: calc(100vh - var(--header-height));
+  background: #fff;
   // background: #eee;
 
   padding: 20px 0 6px 6px;
 
-  position: sticky;
+  // position: sticky;
+  position: fixed;
   top: var(--header-height);
-  // bottom: 0;
+  bottom: 0;
   overflow-y: overlay;
 
   &:hover::-webkit-scrollbar-thumb {

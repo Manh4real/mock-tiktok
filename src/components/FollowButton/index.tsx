@@ -1,29 +1,29 @@
-import React, { useContext } from "react";
+import React from "react";
 
 // components
 import CustomButton from "_/components/CustomButton";
-import { withLoggedIn } from "_/hoc";
+import { withLoginModal } from "_/hoc";
 
 // styles
 import styles from "./FollowButton.module.scss";
 
-// context
-import { LoginContext } from "_/App";
+// hooks
+import { useLoginContext } from "_/contexts/AppContext";
 
 // types
-import { WithLoggedIn } from "_/hoc/withLoggedIn";
+import { WithLoginModal } from "_/hoc/withLoginModal";
 
-interface Props extends WithLoggedIn {
+interface Props extends WithLoginModal {
   onClick: (e: React.MouseEvent) => void;
 }
 
-function FollowButton({ onClick, handleLoggedInFuncClick }: Props) {
-  const { isLoggedIn } = useContext(LoginContext);
+function FollowButton({ onClick, showLoginModal }: Props) {
+  const { isLoggedIn } = useLoginContext();
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
       e.preventDefault();
-      handleLoggedInFuncClick();
+      showLoginModal();
     }
 
     onClick(e);
@@ -36,4 +36,4 @@ function FollowButton({ onClick, handleLoggedInFuncClick }: Props) {
   );
 }
 
-export default withLoggedIn(FollowButton);
+export default withLoginModal(FollowButton);

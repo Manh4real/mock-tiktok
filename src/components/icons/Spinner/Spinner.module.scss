@@ -4,11 +4,13 @@
   position: relative;
   width: var(--spinner-size);
   height: var(--spinner-size);
+  aspect-ratio: 1;
   animation: spinner 1s linear infinite;
 
-  svg {
+  svg.spinner__icon {
     width: inherit;
     height: inherit;
+    fill: currentColor;
   }
 }
 @keyframes spinner {

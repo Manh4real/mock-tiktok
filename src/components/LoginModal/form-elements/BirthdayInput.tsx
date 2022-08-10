@@ -86,7 +86,15 @@ function BirthdayInput() {
       </div>
 
       <div className={styles["row"]}>
-        <p style={{ fontSize: "12px", color: "var(--grey-200)" }}>
+        <p
+          style={{
+            fontSize: "14px",
+            color: "var(--grey-200)",
+            marginBottom: "16px",
+            fontWeight: "300",
+            lineHeight: "1.7",
+          }}
+        >
           Your birthday won't be shown publicly.
         </p>
       </div>

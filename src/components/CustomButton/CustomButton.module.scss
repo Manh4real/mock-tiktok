@@ -38,6 +38,7 @@
   &.primary {
     color: var(--white);
     background: var(--pink);
+
     &:hover {
       background: linear-gradient(0deg, #0000000f, #0000000f), #fe2c55;
     }
@@ -47,6 +48,10 @@
     color: #16182357;
     background-color: #1618230f;
     pointer-events: none;
+
+    &:hover {
+      background: linear-gradient(0deg, #0000000f, #0000000f), #fe2c55;
+    }
   }
   &.outlined {
     color: var(--pink);

@@ -24,7 +24,7 @@ export enum FormState {
   SIGN_UP,
 }
 interface Props {}
-// interface HistoryElementProps extends ResetPasswordProps {}
+
 interface HistoryContextValue {
   history: JSX.Element[];
   pushHistory: (element: JSX.Element, replace?: boolean) => void;
@@ -89,26 +89,3 @@ function LoginModal(props: Props, ref: React.Ref<ModalRefObject | null>) {
 }
 
 export default React.forwardRef(LoginModal);
-
-/*
-
-{currentFormState === FormState.SIGN_UP && (
-              <SignupFooter
-                changeFormState={() =>
-                  setStateHistory((prev) => [
-                    ...prev.slice(0, -1),
-                    FormState.LOG_IN,
-                  ])
-                }
-              />
-            )}
-            {currentFormState === FormState.LOG_IN && (
-              <LoginFooter
-                changeFormState={() =>
-                  setStateHistory((prev) => [
-                    ...prev.slice(0, -1),
-                    FormState.SIGN_UP,
-                  ])
-                }
-              />
-            )}*/

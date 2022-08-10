@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
@@ -18,8 +18,8 @@ import styles from "./Header.module.scss";
 // variables
 import routes from "_/config/routes";
 
-// context
-import { LoginContext } from "_/App";
+// hooks
+import { useLoginContext } from "_/contexts/AppContext";
 
 // types
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
 }
 
 function Header({ isFullWidth }: Props) {
-  const { isLoggedIn } = useContext(LoginContext);
+  const { isLoggedIn } = useLoginContext();
 
   return (
     <div className={styles["header__container"]}>

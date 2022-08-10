@@ -1,1 +1,1 @@
-export { default as withLoggedIn } from "./withLoggedIn";
+export { default as withLoginModal } from "./withLoginModal";

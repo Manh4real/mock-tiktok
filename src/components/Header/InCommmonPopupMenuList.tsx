@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // icons
 import { Language, QuestionMark, RoundedKeyboard } from "_/components/icons";
@@ -20,9 +21,9 @@ const InCommmonPopupMenuList = () => {
         </CustomButton>
       </li>
       <li>
-        <a href="/feedback" className={styles["menu-popup__item"]}>
+        <Link to="/feedback" className={styles["menu-popup__item"]}>
           <QuestionMark /> Feedback and help
-        </a>
+        </Link>
       </li>
       <li>
         <CustomButton className={styles["menu-popup__item"]}>

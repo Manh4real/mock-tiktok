@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import clsx from "clsx";
 import { NavLink } from "react-router-dom";
 
@@ -12,23 +12,23 @@ import routes from "_/config/routes";
 import styles from "./Header.module.scss";
 
 // hoc
-import { withLoggedIn } from "_/hoc";
+import { withLoginModal } from "_/hoc";
 
-// context
-import { LoginContext } from "_/App";
+// hooks
+import { useLoginContext } from "_/contexts/AppContext";
 
 // types
-import { WithLoggedIn } from "_/hoc/withLoggedIn";
+import { WithLoginModal } from "_/hoc/withLoginModal";
 
-interface Props extends WithLoggedIn {}
+interface Props extends WithLoginModal {}
 
-const UploadButton = ({ handleLoggedInFuncClick }: Props) => {
-  const { isLoggedIn } = useContext(LoginContext);
+const UploadButton = ({ showLoginModal }: Props) => {
+  const { isLoggedIn } = useLoginContext();
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
       e.preventDefault();
-      handleLoggedInFuncClick();
+      showLoginModal();
     }
   };
 
@@ -47,4 +47,4 @@ const UploadButton = ({ handleLoggedInFuncClick }: Props) => {
   );
 };
 
-export default withLoggedIn(UploadButton);
+export default withLoginModal(UploadButton);

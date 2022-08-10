@@ -1,0 +1,170 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &::after {
+    content: "";
+
+    position: absolute;
+    inset: 50% 0 0;
+
+    background: linear-gradient(to top, #757575, transparent);
+    z-index: 1;
+
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &:hover {
+    &::after,
+    .controller {
+      transition: all 0.2s ease-out;
+
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.controller {
+  opacity: 0;
+  visibility: hidden;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+
+  color: #fff;
+  padding: 12px;
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  .button {
+    width: 40px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+}
+.voice {
+  position: relative;
+
+  &:hover {
+    .volume {
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  .volume.is--visible {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+  }
+}
+.volume {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+
+  position: absolute;
+  top: 0;
+  transform: translateY(-100%);
+
+  background: #16182357;
+  padding: 12px 11px;
+  border-radius: 20px;
+
+  .volume-trackbar {
+    position: relative;
+
+    background: rgba(255, 255, 255, 0.2);
+    height: 48px;
+    width: 2px;
+  }
+  .currentVolume {
+    display: block;
+
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    background: #fff;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+
+      background: inherit;
+      top: 0;
+      bottom: 0;
+      left: -5px;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 300;
+
+  .progress-bar {
+    flex: 1;
+
+    height: 2px;
+    padding-block: 10px;
+    margin-right: 10px;
+
+    position: relative;
+  }
+  .currentTimeTrackContainer {
+    position: relative;
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    height: 2px;
+  }
+  .currentTimeTrack {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 2px;
+
+    width: 0;
+    background: #fff;
+
+    &::after {
+      content: "";
+      position: absolute;
+
+      right: 0;
+      top: 1px;
+      transform: translate(50%, -50%);
+
+      width: 12px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #fff;
+    }
+  }
+  .time-num {
+    width: 65px;
+    text-align: right;
+  }
+}

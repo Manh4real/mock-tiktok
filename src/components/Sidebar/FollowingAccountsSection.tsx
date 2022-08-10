@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import clsx from "clsx";
 
 // icons
@@ -10,8 +10,8 @@ import Account from "./Account";
 // styles
 import styles from "./Sidebar.module.scss";
 
-// context
-import { LoginContext } from "_/App";
+// hooks
+import { useLoginContext } from "_/contexts/AppContext";
 
 // types
 import { Account as AccountInterface } from "_/types";
@@ -32,7 +32,7 @@ const FOLLOWING_DATA: Partial<AccountInterface>[] = [
 ];
 
 const FollowingAccountsSection = () => {
-  const { isLoggedIn } = useContext(LoginContext);
+  const { isLoggedIn } = useLoginContext();
 
   if (!isLoggedIn) return <></>;
 

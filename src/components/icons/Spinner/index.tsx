@@ -6,10 +6,17 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 // styles
 import styles from "./Spinner.module.scss";
 
-function Spinner() {
+// types
+interface Props {
+  style?: {
+    [index: string]: string | number;
+  };
+}
+
+function Spinner({ style }: Props) {
   return (
-    <div className={styles["spinner"]}>
-      <AiOutlineLoading3Quarters />
+    <div className={styles["spinner"]} style={style}>
+      <AiOutlineLoading3Quarters className={styles["spinner__icon"]} />
     </div>
   );
 }

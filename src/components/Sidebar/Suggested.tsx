@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 
 // components
-import AccountPopup from "./AccountPopup";
+import AccountPopup from "_/components/AccountPopup";
 import Account from "./Account";
 import { SidebarDelimiter } from "./common";
 
