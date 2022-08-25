@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 
 // components
@@ -18,8 +19,22 @@ import styles from "../LoginModal.module.scss";
 // context
 import { History } from "..";
 
-function WithEmailLogin() {
+// types
+import { FormLocation, FormProps } from "../types";
+import routes from "_/config/routes";
+
+function WithEmailLogin(props: FormProps) {
+  return (
+    <>
+      <Form {...props} />
+    </>
+  );
+}
+
+const Form = ({ at = FormLocation.MODAL }: FormProps) => {
   const { pushHistory } = useContext(History);
+
+  const replace = true;
 
   return (
     <>
@@ -28,30 +43,37 @@ function WithEmailLogin() {
         <div className={styles["form__content"]}>
           <div className={clsx(styles["row"], styles["form__desc"])}>
             Email or username
-            <a
-              href="/"
+            <Link
+              to={routes.login + "/phone"}
+              replace={replace}
               onClick={(e) => {
-                e.preventDefault();
+                if (at === FormLocation.MODAL) {
+                  e.preventDefault();
 
-                pushHistory(<WithPhoneLogin />, true);
+                  pushHistory(<WithPhoneLogin />, replace);
+                  return;
+                }
               }}
             >
               Log in with phone
-            </a>
+            </Link>
           </div>
           <EmailInput />
-          <PasswordInput />
-          <a
-            href="/"
+          <PasswordInput setIsAllowed={() => {}} />
+          <Link
+            to={routes.reset}
             className={styles["row"]}
             onClick={(e) => {
-              e.preventDefault();
+              if (at === FormLocation.MODAL) {
+                e.preventDefault();
 
-              pushHistory(<ResetPassword resetWith="email" />);
+                pushHistory(<ResetPassword resetWith="email" />);
+                return;
+              }
             }}
           >
             Forgot password?
-          </a>
+          </Link>
           <CustomButton
             primary
             large
@@ -61,9 +83,9 @@ function WithEmailLogin() {
           </CustomButton>
         </div>
       </form>
-      <Footer />
+      <Footer at={at} />
     </>
   );
-}
+};
 
 export default WithEmailLogin;

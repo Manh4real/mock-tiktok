@@ -6,8 +6,9 @@ interface Options {
     target: number,
     initialValue: number,
     direction: Direction,
-    onMouseUp?: () => void,
-    onMouseMove?: () => void
+    onMouseUp?: (hadMouseDown: boolean) => void,
+    onMouseMove?: () => void,
+    onChange?: (newValue: number) => void
 }
 
 const useProgress = (
@@ -19,7 +20,8 @@ const useProgress = (
         initialValue,
         target,
         onMouseUp,
-        onMouseMove
+        onMouseMove,
+        onChange
     } = options;
     const [min, max] = [0, 1];
     const [hasMouseDown, setHasMouseDown] = useState<boolean>(false);
@@ -29,7 +31,7 @@ const useProgress = (
         setHasMouseDown(true);
     };
 
-    const updateProgress = useCallback((
+    const interactiveUpdateProgress = useCallback((
         e: MouseEvent | React.MouseEvent,
         callback?: (newProgress: number) => void
     ) => {
@@ -67,26 +69,27 @@ const useProgress = (
 
         setProgress(newProgress);
 
+        if (onChange) onChange(newProgress);
         if (callback) callback(newProgress);
 
-    }, [direction, ref, min, max]);
+    }, [direction, ref, min, max, onChange]);
 
     // window event
     useEffect(() => {
         const handleMouseUp = () => {
             setHasMouseDown(false);
 
-            if (onMouseUp) onMouseUp();
+            if (onMouseUp) onMouseUp(hasMouseDown);
         };
 
         const handleMouseMove = (e: MouseEvent) => {
             if (hasMouseDown) {
-                updateProgress(e);
+                e.preventDefault();
+                interactiveUpdateProgress(e);
 
                 if (onMouseMove) onMouseMove();
             }
 
-            e.preventDefault();
         };
 
         window.addEventListener("mouseup", handleMouseUp);
@@ -96,7 +99,7 @@ const useProgress = (
             window.removeEventListener("mouseup", handleMouseUp);
             window.removeEventListener("mousemove", handleMouseMove);
         };
-    }, [hasMouseDown, updateProgress, onMouseUp, onMouseMove]);
+    }, [hasMouseDown, interactiveUpdateProgress, onMouseUp, onMouseMove]);
 
 
     return {
@@ -105,7 +108,7 @@ const useProgress = (
         current: progress * target,
         hasMouseDown,
         handleMouseDown,
-        updateProgress
+        interactiveUpdateProgress
     }
 }
 

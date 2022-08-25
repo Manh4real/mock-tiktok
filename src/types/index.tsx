@@ -42,3 +42,16 @@ export interface Account {
 
   onLive?: boolean;
 }
+
+export interface Post {
+  id: number;
+  content: string;
+  placeholder: string;
+  likes_count: number;
+  comments_count: number;
+  shares_count: number;
+  audio_url: string;
+  video_url: string;
+  posted_at: number;
+  author_id: number;
+}

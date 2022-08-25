@@ -14,15 +14,19 @@ import Footer from "./Footer";
 // styles
 import styles from "../LoginModal.module.scss";
 
+import { FormLocation, FormProps } from "../types";
 enum State {
   WITH_EMAIL,
   WITH_PHONE,
 }
-export interface ResetPasswordProps {
+export interface ResetPasswordProps extends FormProps {
   resetWith?: "phone" | "email";
 }
 
-function ResetPassword({ resetWith = "phone" }: ResetPasswordProps) {
+function ResetPassword({
+  resetWith = "phone",
+  at = FormLocation.MODAL,
+}: ResetPasswordProps) {
   const [state, setState] = useState<State>(() => {
     if (resetWith === "email") return State.WITH_EMAIL;
     else if (resetWith === "phone") return State.WITH_PHONE;
@@ -61,10 +65,10 @@ function ResetPassword({ resetWith = "phone" }: ResetPasswordProps) {
           </div>
 
           {state === State.WITH_EMAIL && <EmailInput />}
-          {state === State.WITH_PHONE && <PhoneInput />}
+          {state === State.WITH_PHONE && <PhoneInput setIsAllowed={() => {}} />}
 
-          <CodeInput />
-          <PasswordInput />
+          <CodeInput disabled={true} setIsAllowed={() => {}} />
+          <PasswordInput setIsAllowed={() => {}} />
           <div style={{ paddingTop: "9px" }}>
             <CustomButton
               primary
@@ -76,7 +80,7 @@ function ResetPassword({ resetWith = "phone" }: ResetPasswordProps) {
           </div>
         </div>
       </form>
-      <Footer />
+      <Footer at={at} />
     </>
   );
 }

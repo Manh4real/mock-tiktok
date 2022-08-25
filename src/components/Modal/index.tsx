@@ -10,6 +10,7 @@ import styles from "./Modal.module.scss";
 
 // types
 import { ModalRefObject } from "_/types";
+import { useModalContext } from "_/contexts";
 interface Props {
   children: JSX.Element;
   closeButtonStyle?: {
@@ -23,7 +24,9 @@ const Modal = React.forwardRef(
     { closeButtonStyle, onHide = () => {}, children }: Props,
     ref: React.Ref<ModalRefObject>
   ) => {
-    const [visible, setVisible] = useState<boolean>(false);
+    const { clearModal } = useModalContext();
+
+    const [visible, setVisible] = useState<boolean>(true);
 
     // handling event functions
     const handleClose = (e: React.MouseEvent) => {
@@ -31,13 +34,13 @@ const Modal = React.forwardRef(
       setVisible(false);
       document.body.style.overflow = "overlay";
       onHide();
+
+      //
+      clearModal();
     };
     const handleOpen = () => {
       setVisible(true);
       document.body.style.overflow = "hidden";
-    };
-    const handleCloseByKey = function (e: KeyboardEvent) {
-      if (e.key === "Escape") setVisible(false);
     };
 
     // supply functions to the parent
@@ -48,10 +51,18 @@ const Modal = React.forwardRef(
 
     // dom event
     useEffect(() => {
+      const handleCloseByKey = function (e: KeyboardEvent) {
+        if (e.key === "Escape") {
+          setVisible(false);
+          document.body.style.overflow = "overlay";
+          onHide();
+        }
+      };
+
       window.addEventListener("keydown", handleCloseByKey);
 
       return () => window.removeEventListener("keydown", handleCloseByKey);
-    }, []);
+    }, [onHide]);
 
     if (!visible) return <></>;
 

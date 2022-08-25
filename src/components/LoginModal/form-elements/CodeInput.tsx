@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 
 // icons
@@ -7,34 +7,37 @@ import { FiAlertTriangle } from "react-icons/fi";
 // components
 import CustomButton from "_/components/CustomButton";
 
+// hoc
+import withInputValidation from "_/hoc/withInputValidation";
+
 // styles
 import styles from "../LoginModal.module.scss";
 
-// hoc
-import withInputValidation from "./withInputValidation";
-
-// context
-import { Submit } from "../login/WithPhoneLogin";
-
 // types
 import { ValidationType } from "_/validation/Validation";
-import { WithInputValidation } from "./withInputValidation";
+import { WithInputValidation } from "_/hoc/types";
+import { AllowedInputProperty } from "_/contexts/submit";
 
-interface Props extends WithInputValidation {}
+interface Props extends WithInputValidation {
+  disabled: boolean;
+  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
+}
 
-function CodeInput({ errorMessage, hasError, isValid, inputProps }: Props) {
-  const { isAllowed, setIsAllowed } = useContext(Submit);
-
+function CodeInput({
+  setIsAllowed,
+  disabled,
+  errorMessage,
+  hasError,
+  isValid,
+  inputProps,
+}: Props) {
   const handleSendCodeClick = (e: React.MouseEvent) => {
     e.preventDefault();
   };
 
   useEffect(() => {
-    setIsAllowed((prev) => ({
-      ...prev,
-      [ValidationType.CODE]: { value: inputProps.value, isValid },
-    }));
-  }, [isValid, setIsAllowed, inputProps.value]);
+    setIsAllowed({ value: inputProps.value, isValid });
+  }, [setIsAllowed, inputProps.value, isValid]);
 
   return (
     <div>
@@ -60,7 +63,8 @@ function CodeInput({ errorMessage, hasError, isValid, inputProps }: Props) {
           type="button"
           onClick={handleSendCodeClick}
           className={styles["normal-button"]}
-          disabled={!isAllowed.phone.isValid}
+          // disabled={!isAllowed.phone.isValid}
+          disabled={disabled}
         >
           Send code
         </CustomButton>

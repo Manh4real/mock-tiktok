@@ -19,8 +19,9 @@ import styles from "./LoginModal.module.scss";
 import { History } from ".";
 
 // types
+import { FormLocation, FormProps } from "./types";
 
-function LoginStart() {
+function LoginStart({ at = FormLocation.MODAL }: FormProps) {
   const { pushHistory } = useContext(History);
 
   return (
@@ -91,7 +92,7 @@ function LoginStart() {
           </button>
         </div>
       </div>
-      <LoginFooter />
+      <LoginFooter at={at} />
     </>
   );
 }

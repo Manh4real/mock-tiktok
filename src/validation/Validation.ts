@@ -18,6 +18,7 @@ export enum ValidationType {
     PASSWORD = "password",
     PHONE = "phone",
     USERNAME = "username",
+    BIRTHDAY = "birthday"
 }
 
 class Validation implements ValidationClass {
@@ -35,6 +36,8 @@ class Validation implements ValidationClass {
                 return this.validatePhone(value);
             case ValidationType.USERNAME:
                 return this.validateUsername(value);
+            case ValidationType.BIRTHDAY:
+                return { isValid: true, errorMessage: "" };
         }
     }
     validateCode(value: string): ValidateValue {

@@ -8,16 +8,15 @@ import styles from "../LoginModal.module.scss";
 import { AlertIcon, InputErrorMessage } from "./components";
 
 // hoc
-import withInputValidation, {
-  WithInputValidation, // type
-} from "./withInputValidation";
+import withInputValidation from "_/hoc/withInputValidation";
 
 // enum
 import { ValidationType } from "_/validation/Validation";
+import { WithInputValidation } from "_/hoc/types";
 
 interface Props extends WithInputValidation {}
 
-function EmailInput({ errorMessage, hasError, inputProps, isValid }: Props) {
+function EmailInput({ errorMessage, hasError, inputProps }: Props) {
   return (
     <div>
       <div

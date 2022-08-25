@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 
 // styles
@@ -19,94 +20,35 @@ import WithEmailLogin from "./WithEmailLogin";
 import ResetPassword from "./ResetPassword";
 import Footer from "./Footer";
 
-// external context
+// context
 import { History } from "_/components/LoginModal";
+import { SubmitProvider, useSubmit } from "_/contexts/submit/loginWithPhone";
+
+// config
+import routes from "_/config/routes";
 
 // types
 import { ValidationType } from "_/validation/Validation";
+import { AllowedInputProperty } from "_/contexts/submit";
+import { FormLocation, FormProps } from "../types";
 
-interface AllowedInputProperty {
-  value: string;
-  isValid: boolean;
-}
-
-interface LoginWithPhoneFields {
-  [ValidationType.PHONE]: AllowedInputProperty;
-  [ValidationType.CODE]: AllowedInputProperty;
-  [ValidationType.PASSWORD]: AllowedInputProperty;
-}
-
-// variables
-const formFieldValue: AllowedInputProperty = {
-  value: "",
-  isValid: false,
+const WithPhoneLogin = (props: FormProps) => {
+  return (
+    <SubmitProvider>
+      <Form {...props} />
+    </SubmitProvider>
+  );
 };
 
-const formSet = {
-  loginWithPhone: {
-    phone: formFieldValue,
-    code: formFieldValue,
-    password: formFieldValue,
-  },
-  loginWithEmail: {
-    username: formFieldValue,
-    email: formFieldValue,
-    password: formFieldValue,
-  },
-  signupWithPhone: {
-    birthday: formFieldValue,
-    phone: formFieldValue,
-    code: formFieldValue,
-  },
-  signupWithEmail: {
-    birthday: formFieldValue,
-    email: formFieldValue,
-    password: formFieldValue,
-    code: formFieldValue,
-  },
-  resetPasswordWithPhone: {
-    phone: formFieldValue,
-    code: formFieldValue,
-    password: formFieldValue,
-  },
-  resetPasswordWithEmail: {
-    email: formFieldValue,
-    password: formFieldValue,
-    code: formFieldValue,
-  },
-};
-
-// internal context
-interface SubmitContextValue {
-  isAllowed: {
-    [ValidationType.PHONE]: AllowedInputProperty;
-    [ValidationType.CODE]: AllowedInputProperty;
-    [ValidationType.PASSWORD]: AllowedInputProperty;
-  };
-  setIsAllowed: React.Dispatch<React.SetStateAction<LoginWithPhoneFields>>;
-}
-
-export const Submit = React.createContext<SubmitContextValue>({
-  isAllowed: formSet.loginWithPhone,
-  setIsAllowed: () => {},
-});
-
-function WithPhoneLogin() {
+//
+function Form({ at = FormLocation.MODAL }: FormProps) {
   const { pushHistory } = useContext(History);
+  const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
 
   const [isWithPassword, setIsWithPassword] = useState<boolean>(false);
 
   // submit
   const [loading, setLoading] = useState<boolean>(false);
-  const [isAllowed, setIsAllowed] = useState<LoginWithPhoneFields>(
-    formSet.loginWithPhone
-  );
-
-  const isAllGood =
-    (isAllowed.phone.isValid && isAllowed.code.isValid) ||
-    (isAllowed.phone.isValid && isAllowed.password.isValid);
-
-  // console.log(isAllowed);
 
   const handleSubmit = (e: React.MouseEvent) => {
     // login with phone
@@ -123,69 +65,101 @@ function WithPhoneLogin() {
     }, 1000);
   };
 
+  const setIsAllowed_phone = useCallback(
+    ({ value, isValid }: AllowedInputProperty) => {
+      setIsAllowed((prev) => ({
+        ...prev,
+        [ValidationType.PHONE]: { value, isValid },
+      }));
+    },
+    [setIsAllowed]
+  );
+
+  const setIsAllowed_code = useCallback(
+    ({ value, isValid }: AllowedInputProperty) => {
+      setIsAllowed((prev) => ({
+        ...prev,
+        [ValidationType.CODE]: { value, isValid },
+      }));
+    },
+    [setIsAllowed]
+  );
+
+  //
+  const replace = true;
+  const atModalFunc = (callback: () => void) => {
+    if (at === FormLocation.MODAL) {
+      callback();
+    }
+  };
+
   return (
-    <Submit.Provider value={{ isAllowed, setIsAllowed }}>
+    <>
       <form className={clsx(styles["form"], styles["content-wrapper"])}>
         <div className={styles["title"]}>Log in</div>
         <div className={styles["form__content"]}>
           <div className={clsx(styles["row"], styles["form__desc"])}>
             Phone
-            <a
-              href="/"
+            <Link
+              to={routes.login + "/email"}
+              replace={replace}
               onClick={(e) => {
-                e.preventDefault();
-
-                pushHistory(<WithEmailLogin />, true);
+                atModalFunc(() => {
+                  e.preventDefault();
+                  pushHistory(<WithEmailLogin />, replace);
+                  return;
+                });
               }}
             >
               Log in with email or username
-            </a>
+            </Link>
           </div>
-
-          <PhoneInput />
-          {!isWithPassword && <CodeInput />}
-          {isWithPassword && <PasswordInput />}
-
+          <PhoneInput setIsAllowed={setIsAllowed_phone} />
+          {!isWithPassword && (
+            <CodeInput
+              setIsAllowed={setIsAllowed_code}
+              disabled={!isAllowed.phone.isValid}
+            />
+          )}
+          {isWithPassword && <PasswordInput setIsAllowed={() => {}} />}
           {isWithPassword ? (
             <div
               className={styles["row"]}
               style={{ display: "flex", gap: "8px" }}
             >
-              <a
-                href="/"
+              <Link
+                to={routes.reset}
                 onClick={(e) => {
-                  e.preventDefault();
-
-                  pushHistory(<ResetPassword />);
+                  atModalFunc(() => {
+                    e.preventDefault();
+                    pushHistory(<ResetPassword />);
+                  });
                 }}
               >
                 Forgot password?
-              </a>
-              <a
-                href="/"
+              </Link>
+              <Link
+                to={routes.login + "/phone/code"}
                 onClick={(e) => {
                   e.preventDefault();
-
                   setIsWithPassword(false);
                 }}
               >
                 Log in with code
-              </a>
+              </Link>
             </div>
           ) : (
-            <a
-              href="/"
+            <Link
+              to={routes.login + "/phone/password"}
               className={styles["row"]}
               onClick={(e) => {
                 e.preventDefault();
-
                 setIsWithPassword(true);
               }}
             >
               Log in with password
-            </a>
+            </Link>
           )}
-
           <CustomButton
             primary
             large
@@ -203,8 +177,8 @@ function WithPhoneLogin() {
           </CustomButton>
         </div>
       </form>
-      <Footer />
-    </Submit.Provider>
+      <Footer at={at} />
+    </>
   );
 }
 

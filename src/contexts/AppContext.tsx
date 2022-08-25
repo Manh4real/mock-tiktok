@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 
+// Login Context
 interface LoginContextValue {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,3 +32,40 @@ export const useLoginContext = () => {
 };
 
 export { LoginContextProvider };
+
+// Modal Context
+interface ModalContextValue {
+  appModal: JSX.Element;
+  setAppModal: React.Dispatch<React.SetStateAction<JSX.Element>>;
+  clearModal: () => void;
+}
+
+interface Props {
+  children: JSX.Element;
+}
+
+export const ModalContext = React.createContext<ModalContextValue>({
+  appModal: <></>,
+  setAppModal: () => {},
+  clearModal: () => {},
+});
+
+function ModalContextProvider({ children }: Props) {
+  const [appModal, setAppModal] = useState<JSX.Element>(<></>);
+
+  const clearModal = () => {
+    setAppModal(<></>);
+  };
+
+  return (
+    <ModalContext.Provider value={{ appModal, setAppModal, clearModal }}>
+      {children}
+    </ModalContext.Provider>
+  );
+}
+
+export const useModalContext = () => {
+  return useContext(ModalContext);
+};
+
+export { ModalContextProvider };

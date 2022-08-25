@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 
 // icons
@@ -9,28 +9,28 @@ import styles from "../LoginModal.module.scss";
 import { AlertIcon, InputErrorMessage } from "./components";
 
 // hoc
-import withInputValidation, {
-  WithInputValidation, // type
-} from "./withInputValidation";
+import withInputValidation from "_/hoc/withInputValidation";
 
-// context
-import { Submit as LoginSubmit } from "../login/WithPhoneLogin";
-
-// enum
+// types
 import { ValidationType } from "_/validation/Validation";
+import { WithInputValidation } from "_/hoc/types";
+import { AllowedInputProperty } from "_/contexts/submit";
 
-interface Props extends WithInputValidation {}
+interface Props extends WithInputValidation {
+  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
+}
 
-function PasswordInput({ hasError, isValid, errorMessage, inputProps }: Props) {
+function PasswordInput({
+  setIsAllowed,
+  hasError,
+  isValid,
+  errorMessage,
+  inputProps,
+}: Props) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
-  const { setIsAllowed } = useContext(LoginSubmit);
-
   useEffect(() => {
-    setIsAllowed((prev) => ({
-      ...prev,
-      [ValidationType.PASSWORD]: { value: inputProps.value, isValid },
-    }));
+    setIsAllowed({ value: inputProps.value, isValid });
   }, [isValid, setIsAllowed, inputProps.value]);
 
   return (

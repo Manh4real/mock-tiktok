@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { useImperativeHandle, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 // icons
@@ -11,8 +11,9 @@ import CustomButton from "_/components/CustomButton";
 import styles from "./Popper.module.scss";
 
 // types
-import { ModalRefObject, PopupMenuItem } from "_/types";
+import { PopupMenuItem } from "_/types";
 import { PopperRefObject } from "./";
+import { useModalContext } from "_/contexts";
 
 interface PopupMenuChildren {
   title: string;
@@ -25,6 +26,9 @@ type History = PopupMenuChildren[];
 
 const Popup = React.forwardRef(
   ({ menu }: PopupProps, ref: React.Ref<PopperRefObject>) => {
+    //
+    const { setAppModal } = useModalContext();
+
     // menu history
     const [history, setHistory] = useState<History>([
       { title: "", content: [...menu] },
@@ -33,7 +37,7 @@ const Popup = React.forwardRef(
     const current = useMemo(() => history[history.length - 1], [history]);
 
     // ref
-    const modalRef = useRef<ModalRefObject>(null);
+    // const modalRef = useRef<ModalRefObject>(null);
 
     // functionalities on menu
     const onNext = (item: PopupMenuItem) => {
@@ -75,7 +79,7 @@ const Popup = React.forwardRef(
               })}
             >
               {current.content.map((item, i) =>
-                getItem(modalRef, item, onNext, i)
+                getItem(setAppModal, item, onNext, i)
               )}
             </div>
           </ul>
@@ -86,7 +90,7 @@ const Popup = React.forwardRef(
 );
 
 function getItem(
-  modalRef: React.RefObject<ModalRefObject>,
+  setAppModal: React.Dispatch<React.SetStateAction<JSX.Element>>,
   current: PopupMenuItem,
   onNext: (item: PopupMenuItem) => void,
   i: number
@@ -122,19 +126,18 @@ function getItem(
     const handleClick = () => {
       if (current.children) onNext(current);
       if (current.modal) {
-        modalRef.current?.handleOpen();
+        // modalRef.current?.handleOpen();
+
+        // has modal
+        const Modal = current.modal;
+        setAppModal(<Modal />);
       }
     };
-
-    // has modal
-    let Modal;
-    if (current.modal) Modal = current.modal;
 
     // content
     content = (
       <div {...props} onClick={handleClick}>
         {itemContent}
-        {Modal && <Modal ref={modalRef} />}
       </div>
     );
   }

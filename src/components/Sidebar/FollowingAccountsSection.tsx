@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 
 // icons
 import { SidebarDelimiter } from "./common";
+import { Spinner } from "../icons";
 
 // components
 import Account from "./Account";
@@ -13,26 +14,27 @@ import styles from "./Sidebar.module.scss";
 // hooks
 import { useLoginContext } from "_/contexts/AppContext";
 
+// services
+import { getFollowingAccounts } from "_/services/account";
+
 // types
 import { Account as AccountInterface } from "_/types";
 
-const FOLLOWING_DATA: Partial<AccountInterface>[] = [
-  {
-    id: 1,
-    nickname: "squatuniversity",
-    full_name: "Squat University",
-    tick: true,
-  },
-  {
-    id: 2,
-    nickname: "thejoestanek",
-    full_name: "Joe Stanek",
-    tick: true,
-  },
-];
-
 const FollowingAccountsSection = () => {
+  const [accounts, setAccounts] = useState<AccountInterface[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const { isLoggedIn } = useLoginContext();
+
+  useEffect(() => {
+    getFollowingAccounts()
+      .then((accounts) => {
+        setAccounts(accounts);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   if (!isLoggedIn) return <></>;
 
@@ -46,19 +48,37 @@ const FollowingAccountsSection = () => {
       >
         <h5 className={styles["sidebar__header-title"]}>Following accounts</h5>
         <div className={styles["sidebar__accs__cnt"]}>
-          <div>
-            {FOLLOWING_DATA.map((acc) => (
-              <Account key={acc.id} account={acc} />
-            ))}
-          </div>
-          <button className={clsx("pink-font", styles["sidebar__more-btn"])}>
-            See more
-          </button>
+          {loading ? (
+            <Spinner />
+          ) : accounts.length <= 0 ? (
+            <NoAccounts />
+          ) : (
+            <Accounts accounts={accounts} />
+          )}
         </div>
       </div>
       <SidebarDelimiter />
     </>
   );
+};
+
+const Accounts = ({ accounts }: { accounts: AccountInterface[] }) => {
+  return (
+    <React.Fragment>
+      <div>
+        {accounts.map((acc) => (
+          <Account key={acc.id} account={acc} />
+        ))}
+      </div>
+      <button className={clsx("pink-font", styles["sidebar__more-btn"])}>
+        See more
+      </button>
+    </React.Fragment>
+  );
+};
+
+const NoAccounts = () => {
+  return <p className="small-font">No accounts here.</p>;
 };
 
 export default FollowingAccountsSection;

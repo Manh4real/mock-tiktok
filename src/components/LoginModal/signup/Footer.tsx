@@ -11,15 +11,23 @@ import { History } from "..";
 
 // components
 import LoginStart from "../LoginStart";
+import { FormLocation } from "_/components/LoginModal/types";
+import { Link } from "react-router-dom";
 
 // types
+interface Props {
+  at?: FormLocation;
+}
 
-function Footer() {
+function Footer({ at = FormLocation.MODAL }: Props) {
   const { pushHistory } = useContext(History);
 
+  const replace = true;
   const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    pushHistory(<LoginStart />, true);
+    if (at === FormLocation.MODAL) {
+      e.preventDefault();
+      pushHistory(<LoginStart />, replace);
+    }
   };
 
   return (
@@ -31,9 +39,14 @@ function Footer() {
       </p>
       <div className={styles["footer__text"]}>
         Already have an account?
-        <a href={routes.login} className="pink-font" onClick={handleClick}>
+        <Link
+          to={routes.login}
+          replace={replace}
+          className="pink-font"
+          onClick={handleClick}
+        >
           Log in
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ const routes = {
     signup: "/signup",
     login: "/login",
     logout: "/logout",
+    reset: "/reset",
 }
 
 export const pagesTitle = {

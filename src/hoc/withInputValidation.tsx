@@ -5,34 +5,17 @@ import Validation from "_/validation/Validation";
 
 // types
 import { ValidationType } from "_/validation/Validation";
-
-export interface WithInputValidation {
-  hasError: boolean;
-  isEmpty: boolean;
-  isValid: boolean;
-  errorMessage: string;
-  inputProps: {
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onFocus: React.FocusEventHandler<HTMLInputElement>;
-    onBlur: React.FocusEventHandler<HTMLInputElement>;
-  };
-}
-
-// interface ParentProps {
-//   gang: string
-// }
+import { WithInputValidation } from "./types";
 
 const validation = new Validation();
 
 const withInputValidation = <
   T extends WithInputValidation = WithInputValidation
 >(
-  WrappedComponent: React.ComponentType<T>, //  & ParentProps
+  WrappedComponent: React.ComponentType<T>,
   validationType: ValidationType
 ) => {
   const ReturnedComponent = (props: Omit<T, keyof WithInputValidation>) => {
-    //  & ParentProps
     const [value, setValue] = useState<string>("");
 
     const validate = (value: string) =>
@@ -41,8 +24,6 @@ const withInputValidation = <
 
     const [isValid, setIsValid] = useState<boolean>(validate(value).isValid);
     const [hasError, setHasError] = useState<boolean>(value !== "" && !isValid);
-
-    // console.log(props.gang);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValue(e.target.value);
@@ -70,7 +51,7 @@ const withInputValidation = <
 
     return (
       <WrappedComponent
-        {...(props as T)} //  & ParentProps
+        {...(props as T)}
         inputProps={inputProps}
         {...otherProps}
       />

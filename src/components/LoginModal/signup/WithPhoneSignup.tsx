@@ -10,8 +10,8 @@ import { PhoneInput, CodeInput } from "_/components/LoginModal/form-elements";
 function WithPhoneSignup() {
   return (
     <>
-      <PhoneInput />
-      <CodeInput />
+      <PhoneInput setIsAllowed={() => {}} />
+      <CodeInput disabled={true} setIsAllowed={() => {}} />
     </>
   );
 }

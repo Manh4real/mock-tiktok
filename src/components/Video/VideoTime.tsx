@@ -22,7 +22,7 @@ interface Props {
 }
 
 const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
-  const [shownTime, setShownTime] = useState<number>();
+  const [shownTime, setShownTime] = useState<number>(0);
 
   const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -31,13 +31,15 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
     handleMouseDown,
     progress,
     setProgress,
-    updateProgress,
+    interactiveUpdateProgress,
     current,
   } = useProgress(progressBarRef, {
     direction: "horizontal",
     initialValue: 0,
     target: videoRef.current?.duration || 0,
-    onMouseUp: () => {
+    onMouseUp: (hadMouseDownOnProgressBar) => {
+      if (!hadMouseDownOnProgressBar) return;
+
       if (videoRef.current) {
         videoRef.current.currentTime = current;
       }
@@ -72,7 +74,7 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
         className={styles["progress-bar"]}
         onMouseDown={handleMouseDown}
         onClick={(e: React.MouseEvent) => {
-          updateProgress(e, function (newProgress) {
+          interactiveUpdateProgress(e, function (newProgress) {
             if (videoRef.current) {
               videoRef.current.currentTime =
                 newProgress * videoRef.current.duration;
@@ -89,9 +91,7 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
         </div>
       </div>
       <div className={styles["time-num"]}>
-        <span className={styles["current-time"]}>
-          {formatTime(shownTime || 0)}
-        </span>
+        <span className={styles["current-time"]}>{formatTime(shownTime)}</span>
         <span style={{ marginInline: "2px" }}>/</span>
         <span className={styles["duration"]}>
           {formatTime(videoRef.current?.duration || 0)}

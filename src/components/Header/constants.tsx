@@ -55,6 +55,15 @@ export const INCOMMON_MENU_LIST: PopupMenuItem[] = [
         },
         {
           title: "Thai",
+          children: {
+            title: "Thai",
+            content: [
+              {
+                title: "Thai 1",
+              },
+              { title: "Thai 2" },
+            ],
+          },
         },
         {
           title: "Brazilian",

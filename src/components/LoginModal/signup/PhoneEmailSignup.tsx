@@ -10,6 +10,7 @@ import { BirthdayInput } from "_/components/LoginModal/form-elements";
 import WithEmailSignup from "./WithEmailSignup";
 import WithPhoneSignup from "./WithPhoneSignup";
 import Footer from "./Footer";
+import { FormLocation, FormProps } from "../types";
 
 // context
 
@@ -19,7 +20,7 @@ enum State {
   WITH_EMAIL,
 }
 
-function PhoneEmailSignup() {
+function PhoneEmailSignup({ at = FormLocation.MODAL }: FormProps) {
   const [state, setState] = useState<State>(State.WITH_PHONE);
 
   let desc: JSX.Element | null = null;
@@ -64,7 +65,7 @@ function PhoneEmailSignup() {
           </CustomButton>
         </div>
       </form>
-      <Footer />
+      <Footer at={at} />
     </>
   );
 }

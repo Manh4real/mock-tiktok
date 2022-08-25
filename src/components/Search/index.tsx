@@ -140,6 +140,9 @@ function Search() {
             value={inputValue}
             onChange={handleChange}
             onFocus={() => setVisible(true)}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              e.stopPropagation();
+            }}
             placeholder="Search accounts and videos"
             className={styles["header__search-input"]}
             autoComplete="off"

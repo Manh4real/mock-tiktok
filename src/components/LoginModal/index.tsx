@@ -36,6 +36,7 @@ export const History = React.createContext<HistoryContextValue>({
 });
 const initialState = [<LoginStart />];
 const initialFormState = [FormState.LOG_IN];
+
 function LoginModal(props: Props, ref: React.Ref<ModalRefObject | null>) {
   const modalRef = useRef<ModalRefObject>(null);
 

@@ -133,3 +133,18 @@
     }
   }
 }
+
+.like-button {
+  .icon--active {
+    animation: scaleUp 0.2s ease-out;
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

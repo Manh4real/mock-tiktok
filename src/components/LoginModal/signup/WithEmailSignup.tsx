@@ -15,8 +15,8 @@ function WithEmailSignup() {
   return (
     <>
       <EmailInput />
-      <PasswordInput />
-      <CodeInput />
+      <PasswordInput setIsAllowed={() => {}} />
+      <CodeInput disabled={true} setIsAllowed={() => {}} />
     </>
   );
 }

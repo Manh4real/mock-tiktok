@@ -1,6 +1,8 @@
 export function numberCompact(number: number | undefined) {
     if (number === undefined) return null;
 
+    if (number < 9999) return number;
+
     const a = ["", "K", "M", "B", "T"];
     const thou = Math.pow(10, 3);
 

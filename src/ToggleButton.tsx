@@ -7,7 +7,7 @@ function ToggleButton() {
   return (
     <button
       onClick={() => setIsLoggedIn((prev) => !prev)}
-      style={{ position: "fixed", top: "5px", left: "5px", zIndex: 999 }}
+      style={{ position: "fixed", top: "5px", left: "5px", zIndex: 10001 }}
     >
       Toggle
     </button>

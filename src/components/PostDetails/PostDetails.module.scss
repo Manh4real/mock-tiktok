@@ -1,0 +1,40 @@
+.container {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+
+  .left {
+    flex: 1 1 896px;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+    padding-inline: 80px;
+  }
+
+  .right {
+    flex: 0 0 544px;
+    width: 544px;
+    background: #fff;
+  }
+}
+
+.video-container {
+  height: 100vh;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  border: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 30px;
+  aspect-ratio: 1;
+}

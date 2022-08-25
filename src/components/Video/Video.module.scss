@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
 
-  &::after {
+  &:not(.has--windowHeight)::after {
     content: "";
 
     position: absolute;
@@ -17,7 +17,7 @@
   }
 
   &:hover {
-    &::after,
+    &:not(.has--windowHeight)::after,
     .controller {
       transition: all 0.2s ease-out;
 
@@ -53,12 +53,18 @@
   }
 }
 
+.placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .video {
   width: 100%;
   height: 100%;
 }
 .voice {
   position: relative;
+  user-select: none;
 
   &:hover {
     .volume {
@@ -72,6 +78,9 @@
     visibility: visible;
     opacity: 1;
   }
+}
+.mute-btn.has--mouseDown {
+  pointer-events: none;
 }
 .volume {
   display: none;
@@ -133,28 +142,43 @@
     margin-right: 10px;
 
     position: relative;
+
+    &:hover .currentTimeTrackContainer {
+      height: 4px;
+      transform: translateY(-25%);
+    }
+    &:hover .currentTimeTrack::after {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+    }
   }
   .currentTimeTrackContainer {
     position: relative;
     background: rgba(255, 255, 255, 0.2);
     width: 100%;
     height: 2px;
+    transition: all 0.1s ease-out;
   }
   .currentTimeTrack {
     position: absolute;
     left: 0;
     top: 0;
-    height: 2px;
+    height: 100%;
 
     width: 0;
     background: #fff;
 
     &::after {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+
       content: "";
       position: absolute;
 
       right: 0;
-      top: 1px;
+      top: 2px;
       transform: translate(50%, -50%);
 
       width: 12px;
@@ -166,5 +190,6 @@
   .time-num {
     width: 65px;
     text-align: right;
+    user-select: none;
   }
 }

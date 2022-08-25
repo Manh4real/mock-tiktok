@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 
 // styles
@@ -7,27 +7,27 @@ import styles from "../LoginModal.module.scss";
 // components
 import { AlertIcon, InputErrorMessage } from "./components";
 
-// context
-import { Submit } from "../login/WithPhoneLogin";
-
 // hoc
-import withInputValidation, {
-  WithInputValidation, // type
-} from "./withInputValidation";
+import withInputValidation from "_/hoc/withInputValidation";
 
-// enum
+// types
 import { ValidationType } from "_/validation/Validation";
+import { WithInputValidation } from "_/hoc/types";
+import { AllowedInputProperty } from "_/contexts/submit";
 
-interface Props extends WithInputValidation {}
+interface Props extends WithInputValidation {
+  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
+}
 
-function PhoneInput({ errorMessage, hasError, isValid, inputProps }: Props) {
-  const { setIsAllowed } = useContext(Submit);
-
+function PhoneInput({
+  setIsAllowed,
+  errorMessage,
+  hasError,
+  isValid,
+  inputProps,
+}: Props) {
   useEffect(() => {
-    setIsAllowed((prev) => ({
-      ...prev,
-      [ValidationType.PHONE]: { value: inputProps.value, isValid },
-    }));
+    setIsAllowed({ value: inputProps.value, isValid });
   }, [isValid, setIsAllowed, inputProps.value]);
 
   return (
