@@ -16,9 +16,7 @@ interface Props {
   to?: string;
   href?: string;
   onClick?: (e: React.MouseEvent) => void;
-  style?: {
-    [index: string]: string | number;
-  };
+  style?: React.CSSProperties;
   className?: string;
   children: React.ReactNode;
 }

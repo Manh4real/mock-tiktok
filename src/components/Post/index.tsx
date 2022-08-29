@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
@@ -20,31 +20,31 @@ import LikeButton from "./LikeButton";
 import CommentButton from "./CommentButton";
 
 // service
-import { getAccount } from "_/services/account";
+// import { getAccountByNickname } from "_/services/account";
 
 // utils
 import { numberCompact } from "_/utils";
 
 // types
-import { Account, Post as PostInterface } from "_/types";
+import { Video as VideoInterface } from "_/types";
 
 interface Props {
-  item: PostInterface;
+  item: VideoInterface;
 }
 
 function Post({ item }: Props) {
-  const [author, setAuthor] = useState<Account>();
+  const author = item.user;
 
-  useEffect(() => {
-    getAccount(item.author_id).then((author) => {
-      setAuthor(author);
-    });
-  }, [item.author_id]);
+  // useEffect(() => {
+  //   getAccountByNickname(item.user.nickname).then((author) => {
+  //     setAuthor(author);
+  //   });
+  // }, [item.user.nickname]);
 
   return (
     <div className={clsx(styles["container"], "scroll-snap-alignCenter")}>
       <div className={styles["post__follow-button"]}>
-        <FollowButton />
+        <FollowButton accountId={author.id} isFollowed={author.is_followed} />
       </div>
       <div className={styles["left"]}>
         {author ? (
@@ -79,25 +79,30 @@ function Post({ item }: Props) {
                   >
                     {author?.nickname}
                   </h3>
-                  <span className="author-nickname">{author?.full_name}</span>
+                  <span className="author-nickname">
+                    {author.full_name ||
+                      `${author.first_name} ${author.last_name}`}
+                  </span>
                   <span>&middot;</span>
-                  <TimeAgo time={item.posted_at} />
+                  <TimeAgo time={item.created_at} />
                 </Link>
               </AccountPopup>
             )}
           </header>
-          <div className={styles["post__content"]}>{item.content}</div>
+          <div className={styles["post__content"]}>{item.description}</div>
         </div>
         <div className={styles["post__audio"]}>
           <h4>
             <Link
-              to={item.audio_url || "/"}
+              to={item.music || "/"}
               className="hover-underlined flex-align-center"
               style={{ width: "max-content" }}
             >
               <MusicNote />
               <span style={{ marginLeft: "5px" }}>
-                original sound - {author?.full_name}
+                original sound -{" "}
+                {author?.full_name ||
+                  `${author.first_name} ${author.last_name}`}
               </span>
             </Link>
           </h4>
@@ -105,8 +110,8 @@ function Post({ item }: Props) {
         <div className={styles["post__watch"]}>
           <div className={styles["post__video"]}>
             <Video
-              src={item.video_url}
-              placeholder={item.placeholder}
+              src={item.file_url}
+              placeholder={item.thumb_url}
               postId={item.id}
             />
           </div>
@@ -122,7 +127,11 @@ function Post({ item }: Props) {
                   <span className={styles["icon"]}>
                     <IoMdShareAlt />
                   </span>
-                  <span>{numberCompact(item.shares_count)}</span>
+                  <span>
+                    {item.shares_count === 0
+                      ? "Share"
+                      : numberCompact(item.shares_count)}
+                  </span>
                 </button>
               </FeedShare>
             </div>

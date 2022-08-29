@@ -1,6 +1,9 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+
+// services
+import { login } from "_/services/auth";
 
 // components
 import {
@@ -13,28 +16,103 @@ import WithPhoneLogin from "./WithPhoneLogin";
 import ResetPassword from "./ResetPassword";
 import Footer from "./Footer";
 
+// icons
+import { Spinner } from "_/components/icons";
+
 // styles
 import styles from "../LoginModal.module.scss";
 
 // context
 import { History } from "..";
+import { CurrentUser } from "_/contexts";
+
+// config
+import routes from "_/config/routes";
+
+// context
+import { useLoginContext, useModalContext } from "_/contexts";
+import { SubmitProvider, useSubmit } from "_/contexts/submit/loginWithEmail";
 
 // types
 import { FormLocation, FormProps } from "../types";
-import routes from "_/config/routes";
+import { ValidationType } from "_/validation/Validation";
+import { AllowedInputProperty } from "_/contexts/submit";
 
 function WithEmailLogin(props: FormProps) {
   return (
-    <>
+    <SubmitProvider>
       <Form {...props} />
-    </>
+    </SubmitProvider>
   );
 }
 
 const Form = ({ at = FormLocation.MODAL }: FormProps) => {
   const { pushHistory } = useContext(History);
+  const { clearModal } = useModalContext();
 
+  const { setCurrentUserInfo } = useLoginContext();
+
+  // submit
+  const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  //
   const replace = true;
+
+  const handleSubmit = (e: React.MouseEvent) => {
+    // login with phone
+    if (!isAllGood) {
+      e.preventDefault();
+      return;
+    }
+
+    setLoading(true);
+    // fake
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   console.log("Logged in with email", isAllowed);
+    // }, 1000);
+
+    //
+    // console.log(isAllowed);
+
+    login(isAllowed.email.value, isAllowed.password.value)
+      .then((result: CurrentUser["info"]) => {
+        if (at === FormLocation.MODAL) clearModal();
+
+        alert("Logged in.");
+        // setIsLoggedIn(true);
+        setCurrentUserInfo(result);
+      })
+      .catch(() => {
+        alert("Invalid Email or Password.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const setIsAllowed_email = useCallback(
+    ({ value, isValid }: AllowedInputProperty) => {
+      setIsAllowed((prev) => ({
+        ...prev,
+        [ValidationType.EMAIL]: { value, isValid },
+      }));
+    },
+    [setIsAllowed]
+  );
+
+  const setIsAllowed_password = useCallback(
+    ({ value, isValid }: AllowedInputProperty) => {
+      setIsAllowed((prev) => ({
+        ...prev,
+        [ValidationType.PASSWORD]: { value, isValid },
+      }));
+    },
+    [setIsAllowed]
+  );
 
   return (
     <>
@@ -58,8 +136,8 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
               Log in with phone
             </Link>
           </div>
-          <EmailInput />
-          <PasswordInput setIsAllowed={() => {}} />
+          <EmailInput setIsAllowed={setIsAllowed_email} />
+          <PasswordInput setIsAllowed={setIsAllowed_password} />
           <Link
             to={routes.reset}
             className={styles["row"]}
@@ -77,9 +155,17 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
           <CustomButton
             primary
             large
+            disabled={!isAllGood}
             className={clsx(styles["row"], styles["submit-button"])}
+            onClick={handleSubmit}
           >
-            Log in
+            {loading ? (
+              <Spinner
+                style={{ width: "15px", height: "15px", color: "#fff" }}
+              />
+            ) : (
+              "Log in"
+            )}
           </CustomButton>
         </div>
       </form>

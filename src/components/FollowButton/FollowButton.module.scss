@@ -1,0 +1,12 @@
+.button {
+  &.is--following {
+    background: #fff;
+    color: var(--black);
+    border: 1px solid #1618231f;
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--grey-100);
+    }
+  }
+}

@@ -1,0 +1,35 @@
+.container {
+  background: var(--grey-100);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      #e5e5e520,
+      #e5e5e530,
+      #e5e5e580,
+      #e5e5e580,
+      #e5e5e530,
+      #e5e5e520,
+      transparent
+    );
+
+    animation: skeleton-animate 1s infinite linear;
+  }
+}
+
+@keyframes skeleton-animate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

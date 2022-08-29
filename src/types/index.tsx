@@ -40,6 +40,9 @@ export interface Account {
   created_at: string;
   updated_at: string;
 
+  videos: Video[];
+  is_followed: boolean;
+
   onLive?: boolean;
 }
 
@@ -50,8 +53,48 @@ export interface Post {
   likes_count: number;
   comments_count: number;
   shares_count: number;
+  views_count: number;
   audio_url: string;
   video_url: string;
   posted_at: number;
   author_id: number;
+}
+
+export interface Video {
+  id: number;
+  uuid: string;
+  user_id: number;
+  type: string;
+  thumb_url: string;
+  file_url: string;
+  description: string;
+  music: string;
+  is_liked: boolean;
+  likes_count: number;
+  comments_count: number;
+  shares_count: number;
+  views_count: number;
+  viewable: "public" | "private";
+  allows: string[];
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+  user: Account;
+  meta: {
+    file_size: number;
+    file_format: string;
+    mime_type: string;
+    playtime_string: string;
+    playtime_seconds: number;
+    bitrate: number;
+    video: {
+      dataformat: string;
+      rotate: number;
+      resolution_x: number;
+      resolution_y: number;
+      fourcc: string;
+      fourcc_lookup: string;
+      frame_rate: number;
+    };
+  };
 }

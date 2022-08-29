@@ -64,7 +64,7 @@ function ResetPassword({
             )}
           </div>
 
-          {state === State.WITH_EMAIL && <EmailInput />}
+          {state === State.WITH_EMAIL && <EmailInput setIsAllowed={() => {}} />}
           {state === State.WITH_PHONE && <PhoneInput setIsAllowed={() => {}} />}
 
           <CodeInput disabled={true} setIsAllowed={() => {}} />

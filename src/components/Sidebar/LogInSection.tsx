@@ -10,15 +10,22 @@ import CustomButton from "_/components/CustomButton";
 // styles
 import styles from "./Sidebar.module.scss";
 
+// context
+import { useLoginContext } from "_/contexts";
+
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
 
 interface Props extends WithLoginModal {}
 
 const LogInSection = ({ showLoginModal }: Props) => {
+  const { isLoggedIn } = useLoginContext();
+
   const handleClick = () => {
     showLoginModal();
   };
+
+  if (isLoggedIn) return <></>;
 
   return (
     <div

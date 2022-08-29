@@ -1,0 +1,68 @@
+.container {
+  padding: 16px 24px 67px 16px;
+
+  header {
+    position: sticky;
+    top: 60px;
+    background: #fff;
+    margin-top: -16px;
+    padding-top: 8px;
+    height: 50px;
+    border-bottom: 0.5px solid #1618231f;
+  }
+
+  .title {
+    // margin-top: -16px;
+    padding-block: 9px;
+    color: var(--black);
+    font-weight: 500;
+  }
+  .results {
+    margin-top: 16px;
+  }
+}
+
+.row {
+  display: flex;
+  border-bottom: 0.5px solid #1618231f;
+
+  &:hover {
+    background: #f8f8f8;
+  }
+  .link {
+    margin: 16px;
+    width: 100%;
+  }
+
+  .image {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+  }
+  .right {
+    font-size: 14px;
+    flex-grow: 1;
+  }
+  .subtitle {
+    color: var(--grey);
+  }
+  .nickname {
+    font-size: 18px;
+  }
+  .bio {
+    margin-top: 4px;
+  }
+}
+
+.load-more-button {
+  color: var(--grey-200);
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  margin-block: 16px;
+  height: 24px;
+
+  span {
+    margin-right: 8px;
+  }
+}

@@ -8,17 +8,30 @@ import { withLoginModal } from "_/hoc";
 import styles from "./FollowButton.module.scss";
 
 // hooks
+import { useFollow } from "_/hooks";
 import { useLoginContext } from "_/contexts/AppContext";
 
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
+import clsx from "clsx";
 
 interface Props extends WithLoginModal {
-  onClick: (e: React.MouseEvent) => void;
+  isFollowed: boolean;
+  accountId: number;
+  style?: React.CSSProperties;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
-function FollowButton({ onClick, showLoginModal }: Props) {
+function FollowButton({
+  isFollowed,
+  accountId,
+  onClick = () => {},
+  showLoginModal,
+  style,
+}: Props) {
   const { isLoggedIn } = useLoginContext();
+
+  const [followed, toggleFollow] = useFollow(isFollowed, accountId);
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
@@ -26,12 +39,20 @@ function FollowButton({ onClick, showLoginModal }: Props) {
       showLoginModal();
     }
 
-    onClick(e);
+    // onClick(e);
+    toggleFollow();
   };
 
   return (
-    <CustomButton primary onClick={handleClick} className={styles["button"]}>
-      Follow
+    <CustomButton
+      primary
+      style={style}
+      onClick={handleClick}
+      className={clsx(styles["button"], {
+        [styles["is--following"]]: followed,
+      })}
+    >
+      {followed ? "Following" : "Follow"}
     </CustomButton>
   );
 }

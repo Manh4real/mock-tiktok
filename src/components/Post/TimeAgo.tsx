@@ -4,7 +4,7 @@ import React from "react";
 import { fromNow } from "_/config/moment";
 
 interface Props {
-  time: number;
+  time: number | string;
 }
 
 const TimeAgo = ({ time }: Props) => {

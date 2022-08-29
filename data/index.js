@@ -9,7 +9,7 @@ export const videoApi = axios.create({
 const sampleAccounts = [
   {
     id: 12367855,
-    nickname: "selena_gomez2301asdfasdfasdfsdf ",
+    nickname: "selena_gomez2301asdfasdfasdfsdf",
     full_name: "Selena Gomez",
     avatar:
       "https://ca-times.brightspotcdn.com/dims4/default/037e6e5/2147483647/strip/true/crop/2160x2160+0+0/resize/840x840!/format/webp/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F8f%2F8f%2F462226764ec386fc2a325793885d%2Fpic-10-1sophie-muller-copy.jpg",
@@ -121,12 +121,12 @@ const sampleAccounts = [
     full_name: "Squat University",
     tick: true,
     avatar: "",
-    followers_count: 32527900,
-    likes_count: 28860000,
+    followers_count: 2527900,
+    likes_count: 2860000,
     first_name: "Squat",
     last_name: "University",
     bio: "rich Electronic grey Loan Account Soap Lari conglomeration zero Steel",
-    followings_count: 110,
+    followings_count: 10,
     website_url: "courteous-builder.org",
     facebook_url: "nocturnal-sprout.info",
     youtube_url: "perfect-housewife.net",
@@ -142,12 +142,12 @@ const sampleAccounts = [
     full_name: "Joe Stanek",
     tick: true,
     avatar: "",
-    followers_count: 32527900,
-    likes_count: 28860000,
+    followers_count: 527900,
+    likes_count: 860000,
     first_name: "Joe",
     last_name: "Stanek",
     bio: "rich Electronic grey Loan Account Soap Lari conglomeration zero Steel",
-    followings_count: 110,
+    followings_count: 11,
     website_url: "courteous-builder.org",
     facebook_url: "nocturnal-sprout.info",
     youtube_url: "perfect-housewife.net",
@@ -193,6 +193,7 @@ const randomData = async () => {
       comments_count: +faker.random.numeric(3),
       likes_count: +faker.random.numeric(4),
       shares_count: +faker.random.numeric(2),
+      views_count: i % 2 ? faker.random.numeric(4) : faker.random.numeric(5),
       posted_at: Date.now() - i * 24 * 60 * 60 * 1000,
     });
     data.accounts.push({

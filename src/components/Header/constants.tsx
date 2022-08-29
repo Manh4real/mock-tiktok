@@ -1,6 +1,5 @@
 // icons
 import { FiLogOut, FiSettings } from "react-icons/fi";
-import { CgProfile } from "react-icons/cg";
 import {
   Language,
   QuestionMark,
@@ -84,11 +83,6 @@ export const INCOMMON_MENU_LIST: PopupMenuItem[] = [
 ];
 
 export const PROFILE_MENU_LIST: PopupMenuItem[] = [
-  {
-    icon: <CgProfile />,
-    to: "/@gang4L",
-    title: "View profile",
-  },
   {
     icon: <TiktokCoin />,
     to: "/coin",

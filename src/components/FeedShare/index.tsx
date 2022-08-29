@@ -15,11 +15,13 @@ import {
 import { BsChevronDown, BsFacebook } from "react-icons/bs";
 
 // types
+import { Placement } from "@popperjs/core";
 interface Props {
+  placement?: Placement;
   children: JSX.Element;
 }
 
-function FeedShare({ children }: Props) {
+function FeedShare({ placement = "top-start", children }: Props) {
   const [expanded, setExpanded] = useState<Boolean>(false);
 
   const handleClick = () => {
@@ -30,7 +32,7 @@ function FeedShare({ children }: Props) {
     <div>
       <Tippy
         interactive
-        placement="top-start"
+        placement={placement}
         delay={[300, 100]}
         onHidden={() => {
           setExpanded(false);

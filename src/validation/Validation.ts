@@ -1,3 +1,4 @@
+import moment from "moment";
 import Patterns from "./Patterns";
 
 export interface ValidateValue {
@@ -11,6 +12,7 @@ interface ValidationClass {
     validatePassword: (value: string) => ValidateValue;
     validatePhone: (value: string) => ValidateValue;
     validateUsername: (value: string) => ValidateValue;
+    validateBirthday: (value: string) => ValidateValue
 }
 export enum ValidationType {
     CODE = "code",
@@ -19,6 +21,11 @@ export enum ValidationType {
     PHONE = "phone",
     USERNAME = "username",
     BIRTHDAY = "birthday"
+}
+export interface Birthday {
+    day: string | number,
+    month: string | number,
+    year: string | number
 }
 
 class Validation implements ValidationClass {
@@ -37,7 +44,7 @@ class Validation implements ValidationClass {
             case ValidationType.USERNAME:
                 return this.validateUsername(value);
             case ValidationType.BIRTHDAY:
-                return { isValid: true, errorMessage: "" };
+                return this.validateBirthday(value);
         }
     }
     validateCode(value: string): ValidateValue {
@@ -59,6 +66,13 @@ class Validation implements ValidationClass {
     validateUsername(value: string): ValidateValue {
         const check = Patterns.username.test(value);
         return { isValid: check, errorMessage: "" };
+    }
+    validateBirthday(value: string): ValidateValue {
+        const { day, month, year } = JSON.parse(value) as Birthday;
+        const date = moment(`${year}-${month}-${day}`);
+        const check = date.isValid();
+
+        return { isValid: check, errorMessage: "Please enter your birthday" }
     }
 }
 

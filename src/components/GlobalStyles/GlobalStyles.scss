@@ -54,7 +54,11 @@ html *::-webkit-scrollbar-track {
 }
 
 //
-
+.text-overflow-elipse {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .small-font {
   font-size: 12px;
   color: var(--grey);
@@ -81,6 +85,21 @@ html *::-webkit-scrollbar-track {
 }
 
 //
+.circle {
+  border-radius: 50%;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+.grey-outlined {
+  background: #fff;
+  color: var(--black);
+  border: 1px solid #1618231f;
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--grey-100);
+  }
+}
 .hover-underlined {
   &:hover {
     text-decoration: underline;

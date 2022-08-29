@@ -1,9 +1,12 @@
 import api from "_/api";
 
-export const getUsers = async (q: string, type = "less") => {
-    const res = await api.get("/users/search", {
-        params: { q, type },
-      });
+type QueryType = "more" | "less";
 
-    return res.data;
+export const getUsers = async (q: string, type: QueryType = "less", page: number = 1) => {
+  const res = await api.get("/users/search", {
+    params: { q, type, page },
+  });
+  const data = res.data;
+
+  return data;
 }

@@ -15,6 +15,7 @@ function Tooltip({ title, children }: Props) {
     <Tippy
       zIndex={10000}
       delay={[0, 300]}
+      placement="bottom"
       content={
         <div className={styles["tooltip"]} tabIndex={-1}>
           {title}

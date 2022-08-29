@@ -19,7 +19,7 @@ import { numberCompact } from "_/utils";
 import { Account as AccountInterface } from "_/types";
 
 interface Props {
-  account: Partial<AccountInterface>;
+  account: AccountInterface;
   children: JSX.Element;
 }
 
@@ -43,7 +43,11 @@ function AccountPopup({ account, children }: Props) {
               <Link to={"/@" + account.nickname} className={styles["avatar"]}>
                 <Image src={account.avatar} width={44} height={44} />
               </Link>
-              <FollowButton onClick={handleClick} />
+              <FollowButton
+                onClick={handleClick}
+                accountId={account.id}
+                isFollowed={account.is_followed}
+              />
             </div>
             <Link to={"/@" + account.nickname}>
               <div className={styles["text"]}>
@@ -51,18 +55,19 @@ function AccountPopup({ account, children }: Props) {
                   <span className={styles["username"]}>{account.nickname}</span>
                   {account.tick && <VerifyBadge />}
                 </h4>
-                <small className={styles["desc"]}>{account.full_name}</small>
+                <small className={styles["desc"]}>
+                  {account.full_name ||
+                    `${account.first_name} ${account.last_name}`}
+                </small>
               </div>
             </Link>
             <div className={styles["numbers"]}>
               <span>
-                <strong>
-                  {numberCompact(account.followers_count) || "--"}
-                </strong>
+                <strong>{numberCompact(account.followers_count)}</strong>
                 Followers
               </span>
               <span>
-                <strong>{numberCompact(account.likes_count) || "--"}</strong>
+                <strong>{numberCompact(account.likes_count)}</strong>
                 Likes
               </span>
             </div>

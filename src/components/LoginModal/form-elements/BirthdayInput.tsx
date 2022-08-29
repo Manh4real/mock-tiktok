@@ -1,10 +1,57 @@
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // styles
 import styles from "../LoginModal.module.scss";
 
-function BirthdayInput() {
+// hoc
+// import withInputValidation from "_/hoc/withInputValidation";
+
+// types
+import Validation, { Birthday, ValidationType } from "_/validation/Validation";
+import { AllowedInputProperty } from "_/contexts/submit";
+// import { WithInputValidation } from "_/hoc/types";
+
+interface Props {
+  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
+}
+
+function BirthdayInput({ setIsAllowed }: Props) {
+  const today = new Date();
+  const [value, setValue] = useState<Birthday>({
+    day: today.getDate(),
+    month: today.getMonth() + 1,
+    year: today.getFullYear(),
+  });
+
+  // const validate = new Validation().validate(
+  //   ValidationType.BIRTHDAY,
+  //   JSON.stringify(value)
+  // );
+  const validate = (value: Birthday) =>
+    new Validation().validate(ValidationType.BIRTHDAY, JSON.stringify(value));
+
+  const [isValid, setIsValid] = useState<boolean>(validate(value).isValid);
+  // const [hasError, setHasError] = useState<boolean>(
+  //   value.day !== "" && value.month !== "" && value.year !== "" && !isValid
+  // );
+
+  // const handleBlur: React.FocusEventHandler<HTMLSelectElement> = () => {
+  //   setHasError(
+  //     value.day !== "" && value.month !== "" && value.year !== "" && !isValid
+  //   );
+  // };
+  // const handleFocus: React.FocusEventHandler<HTMLSelectElement> = () => {
+  //   setHasError(false);
+  // };
+
+  useEffect(() => {
+    setIsValid(validate(value).isValid);
+  }, [value]);
+  useEffect(() => {
+    setIsAllowed({ value: JSON.stringify(value), isValid });
+  }, [isValid, setIsAllowed, value]);
+
   return (
     <div>
       <div className={clsx(styles["row"], styles["form__desc"])}>
@@ -18,7 +65,18 @@ function BirthdayInput() {
             styles["form__date-selector"]
           )}
         >
-          <select className={styles["form__select"]}>
+          <select
+            className={styles["form__select"]}
+            value={+value.month}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setValue((prev) => {
+                return {
+                  ...prev,
+                  month: +e.target.value,
+                };
+              });
+            }}
+          >
             <option value="0">Month</option>
             <option value="1">January</option>
             <option value="2">February</option>
@@ -40,8 +98,19 @@ function BirthdayInput() {
             styles["form__date-selector"]
           )}
         >
-          <select className={styles["form__select"]}>
-            <option value="0">Day</option>
+          <select
+            className={styles["form__select"]}
+            value={value.day}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setValue((prev) => {
+                return {
+                  ...prev,
+                  day: e.target.value,
+                };
+              });
+            }}
+          >
+            <option value="-999">Day</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -79,8 +148,20 @@ function BirthdayInput() {
             styles["form__date-selector"]
           )}
         >
-          <select className={styles["form__select"]}>
-            <option value="0">Year</option>
+          <select
+            className={styles["form__select"]}
+            value={value.year}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setValue((prev) => {
+                return {
+                  ...prev,
+                  year: e.target.value,
+                };
+              });
+            }}
+          >
+            <option value="-999">Year</option>
+            <YearOptions />
           </select>
         </div>
       </div>
@@ -101,5 +182,21 @@ function BirthdayInput() {
     </div>
   );
 }
+
+const YearOptions = () => {
+  return (
+    <>
+      {new Array(90).fill("").map((_, index) => {
+        const thisYear = new Date().getFullYear();
+
+        return (
+          <option key={index} value={`${thisYear - index}`}>
+            {thisYear - index}
+          </option>
+        );
+      })}
+    </>
+  );
+};
 
 export default BirthdayInput;

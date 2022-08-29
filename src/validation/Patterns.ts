@@ -9,7 +9,7 @@ interface PatternObject {
 const Patterns: PatternObject = {
     code: /^\d{6}$/,
     email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    password: /^\S{8,20}$/,
+    password: /^\S{1,20}$/,
     phone: /^\d{10,15}$/,
     username: /./,
 }

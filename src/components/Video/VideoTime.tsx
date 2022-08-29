@@ -57,14 +57,18 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
       setProgress(videoRef.current.currentTime / videoRef.current.duration);
     }
   }, [hasMouseDown, setProgress, videoRef]);
+  const resetTime = useCallback(() => {
+    setProgress(0);
+  }, [setProgress]);
 
   //
   useImperativeHandle(
     ref,
     () => ({
       handleTimeUpdate,
+      resetTime,
     }),
-    [handleTimeUpdate]
+    [handleTimeUpdate, resetTime]
   );
 
   return (

@@ -20,6 +20,15 @@
     background: rgba(22, 24, 35, 0.08);
   }
   .post__follow-button {
+    .is--following {
+      border-color: #1618231f;
+      color: var(--black);
+
+      &:hover {
+        background: var(--grey-100);
+      }
+    }
+
     position: absolute;
     background: #fff;
     right: 0;

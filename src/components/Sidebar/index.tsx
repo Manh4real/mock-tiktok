@@ -4,7 +4,7 @@ import React from "react";
 import { useLoginContext } from "_/contexts/AppContext";
 
 // components
-import CommonSidebar from "./common";
+import CommonSidebar, { SidebarDelimiter } from "./common";
 import LogInSection from "./LogInSection";
 import Suggested from "./Suggested";
 
@@ -15,6 +15,8 @@ function Sidebar() {
     <CommonSidebar>
       <React.Fragment>
         {!isLoggedIn && <LogInSection />}
+        <SidebarDelimiter />
+
         <Suggested />
       </React.Fragment>
     </CommonSidebar>

@@ -43,11 +43,11 @@ const WithPhoneLogin = (props: FormProps) => {
 //
 function Form({ at = FormLocation.MODAL }: FormProps) {
   const { pushHistory } = useContext(History);
+
+  // submit
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
 
   const [isWithPassword, setIsWithPassword] = useState<boolean>(false);
-
-  // submit
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = (e: React.MouseEvent) => {

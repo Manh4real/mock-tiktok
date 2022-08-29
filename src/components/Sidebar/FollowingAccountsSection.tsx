@@ -24,17 +24,24 @@ const FollowingAccountsSection = () => {
   const [accounts, setAccounts] = useState<AccountInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { isLoggedIn } = useLoginContext();
+  const { currentUser, isLoggedIn, token } = useLoginContext();
 
   useEffect(() => {
+    if (!currentUser) return;
+
+    if (!token) return;
+
     getFollowingAccounts()
       .then((accounts) => {
         setAccounts(accounts);
       })
+      .catch(() => {
+        console.log("Error: Can't get following accounts.");
+      })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [currentUser, token]);
 
   if (!isLoggedIn) return <></>;
 

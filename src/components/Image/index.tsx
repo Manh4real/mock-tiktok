@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // variables
 import { images } from "_/images";
@@ -18,7 +18,12 @@ function Image({
   className,
   ...others
 }: ImageProps) {
-  const [fallbackImage, setFallbackImage] = useState("");
+  const [fallbackImage, setFallbackImage] = useState(src);
+
+  //
+  useEffect(() => {
+    setFallbackImage(src);
+  }, [src]);
 
   const handleError = () => {
     setFallbackImage(images.userAvatarDefault);
@@ -27,7 +32,7 @@ function Image({
   return (
     <img
       className={clsx(styles["image"], className)}
-      src={fallbackImage || src}
+      src={fallbackImage}
       alt={alt}
       width={width}
       height={height}

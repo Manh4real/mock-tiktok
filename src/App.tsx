@@ -15,6 +15,7 @@ import {
   LoginWithEmail,
   ResetPasswordPage,
   PhoneEmailSignupPage,
+  Logout,
 } from "./pages";
 
 // layouts
@@ -27,7 +28,6 @@ import {
 
 // components
 import ToTopButton from "_/components/ToTopButton";
-import ToggleButton from "_/ToggleButton";
 import { AppModal } from "_/modals";
 
 import { LoginContextProvider, ModalContextProvider } from "_/contexts";
@@ -40,7 +40,6 @@ function App() {
     <LoginContextProvider>
       <ModalContextProvider>
         <BrowserRouter>
-          <ToggleButton />
           <AppModal />
           <Routes>
             <Route element={<DefaultLayout />}>
@@ -57,11 +56,9 @@ function App() {
             <Route
               path={routes.profile}
               element={
-                <PrivateLayout>
-                  <FullWidthLayout>
-                    <Profile />
-                  </FullWidthLayout>
-                </PrivateLayout>
+                <FullWidthLayout>
+                  <Profile />
+                </FullWidthLayout>
               }
             />
             <Route element={<PrivateLayout />}>
@@ -78,6 +75,7 @@ function App() {
               <Route index element={<Signup />} />
               <Route path={"phone-email"} element={<PhoneEmailSignupPage />} />
             </Route>
+            <Route path={routes.logout} element={<Logout />} />
             <Route path={routes.reset} element={<ResetPasswordPage />}></Route>
           </Routes>
           <ToTopButton />

@@ -5,4 +5,5 @@ export interface VoiceRefObject {
 }
 export interface VideoTimeRefObject {
     handleTimeUpdate: () => void;
+    resetTime: () => void
 }

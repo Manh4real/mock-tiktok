@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 
 // styles
@@ -10,13 +10,26 @@ import { AlertIcon, InputErrorMessage } from "./components";
 // hoc
 import withInputValidation from "_/hoc/withInputValidation";
 
-// enum
+// types
 import { ValidationType } from "_/validation/Validation";
+import { AllowedInputProperty } from "_/contexts/submit";
 import { WithInputValidation } from "_/hoc/types";
 
-interface Props extends WithInputValidation {}
+interface Props extends WithInputValidation {
+  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
+}
 
-function EmailInput({ errorMessage, hasError, inputProps }: Props) {
+function EmailInput({
+  isValid,
+  errorMessage,
+  hasError,
+  inputProps,
+  setIsAllowed,
+}: Props) {
+  useEffect(() => {
+    setIsAllowed({ value: inputProps.value, isValid });
+  }, [isValid, setIsAllowed, inputProps.value]);
+
   return (
     <div>
       <div

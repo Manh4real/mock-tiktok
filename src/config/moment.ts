@@ -23,6 +23,9 @@ moment.updateLocale('vn', {
     }
 });
 
-export const fromNow = (time: number) => {
+export const fromNow = (time: number | string) => {
     return moment(time).fromNow();
 }
+// export const fromNow_string = (time: string) => {
+//     return moment(time).fromNow();
+// }

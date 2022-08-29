@@ -164,6 +164,7 @@ interface Post {
   comments_count: number,
   likes_count: number,
   shares_count: number,
+  views_count: number,
   posted_at: number,
 }
 interface Account {

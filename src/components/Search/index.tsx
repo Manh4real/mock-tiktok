@@ -115,6 +115,7 @@ function Search() {
     <div ref={searchContainerRef} className={styles["header__search-ctn"]}>
       <Tippy
         interactive
+        placement="bottom"
         onClickOutside={() => setVisible(false)}
         visible={visible && results.length > 0}
         render={(attrs) => (
@@ -140,9 +141,9 @@ function Search() {
             value={inputValue}
             onChange={handleChange}
             onFocus={() => setVisible(true)}
-            onKeyDown={(e: React.KeyboardEvent) => {
-              e.stopPropagation();
-            }}
+            // onKeyDown={(e: React.KeyboardEvent) => {
+            //   e.stopPropagation();
+            // }}
             placeholder="Search accounts and videos"
             className={styles["header__search-input"]}
             autoComplete="off"

@@ -8,52 +8,81 @@ import { Spinner } from "_/components/icons";
 import Post from "_/components/Post";
 
 // services
-import { getPosts } from "_/services/post";
+// import { getPosts } from "_/services/post";
+import { getVideoList } from "_/services/video";
 
 // styles
 import styles from "./Home.module.scss";
 
 // types
-import { Post as PostInterface } from "_/types";
+import { Video, Video as VideoInterface } from "_/types";
 
 const Posts = () => {
   const [page, setPage] = useState<number>(1);
-  const [end, setEnd] = useState<boolean>(false);
-  const [posts, setPosts] = useState<PostInterface[]>([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  // const [end, setEnd] = useState<boolean>(false);
+  const [posts, setPosts] = useState<VideoInterface[]>([]);
 
   const handleLoadMore = () => {
-    if (end) return;
+    // if (end) return;
 
-    const nextPage = page + 1;
-    getPosts(nextPage).then((newPosts) => {
-      if (newPosts.length <= 0) {
-        setEnd(true);
-        return;
-      }
+    // const nextPage = page + 1;
+    // getPosts(nextPage).then((newPosts) => {
+    //   if (newPosts.length <= 0) {
+    //     setEnd(true);
+    //     return;
+    //   }
 
-      setPosts((prev) => [...prev, ...newPosts]);
-      setPage(nextPage);
+    //   setPosts((prev) => [...prev, ...newPosts]);
+    //   setPage(nextPage);
+    // });
+
+    if (page >= totalPage) return;
+
+    getVideoList("for-you", page + 1).then((data) => {
+      const rs = data.data as Video[];
+
+      setPosts((prev) => [...prev, ...rs]);
+
+      //
+      const currentPage = data.meta.pagination.current_page;
+      setPage(currentPage);
     });
   };
-
-  useEffect(() => {});
-
-  useEffect(() => {
-    // initial
-    getPosts().then((newPosts) => {
-      if (newPosts.length === 0) {
-        setEnd(true);
-        return;
-      }
-
-      setPosts(newPosts);
-    });
-  }, []);
 
   //
   useEffect(() => {
     if (page === 1) window.scrollTo(0, 0);
-  }, [posts, page]);
+  });
+
+  useEffect(() => {
+    // initial
+    // getPosts().then((newPosts) => {
+    //   if (newPosts.length === 0) {
+    //     setEnd(true);
+    //     return;
+    //   }
+
+    //   setPosts(newPosts);
+    // });
+    getVideoList().then((data) => {
+      const rs = data.data as Video[];
+
+      setPosts(rs);
+
+      //
+      const total = data.meta.pagination.total_pages;
+      setTotalPage(total);
+
+      const currentPage = data.meta.pagination.current_page;
+      setPage(currentPage);
+    });
+  }, []);
+
+  //
+  // useEffect(() => {
+  //   if (page === 1) window.scrollTo(0, 0);
+  // }, [posts, page]);
 
   // #region
   // ⚠️🆘 Experiment: Infinite scroll
@@ -106,7 +135,7 @@ const Posts = () => {
     <InfiniteScroll
       dataLength={posts.length} //This is important field to render the next data
       next={handleLoadMore}
-      hasMore={!end}
+      hasMore={page < totalPage}
       scrollThreshold={0.8}
       loader={
         <div className={styles["loader"]}>

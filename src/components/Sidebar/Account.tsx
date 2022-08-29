@@ -18,7 +18,14 @@ interface Props {
 }
 
 function Account({ account }: Props, ref: React.Ref<HTMLDivElement>) {
-  const { nickname, avatar, full_name, tick = false, onLive = false } = account;
+  const {
+    nickname,
+    avatar,
+    first_name,
+    last_name,
+    tick = false,
+    onLive = false,
+  } = account;
   const onLiveImageStyle = onLive ? { width: "26px", height: "26px" } : {};
 
   return (
@@ -35,7 +42,9 @@ function Account({ account }: Props, ref: React.Ref<HTMLDivElement>) {
             <span>{nickname}</span>
             {tick && <VerifyBadge />}
           </div>
-          <div className={styles["sidebar__acc-user-desc"]}>{full_name}</div>
+          <div
+            className={styles["sidebar__acc-user-desc"]}
+          >{`${first_name} ${last_name}`}</div>
         </div>
       </Link>
     </div>

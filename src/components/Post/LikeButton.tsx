@@ -41,17 +41,17 @@ const LikeButton = ({ postId, likesCount, showLoginModal }: Props) => {
 
     // fake
     if (!active) {
-      likePost(postId, value + 1).then((result) => {
+      likePost(postId).then((result) => {
         setValue(result);
       });
     } else {
-      dislikePost(postId, value - 1).then((result) => {
+      dislikePost(postId).then((result) => {
         setValue(result);
       });
     }
 
     setActive((prev) => !prev);
-  }, [active, value, isLoggedIn, postId, showLoginModal]);
+  }, [active, isLoggedIn, postId, showLoginModal]);
 
   // dom events
   useEffect(() => {
