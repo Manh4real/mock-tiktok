@@ -13,9 +13,9 @@ interface Props {
 }
 
 function PrivateLayout({ children }: Props) {
-  const { isLoggedIn } = useLoginContext();
+  const { token } = useLoginContext();
 
-  if (!isLoggedIn) return <Navigate to={routes.login} replace={true} />;
+  if (!token) return <Navigate to={routes.login} replace={true} />;
 
   return (
     <>

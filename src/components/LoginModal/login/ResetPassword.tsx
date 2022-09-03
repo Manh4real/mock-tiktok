@@ -14,6 +14,7 @@ import Footer from "./Footer";
 // styles
 import styles from "../LoginModal.module.scss";
 
+// type
 import { FormLocation, FormProps } from "../types";
 enum State {
   WITH_EMAIL,

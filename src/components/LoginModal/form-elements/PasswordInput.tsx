@@ -6,19 +6,19 @@ import { Eye } from "_/components/icons";
 
 // styles
 import styles from "../LoginModal.module.scss";
+
+// components
 import { AlertIcon, InputErrorMessage } from "./components";
 
 // hoc
 import withInputValidation from "_/hoc/withInputValidation";
 
 // types
-import { ValidationType } from "_/validation/Validation";
 import { WithInputValidation } from "_/hoc/types";
-import { AllowedInputProperty } from "_/contexts/submit";
+import { ValidationType } from "_/validation/Validation";
+import { SubmitContext__InputProps } from "_/contexts/submit";
 
-interface Props extends WithInputValidation {
-  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
-}
+interface Props extends WithInputValidation, SubmitContext__InputProps {}
 
 function PasswordInput({
   setIsAllowed,

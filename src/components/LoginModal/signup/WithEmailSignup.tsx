@@ -15,6 +15,7 @@ import {
   CodeInput,
   BirthdayInput,
 } from "_/components/LoginModal/form-elements";
+import { EmailSignupDesc } from "./components";
 
 // context
 import { SubmitProvider } from "_/contexts/submit/signupWithEmail";
@@ -23,15 +24,14 @@ import { useSubmit } from "_/contexts/submit/signupWithEmail";
 // services
 import { signup } from "_/services/auth";
 
+// context
+import { useModalContext } from "_/contexts";
+import { CurrentUser, useLoginContext } from "_/contexts";
+
 // types
 import { AllowedInputProperty } from "_/contexts/submit";
 import { ValidationType } from "_/validation/Validation";
-import { EmailSignupDesc } from "./components";
 import { FormLocation } from "../types";
-import { CurrentUser, useLoginContext } from "_/contexts";
-
-// context
-import { useModalContext } from "_/contexts";
 
 interface Props {
   at: FormLocation;
@@ -55,8 +55,6 @@ const Form = ({ at, toggleToEmail }: Props) => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  console.log(isAllowed);
-
   //
   const handleSubmit = (e: React.MouseEvent) => {
     // login with phone
@@ -67,23 +65,16 @@ const Form = ({ at, toggleToEmail }: Props) => {
 
     setLoading(true);
 
-    // fake
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   console.log("Signed up with email", isAllowed);
-    // }, 1000);
-
     //
     signup(isAllowed.email.value, isAllowed.password.value)
       .then((result: CurrentUser["info"]) => {
         if (at === FormLocation.MODAL) clearModal();
 
-        alert("Logged in.");
-        // setIsLoggedIn(true);
+        alert("Signed up.");
         setCurrentUserInfo(result);
       })
       .catch(() => {
-        alert("Invalid Email or Password.");
+        alert("This email has been used.");
       })
       .finally(() => {
         setLoading(false);

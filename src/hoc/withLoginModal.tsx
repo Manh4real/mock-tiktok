@@ -29,7 +29,6 @@ function withLoginModal<T extends WithLoginModal = WithLoginModal>(
     return (
       <>
         <WrappedComponent {...(props as T)} showLoginModal={showLoginModal} />
-        {/* <LoginModal ref={loginModalRef} /> */}
       </>
     );
   };

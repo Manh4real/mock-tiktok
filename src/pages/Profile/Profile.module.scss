@@ -50,6 +50,9 @@
   .numbers span + span {
     margin-left: 20px;
   }
+  .numbers strong {
+    margin-right: 4px;
+  }
 }
 
 .follow-section {
@@ -98,6 +101,9 @@
     &.active {
       color: var(--black);
       border-bottom: 2px solid var(--black);
+    }
+    &:disabled {
+      pointer-events: none;
     }
   }
 }

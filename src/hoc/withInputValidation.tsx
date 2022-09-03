@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 // variables
 import Validation from "_/validation/Validation";
@@ -35,12 +35,18 @@ const withInputValidation = <
     const handleFocus: React.FocusEventHandler<HTMLInputElement> = () => {
       setHasError(false);
     };
+    const reset = useCallback(() => {
+      setValue("");
+      setHasError(false);
+      setIsValid(false);
+    }, []);
 
     const otherProps = {
       hasError: hasError,
       isEmpty: value === "",
       isValid: isValid,
       errorMessage: validatingResult.errorMessage,
+      reset: reset,
     };
     const inputProps = {
       value: value,

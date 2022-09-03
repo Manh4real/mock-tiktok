@@ -33,6 +33,9 @@ import routes from "_/config/routes";
 import { useLoginContext, useModalContext } from "_/contexts";
 import { SubmitProvider, useSubmit } from "_/contexts/submit/loginWithEmail";
 
+// hooks
+import { useRedirect } from "_/hooks";
+
 // types
 import { FormLocation, FormProps } from "../types";
 import { ValidationType } from "_/validation/Validation";
@@ -52,6 +55,8 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
 
   const { setCurrentUserInfo } = useLoginContext();
 
+  const { redirect, redirectSearchParamString: redirectSearchParams } =
+    useRedirect();
   // submit
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
 
@@ -60,30 +65,22 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
   //
   const replace = true;
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const handleSubmit = (e: React.MouseEvent | React.FormEvent) => {
+    e.preventDefault();
+
     // login with phone
     if (!isAllGood) {
-      e.preventDefault();
       return;
     }
 
     setLoading(true);
-    // fake
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   console.log("Logged in with email", isAllowed);
-    // }, 1000);
-
-    //
-    // console.log(isAllowed);
 
     login(isAllowed.email.value, isAllowed.password.value)
       .then((result: CurrentUser["info"]) => {
         if (at === FormLocation.MODAL) clearModal();
+        else if (at === FormLocation.PAGE) redirect();
 
         alert("Logged in.");
-        // setIsLoggedIn(true);
         setCurrentUserInfo(result);
       })
       .catch(() => {
@@ -116,13 +113,17 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
 
   return (
     <>
-      <form className={clsx(styles["form"], styles["content-wrapper"])}>
+      <form
+        action=""
+        className={clsx(styles["form"], styles["content-wrapper"])}
+        onSubmit={handleSubmit}
+      >
         <div className={styles["title"]}>Log in</div>
         <div className={styles["form__content"]}>
           <div className={clsx(styles["row"], styles["form__desc"])}>
             Email or username
             <Link
-              to={routes.login + "/phone"}
+              to={routes.login + "/phone" + redirectSearchParams}
               replace={replace}
               onClick={(e) => {
                 if (at === FormLocation.MODAL) {
@@ -139,7 +140,7 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
           <EmailInput setIsAllowed={setIsAllowed_email} />
           <PasswordInput setIsAllowed={setIsAllowed_password} />
           <Link
-            to={routes.reset}
+            to={routes.reset + redirectSearchParams}
             className={styles["row"]}
             onClick={(e) => {
               if (at === FormLocation.MODAL) {

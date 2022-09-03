@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Logo } from "_/components/icons";
 
 import styles from "./Footer.module.scss";

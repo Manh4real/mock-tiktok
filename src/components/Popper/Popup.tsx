@@ -1,6 +1,7 @@
 import React, { useImperativeHandle, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+
 // icons
 import { BsChevronLeft } from "react-icons/bs";
 
@@ -12,8 +13,8 @@ import styles from "./Popper.module.scss";
 
 // types
 import { PopupMenuItem } from "_/types";
-import { PopperRefObject } from "./";
 import { useModalContext } from "_/contexts";
+import { PopperRefObject } from "./";
 
 interface PopupMenuChildren {
   title: string;
@@ -35,9 +36,6 @@ const Popup = React.forwardRef(
     ]);
     // current shown menu
     const current = useMemo(() => history[history.length - 1], [history]);
-
-    // ref
-    // const modalRef = useRef<ModalRefObject>(null);
 
     // functionalities on menu
     const onNext = (item: PopupMenuItem) => {
@@ -126,8 +124,6 @@ function getItem(
     const handleClick = () => {
       if (current.children) onNext(current);
       if (current.modal) {
-        // modalRef.current?.handleOpen();
-
         // has modal
         const Modal = current.modal;
         setAppModal(<Modal />);

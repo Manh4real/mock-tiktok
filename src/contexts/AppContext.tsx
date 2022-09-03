@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { getCurrentUser, getToken } from "_/services/account";
 import { Account } from "_/types";
 
@@ -19,6 +19,7 @@ interface LoginContextValue {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentUserInfo: (info: CurrentUser["info"]) => void;
+  setCurrentUserInfoData: (info: CurrentUser["info"]["data"]) => void;
   clearCurrentUser: () => void;
 }
 
@@ -32,6 +33,7 @@ export const LoginContext = React.createContext<LoginContextValue>({
   token: getToken(),
   setIsLoggedIn: () => {},
   setCurrentUserInfo: () => {},
+  setCurrentUserInfoData: () => {},
   clearCurrentUser: () => {},
 });
 
@@ -55,6 +57,20 @@ function LoginContextProvider({ children }: Props) {
         ...prev,
         isLoggedIn: true,
         info,
+      };
+    });
+  };
+  const setCurrentUserInfoData = (data: CurrentUser["info"]["data"]) => {
+    setCurrentUser((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        isLoggedIn: true,
+        info: {
+          ...prev.info,
+          data,
+        },
       };
     });
   };
@@ -83,6 +99,7 @@ function LoginContextProvider({ children }: Props) {
         isLoggedIn,
         setIsLoggedIn,
         setCurrentUserInfo,
+        setCurrentUserInfoData,
         clearCurrentUser,
       }}
     >
@@ -117,9 +134,9 @@ export const ModalContext = React.createContext<ModalContextValue>({
 function ModalContextProvider({ children }: Props) {
   const [appModal, setAppModal] = useState<JSX.Element>(<></>);
 
-  const clearModal = () => {
+  const clearModal = useCallback(() => {
     setAppModal(<></>);
-  };
+  }, []);
 
   return (
     <ModalContext.Provider value={{ appModal, setAppModal, clearModal }}>

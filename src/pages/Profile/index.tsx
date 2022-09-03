@@ -29,7 +29,8 @@ import { getAccountByNickname } from "_/services/account";
 import { useLoginContext } from "_/contexts";
 
 // types
-import { Account } from "_/types";
+import { Account, Video } from "_/types";
+import { getLikedVideos } from "_/services/video";
 
 type PageTitleFunc = (name: string, username: string) => string;
 
@@ -72,6 +73,8 @@ function Profile() {
   if (loading) return <Spinner />;
   if (!account) return <h1>Profile Not Found.</h1>;
 
+  const accountName = `${account.first_name} ${account.last_name}`;
+
   return (
     <div className={styles["container"]}>
       <header className={styles["header"]}>
@@ -98,10 +101,10 @@ function Profile() {
               >
                 {account.nickname}
               </h1>
-              <h3 className={styles["user-name"]}>{account.full_name}</h3>
+              <h3 className={styles["user-name"]}>{accountName}</h3>
 
               {isCurrentUser ? (
-                <EditButton />
+                <EditButton account={account} />
               ) : (
                 <FollowSection
                   accountId={account.id}
@@ -118,30 +121,100 @@ function Profile() {
           <div className={styles["lower"]}>
             <div className={styles["numbers"]}>
               <span>
-                <strong>{numberCompact(account.followings_count)}</strong>{" "}
-                Following
+                <strong>{numberCompact(account.followings_count)}</strong>
+                <span>Following</span>
               </span>
               <span>
-                <strong>{numberCompact(account.followers_count)}</strong>{" "}
-                Followers
+                <strong>{numberCompact(account.followers_count)}</strong>
+                <span>Followers</span>
               </span>
               <span>
-                <strong>{numberCompact(account.likes_count)}</strong> Likes
+                <strong>{numberCompact(account.likes_count)}</strong>
+                <span>Likes</span>
               </span>
             </div>
             <div className={styles["bio"]}>{account.bio}</div>
           </div>
         </div>
-        <div className={styles["tabs"]}>
-          <button className={styles["active"]}>Videos</button>
-          <button>Liked</button>
-        </div>
       </header>
-      <main className={styles["main"]}>
-        <ProfileVideos accountId={account.id} videos={account.videos} />
-      </main>
+      <VideoList account={account} />
     </div>
   );
 }
 
-export default Profile;
+//============================================================================
+
+const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
+
+const VideoList = ({ account }: { account: Account }) => {
+  const { currentUser } = useLoginContext();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [active, setActive] = useState<"videos" | "liked">("videos");
+  const [videos, setVideos] = useState<Video[]>([]);
+
+  useEffect(() => {
+    setLoading(true);
+    if (active === "videos") {
+      setVideos(account.videos);
+      catchedVideos.set("videos", account.videos);
+      setLoading(false);
+    } else if (active === "liked") {
+      if (!currentUser) return;
+      if (currentUser.info.data.id !== account.id) return;
+
+      //
+      const catchedLikedVideos = catchedVideos.get("liked");
+
+      if (catchedLikedVideos) {
+        setVideos(catchedLikedVideos);
+        setLoading(false);
+      } else {
+        getLikedVideos(account.id)
+          .then((result) => {
+            setVideos(result.data);
+            catchedVideos.set("liked", result.data);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    }
+  }, [account.id, account.videos, active, currentUser]);
+
+  return (
+    <>
+      <div className={styles["tabs"]}>
+        <button
+          className={clsx({ [styles["active"]]: active === "videos" })}
+          onClick={() => {
+            if (active !== "videos") setActive("videos");
+          }}
+        >
+          Videos
+        </button>
+        <button
+          disabled={currentUser?.info.data.id !== account.id}
+          className={clsx({ [styles["active"]]: active === "liked" })}
+          onClick={() => {
+            if (!currentUser) return;
+            if (currentUser.info.data.id !== account.id) return;
+
+            if (active !== "liked") setActive("liked");
+          }}
+        >
+          Liked
+        </button>
+      </div>
+      <main className={styles["main"]}>
+        <ProfileVideos
+          loading={loading}
+          accountId={account.id}
+          videos={videos}
+        />
+      </main>
+    </>
+  );
+};
+
+export default React.memo(Profile);

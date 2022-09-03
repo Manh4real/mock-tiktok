@@ -74,7 +74,7 @@ export interface Video {
   comments_count: number;
   shares_count: number;
   views_count: number;
-  viewable: "public" | "private";
+  viewable: Viewer;
   allows: string[];
   published_at: string;
   created_at: string;
@@ -98,3 +98,39 @@ export interface Video {
     };
   };
 }
+
+export interface Comment {
+  id: number;
+  comment: string;
+  likes_count: number;
+  is_liked: boolean;
+  created_at: string;
+  updated_at: string;
+  user: Account;
+}
+
+export type Viewer = "public" | "friends" | "private";
+export type ViewerPermission = ("comment" | "duet" | "stitch")[];
+
+export interface VideoRefObject {
+  pause: () => void;
+  play: () => void;
+}
+
+//
+export type ResponseWithPagination<T> = {
+  data: T[];
+  meta: {
+    pagination: {
+      total: number;
+      count: number;
+      per_page: number;
+      current_page: number;
+      total_pages: number;
+      links: {
+        prev?: string;
+        next?: string;
+      };
+    };
+  };
+};

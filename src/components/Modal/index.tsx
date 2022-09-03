@@ -1,6 +1,6 @@
 import React, { useEffect, useImperativeHandle, useState } from "react";
 import ReactDOM from "react-dom";
-// components
+import clsx from "clsx";
 
 // icons
 import { Close } from "_/components/icons";
@@ -10,9 +10,13 @@ import styles from "./Modal.module.scss";
 
 // types
 import { ModalRefObject } from "_/types";
+
+// context
 import { useModalContext } from "_/contexts";
+
 interface Props {
   children: JSX.Element;
+  noAnimation?: boolean;
   closeButtonStyle?: {
     [index: string]: number | string;
   };
@@ -21,7 +25,12 @@ interface Props {
 
 const Modal = React.forwardRef(
   (
-    { closeButtonStyle, onHide = () => {}, children }: Props,
+    {
+      closeButtonStyle,
+      noAnimation = false,
+      onHide = () => {},
+      children,
+    }: Props,
     ref: React.Ref<ModalRefObject>
   ) => {
     const { clearModal } = useModalContext();
@@ -71,7 +80,11 @@ const Modal = React.forwardRef(
         className={styles["modal-container"]}
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
-        <div className={styles["modal"]}>
+        <div
+          className={clsx(styles["modal"], {
+            [styles["noAnimation"]]: noAnimation,
+          })}
+        >
           {children}
           <button
             className={styles["closeBtn"]}

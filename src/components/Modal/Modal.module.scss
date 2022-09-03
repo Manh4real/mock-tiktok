@@ -12,11 +12,15 @@
   min-height: 280px;
   border-radius: 8px;
   background: #fff;
-  border: 1px solid var(--grey-100);
+  // border: 1px solid var(--grey-100);
   box-shadow: rgb(0 0 0 / 6%) 0px 2px 8px;
 
   position: relative;
   animation: scaleUp 0.2s ease-out;
+
+  &.noAnimation {
+    animation: none;
+  }
 }
 
 @keyframes scaleUp {

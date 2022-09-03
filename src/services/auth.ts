@@ -8,8 +8,6 @@ export const login = async (email: string, password: string) => {
     })
     const result = response.data;
 
-    console.log(result);
-
     // 
     localStorage.setItem("tiktok_access_token", JSON.stringify(result.meta.token));
 
@@ -24,7 +22,6 @@ export const signup = async (email: string, password: string) => {
     })
     const result = response.data;
 
-    console.log(result);
     localStorage.setItem("tiktok_access_token", JSON.stringify(result.meta.token));
 
     return result;

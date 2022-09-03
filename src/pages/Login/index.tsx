@@ -10,13 +10,15 @@ import { AiFillApple } from "react-icons/ai";
 // config
 import routes from "_/config/routes";
 
-// components
-// import Footer from "_/components/Footer";
+// hooks
+import { useRedirect } from "_/hooks";
 
 // styles
 import styles from "./Login.module.scss";
 
 const Login = () => {
+  const { redirectSearchParamString: redirectSearchParams } = useRedirect();
+
   return (
     <div className={styles["wrapper"]}>
       <div className={styles["container"]}>
@@ -28,7 +30,10 @@ const Login = () => {
               more.
             </p>
             <div className={styles["boxes"]}>
-              <Link to={routes.login + "/phone"} className={styles["box"]}>
+              <Link
+                to={routes.login + "/phone" + redirectSearchParams}
+                className={styles["box"]}
+              >
                 <div className={styles["icon"]}>
                   <Person />
                 </div>

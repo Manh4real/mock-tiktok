@@ -6,9 +6,6 @@ import routes, { pagesTitle } from "_/config/routes";
 // components
 import Posts from "./Posts";
 
-// context
-import { CurrentVideoProvider } from "_/contexts";
-
 function Home() {
   //
   useEffect(() => {
@@ -17,11 +14,9 @@ function Home() {
 
   return (
     <div>
-      <CurrentVideoProvider>
-        <Posts />
-      </CurrentVideoProvider>
+      <Posts />
     </div>
   );
 }
 
-export default Home;
+export default React.memo(Home);

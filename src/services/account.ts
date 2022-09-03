@@ -1,7 +1,5 @@
 import api from "_/api";
 
-// const ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC90aWt0b2suZnVsbHN0YWNrLmVkdS52blwvYXBpXC9hdXRoXC9yZWdpc3RlciIsImlhdCI6MTY2MTYxODMxOCwiZXhwIjoxNjY0MjEwMzE4LCJuYmYiOjE2NjE2MTgzMTgsImp0aSI6ImZGdzkwNDFxRzFDNEJTRkwiLCJzdWIiOjE1NSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.YOQRH6mP20WyzLE5CksGRSRzlC6JFAK2YRv8g0l07rI"
-
 export const getToken = () => {
     const a = localStorage.getItem("tiktok_access_token") || "null";
 
@@ -19,6 +17,38 @@ export const getCurrentUser = async () => {
         }
     })
     const data = response.data;
+    return data.data;
+}
+
+type Body = Partial<{
+    first_name: string;
+    last_name: string;
+    nickname: string;
+    avatar: File;
+    bio: string;
+}>
+export const updateCurrentUser = async (body: Body) => {
+    const formData = new FormData();
+
+    Object.entries(body).forEach(([key, value]) => {
+        if (value instanceof File) formData.append(key, value, value.name);
+        else formData.append(key, value);
+    })
+
+    const token = getToken();
+
+    if (!token) return;
+
+    const response = await api.post(`auth/me`, formData, {
+        params: {
+            _method: "PATCH",
+        },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    })
+    const data = response.data;
+
     return data.data;
 }
 
@@ -64,12 +94,14 @@ export const getSuggestedAccounts = async () => {
     return data.data;
 }
 
-export const getFollowingAccounts = async () => {
+export const getFollowingAccounts = async (page: number = 1) => {
     const token = getToken();
+
+    if (!token) return null;
 
     const result = await api.get(`/me/followings`, {
         params: {
-            page: 1
+            page
         },
         headers: {
             // Authorization: `Bearer ${ACCESS_TOKEN}`
@@ -78,12 +110,14 @@ export const getFollowingAccounts = async () => {
     });
     const data = result.data;
 
-    return data.data;
+    return data;
 }
 
 //
 export const followAccount = async (id: number) => {
     const token = getToken();
+
+    if (!token) return;
 
     const result = await api.post(`/users/${id}/follow`, null, {
         headers: {
@@ -95,6 +129,8 @@ export const followAccount = async (id: number) => {
 
 export const unfollowAccount = async (id: number) => {
     const token = getToken();
+
+    if (!token) return;
 
     const result = await api.post(`/users/${id}/unfollow`, null, {
         headers: {

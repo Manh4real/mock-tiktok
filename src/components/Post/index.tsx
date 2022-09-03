@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import clsx from "clsx";
+import { Link } from "react-router-dom";
 
 // styles
 import styles from "./Post.module.scss";
@@ -11,16 +11,13 @@ import { IoMdShareAlt } from "react-icons/io";
 
 // components
 import Image from "_/components/Image";
-import Video from "_/components/Video";
 import AccountPopup from "_/components/AccountPopup";
 import FeedShare from "_/components/FeedShare";
-import TimeAgo from "./TimeAgo";
+import TimeAgo from "_/components/TimeAgo";
 import FollowButton from "./FollowButton";
 import LikeButton from "./LikeButton";
 import CommentButton from "./CommentButton";
-
-// service
-// import { getAccountByNickname } from "_/services/account";
+import VideoContainer from "./VideoContainer";
 
 // utils
 import { numberCompact } from "_/utils";
@@ -34,17 +31,17 @@ interface Props {
 
 function Post({ item }: Props) {
   const author = item.user;
-
-  // useEffect(() => {
-  //   getAccountByNickname(item.user.nickname).then((author) => {
-  //     setAuthor(author);
-  //   });
-  // }, [item.user.nickname]);
+  const authorName =
+    author.full_name || `${author.first_name} ${author.last_name}`;
 
   return (
     <div className={clsx(styles["container"], "scroll-snap-alignCenter")}>
       <div className={styles["post__follow-button"]}>
-        <FollowButton accountId={author.id} isFollowed={author.is_followed} />
+        <FollowButton
+          styles={styles}
+          accountId={author.id}
+          isFollowed={author.is_followed}
+        />
       </div>
       <div className={styles["left"]}>
         {author ? (
@@ -79,10 +76,7 @@ function Post({ item }: Props) {
                   >
                     {author?.nickname}
                   </h3>
-                  <span className="author-nickname">
-                    {author.full_name ||
-                      `${author.first_name} ${author.last_name}`}
-                  </span>
+                  <span className="author-nickname">{authorName}</span>
                   <span>&middot;</span>
                   <TimeAgo time={item.created_at} />
                 </Link>
@@ -108,17 +102,17 @@ function Post({ item }: Props) {
           </h4>
         </div>
         <div className={styles["post__watch"]}>
-          <div className={styles["post__video"]}>
-            <Video
-              src={item.file_url}
-              placeholder={item.thumb_url}
-              postId={item.id}
-            />
-          </div>
+          <VideoContainer video={item} />
           <div style={{ display: "flex" }}>
             <div className={styles["post__buttons"]}>
-              <LikeButton postId={item.id} likesCount={item.likes_count} />
+              <LikeButton
+                isLiked={item.is_liked}
+                styles={styles}
+                postId={item.id}
+                likesCount={item.likes_count}
+              />
               <CommentButton
+                styles={styles}
                 postId={item.id}
                 commentsCount={item.comments_count}
               />

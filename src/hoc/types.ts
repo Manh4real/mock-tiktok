@@ -3,10 +3,24 @@ export interface WithInputValidation {
     isEmpty: boolean;
     isValid: boolean;
     errorMessage: string;
+    reset: () => void;
     inputProps: {
         value: string;
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-        onFocus: React.FocusEventHandler<HTMLInputElement>;
-        onBlur: React.FocusEventHandler<HTMLInputElement>;
+        onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+        onFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+        onBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+    };
+}
+
+export interface WithFileValidation {
+    isEmpty: boolean;
+    isValid: boolean;
+    hasError: boolean;
+    errorMessage: string;
+    reset: () => void;
+    inputProps: {
+        url: string;
+        file: File;
+        onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     };
 }

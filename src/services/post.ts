@@ -1,17 +1,34 @@
 import api from "_/api";
+import { getToken } from "./account";
 
 export const likePost = async (postId: number) => {
-    const result = await api.post(`posts/${postId}/like`)
+    const token = getToken();
+
+    if (!token) return;
+
+    const result = await api.post(`videos/${postId}/like`, null, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
     const data = result.data;
 
-    return data.likes_count;
+    return data.data;
 }
 
 export const dislikePost = async (postId: number) => {
-    const result = await api.post(`posts/${postId}/like`)
+    const token = getToken();
+
+    if (!token) return;
+
+    const result = await api.post(`videos/${postId}/unlike`, null, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
     const data = result.data;
 
-    return data.likes_count;
+    return data.data;
 }
 
 // import { fakeApi } from "_/api";

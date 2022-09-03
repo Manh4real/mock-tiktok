@@ -5,15 +5,17 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { VideoRefObject } from "_/types";
 
 interface Current {
   postId: number;
   muted: boolean;
   volume: number;
+  videoRef: VideoRefObject | null;
 }
 interface ContextValueInterface {
   currentVideo: Current;
-  handleVideoChange: (postId: number) => void;
+  handleVideoChange: (postId: number, videoRef: VideoRefObject) => void;
   handleToggleMute: () => void;
   saveVolume: (value: number) => void;
   setMute: (muted: boolean) => void;
@@ -23,6 +25,7 @@ const initialValue: Current = {
   postId: -999,
   muted: false,
   volume: 0.5,
+  videoRef: null,
 };
 const Context = React.createContext<ContextValueInterface>({
   currentVideo: initialValue,
@@ -39,11 +42,14 @@ const useCurrentVideo = () => {
 const Provider = ({ children }: { children: JSX.Element }) => {
   const [current, setCurrent] = useState<Current>(initialValue);
 
-  const handleVideoChange = useCallback((postId: number) => {
-    setCurrent((prev) => {
-      return { ...prev, postId };
-    });
-  }, []);
+  const handleVideoChange = useCallback(
+    (postId: number, videoRef: VideoRefObject) => {
+      setCurrent((prev) => {
+        return { ...prev, postId, videoRef };
+      });
+    },
+    []
+  );
 
   const setMute = useCallback((muted: boolean) => {
     setCurrent((prev) => {

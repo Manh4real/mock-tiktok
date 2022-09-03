@@ -8,7 +8,7 @@ import {
 } from "_/components/icons";
 
 // components
-import KeyboardModal from "./KeyboardModal";
+import KeyboardModal from "_/components/KeyboardModal";
 
 // types
 import { PopupMenuItem } from "_/types";

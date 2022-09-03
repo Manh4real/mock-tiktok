@@ -7,17 +7,11 @@ import { BsChevronLeft } from "react-icons/bs";
 import Modal from "_/components/Modal";
 import LoginStart from "./LoginStart";
 
-// import { SignupFooter } from "./signup";
-// import { LoginFooter } from "./login";
-
 // styles
 import styles from "./LoginModal.module.scss";
 
-// variables
-
 // types
 import { ModalRefObject } from "_/types";
-// import { ResetPasswordProps } from "./login/ResetPassword";
 
 export enum FormState {
   LOG_IN,

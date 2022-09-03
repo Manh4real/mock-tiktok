@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 
-// styles
-import styles from "./Post.module.scss";
-
 // icons
 import { BsFillHeartFill } from "react-icons/bs";
 
@@ -16,14 +13,25 @@ import { useCurrentVideo, useLoginContext } from "_/contexts";
 // services
 import { dislikePost, likePost } from "_/services/post";
 import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
+import { Video } from "_/types";
 
 // types
 interface Props extends WithLoginModal {
+  isLiked: boolean;
+  styles: {
+    readonly [key: string]: string;
+  };
   postId: number;
   likesCount: number;
 }
 
-const LikeButton = ({ postId, likesCount, showLoginModal }: Props) => {
+const LikeButton = ({
+  isLiked,
+  styles,
+  postId,
+  likesCount,
+  showLoginModal,
+}: Props) => {
   const { isLoggedIn } = useLoginContext();
 
   const {
@@ -31,7 +39,7 @@ const LikeButton = ({ postId, likesCount, showLoginModal }: Props) => {
   } = useCurrentVideo();
 
   const [value, setValue] = useState<number>(likesCount);
-  const [active, setActive] = useState<boolean>(false);
+  const [active, setActive] = useState<boolean>(isLiked);
 
   const handleClick = useCallback(() => {
     if (!isLoggedIn) {
@@ -39,18 +47,18 @@ const LikeButton = ({ postId, likesCount, showLoginModal }: Props) => {
       return;
     }
 
-    // fake
+    //
     if (!active) {
-      likePost(postId).then((result) => {
-        setValue(result);
+      likePost(postId).then((video: Video) => {
+        setValue(video.likes_count);
+        setActive(video.is_liked);
       });
     } else {
-      dislikePost(postId).then((result) => {
-        setValue(result);
+      dislikePost(postId).then((video: Video) => {
+        setValue(video.likes_count);
+        setActive(video.is_liked);
       });
     }
-
-    setActive((prev) => !prev);
   }, [active, isLoggedIn, postId, showLoginModal]);
 
   // dom events

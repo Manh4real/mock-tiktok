@@ -4,12 +4,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 # This is a mock Tiktok web app
 
-✅ Submit Form Login with Phone, Code
+Note: Login with Phone, Code
 
-# Current Work (25 Aug, 2022)
+# Current Work (1 Sep, 2022)
 
-- Update Profile page, Search page
-- Replace JSON Server with real API
-- Follow, unfollow manipulation
-- Login, Register (email & password)
-- Logout
+- Video details ✅
+- update profile: avatar, name, bio (username just for illustration) ✅
+- upload video ✅
+- comment on a video
+- delete own's comment, like a comment

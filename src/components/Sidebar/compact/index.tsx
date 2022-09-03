@@ -13,10 +13,11 @@ import Suggested from "../Suggested";
 function CompactSidebar() {
   const params = useParams();
 
-  const { isLoggedIn } = useLoginContext();
-  // fake
+  const { isLoggedIn, currentUser } = useLoginContext();
+
   // current page is of current logged-in user
-  const isSelf = isLoggedIn && params.usernameParam === "gang4L";
+  const isSelf =
+    isLoggedIn && params.usernameParam === currentUser?.info.data.nickname;
 
   return (
     <CommonSidebar compact>

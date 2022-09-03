@@ -8,7 +8,6 @@ const useElementOnScreen = (
 
   const callbackFunction: IntersectionObserverCallback = (entries) => {
     const [entry] = entries; //const entry = entries[0]
-    // console.log(entries);
 
     setIsVisible(entry.isIntersecting);
   };

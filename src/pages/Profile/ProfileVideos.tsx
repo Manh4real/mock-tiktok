@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 
 // styles
@@ -8,44 +8,36 @@ import styles from "./Profile.module.scss";
 import ProfileVideo from "./ProfileVideo";
 import Skeletons from "./Skeletons";
 
-// services
-// import { getPostsByAccountId } from "_/services/post";
-// import { getUsersVideos } from "_/services/video";
-
 // types
 import { Video } from "_/types";
+
 interface Props {
+  loading: boolean;
   accountId: number;
   videos: Video[];
 }
 
-const ProfileVideos = ({ videos }: Props) => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [videoList, setVideoList] = useState<Video[]>([]);
+const ProfileVideos = ({ loading, videos }: Props) => {
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [videoList, setVideoList] = useState<Video[]>(videos);
+  const videoList = videos;
 
-  useEffect(() => {
-    setLoading(true);
-    const timeID = setTimeout(() => {
-      // getPostsByAccountId(accountId)
-      //   .then((vids: Post[]) => {
-      //     setVideos(vids);
-      //   })
-      //   .finally(() => {
-      //     setLoading(false);
-      //   });
+  // useEffect(() => {
+  //   // setLoading(true);
+  //   // const timeID = setTimeout(() => {
+  //   setVideoList(videos);
+  //   // setLoading(false);
+  //   // }, 2000);
 
-      setVideoList(videos);
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeID);
-  }, [videos]);
+  //   // return () => clearTimeout(timeID);
+  // }, [videos]);
 
   const content = useMemo(() => {
     return videoList.map((video) => (
       <div key={video.id} style={{ width: "100%" }}>
         <div className={styles["video"]}>
           <ProfileVideo
+            videoId={video.id}
             poster={video.thumb_url}
             src={video.file_url}
             views={video.views_count}
@@ -72,4 +64,4 @@ const ProfileVideos = ({ videos }: Props) => {
   );
 };
 
-export default ProfileVideos;
+export default React.memo(ProfileVideos);

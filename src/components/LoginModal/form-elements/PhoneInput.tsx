@@ -13,11 +13,9 @@ import withInputValidation from "_/hoc/withInputValidation";
 // types
 import { ValidationType } from "_/validation/Validation";
 import { WithInputValidation } from "_/hoc/types";
-import { AllowedInputProperty } from "_/contexts/submit";
+import { SubmitContext__InputProps } from "_/contexts/submit";
 
-interface Props extends WithInputValidation {
-  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
-}
+interface Props extends WithInputValidation, SubmitContext__InputProps {}
 
 function PhoneInput({
   setIsAllowed,

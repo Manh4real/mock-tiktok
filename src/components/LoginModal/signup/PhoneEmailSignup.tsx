@@ -9,10 +9,9 @@ import WithEmailSignup from "./WithEmailSignup";
 import WithPhoneSignup from "./WithPhoneSignup";
 import Footer from "./Footer";
 
-// context
-
 // types
 import { FormLocation, FormProps } from "../types";
+
 enum State {
   WITH_PHONE,
   WITH_EMAIL,

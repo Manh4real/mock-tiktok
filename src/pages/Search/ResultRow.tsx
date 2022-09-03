@@ -22,6 +22,9 @@ interface Props {
 }
 
 const ResultRow = ({ account }: Props) => {
+  const accountName =
+    account.full_name || `${account.first_name} ${account.last_name}`;
+
   return (
     <div className={styles["row"]}>
       <Link
@@ -38,7 +41,7 @@ const ResultRow = ({ account }: Props) => {
             {account.nickname} {account.tick && <VerifyBadge />}
           </h3>
           <p className={styles["subtitle"]}>
-            {account.full_name}
+            {accountName}
             <span style={{ marginInline: 5 }}>&middot;</span>
             <span>
               <strong>{numberCompact(account.followers_count)} </strong>

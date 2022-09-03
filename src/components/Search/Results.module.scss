@@ -67,6 +67,7 @@
     max-width: unset;
     width: var(--size);
     height: var(--size);
+    object-fit: cover;
   }
 }
 .results__item-accNames {

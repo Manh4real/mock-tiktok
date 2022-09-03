@@ -1,5 +1,5 @@
 export function numberCompact(number: number | undefined) {
-    if (number === undefined) return null;
+    if (number === undefined || number === null) return "--";
 
     if (number < 9999) return number;
 

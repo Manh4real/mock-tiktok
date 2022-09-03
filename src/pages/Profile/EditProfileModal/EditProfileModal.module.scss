@@ -1,0 +1,117 @@
+.container {
+  max-height: 90vh;
+  overflow: overlay;
+
+  button + button {
+    margin-left: 16px;
+  }
+  p + p {
+    margin-top: 8px;
+    line-height: 18px;
+    max-width: 460px;
+    width: 360px;
+  }
+}
+.header {
+  font-size: 24px;
+  font-weight: 500;
+  padding: 24px 24px 12px;
+
+  border-bottom: 1px solid #16182333;
+}
+
+.table {
+  width: 700px;
+  padding: 8px 24px 0px;
+}
+
+.row {
+  display: flex;
+  padding: 16px 0px;
+  border-bottom: 1px solid #1618231f;
+}
+.col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.label {
+  font-weight: 500;
+  width: 120px;
+  margin-right: 24px;
+}
+.inputText {
+  font-weight: 300;
+  line-height: 24px;
+
+  width: 360px;
+  height: 38px;
+  padding: 7px 12px;
+  border-radius: 4px;
+
+  background-color: #1618230f;
+  caret-color: var(--pink);
+
+  outline: none;
+  border: none;
+
+  &:focus {
+    outline: 1px solid #16182333;
+  }
+  &.on--error {
+    outline: 1px solid red;
+  }
+}
+
+.textArea {
+  font-weight: 300;
+
+  width: 360px;
+  height: 100px;
+  padding: 12px;
+  border-radius: 4px;
+
+  background: #1618230f;
+  caret-color: var(--pink);
+
+  border: none;
+  outline: none;
+  resize: none;
+
+  &:focus {
+    outline: 1px solid #16182333;
+  }
+  &.on--error {
+    outline: 1px solid red;
+  }
+}
+
+//
+.photo-file-label {
+  position: relative;
+  margin-left: 128px;
+
+  cursor: pointer;
+
+  .edit-icon {
+    &:hover {
+      background: #fff;
+    }
+  }
+}
+.link-text {
+  margin-top: 16px;
+}
+
+.cancel-button {
+  height: 36px;
+  width: 96px;
+  padding: 7px 16px;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 86px;
+  padding-inline: 24px;
+}

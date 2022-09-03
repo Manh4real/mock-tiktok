@@ -17,23 +17,36 @@ import { numberCompact } from "_/utils";
 
 // types
 import { Account as AccountInterface } from "_/types";
+import { Placement, Rect } from "@popperjs/core";
 
 interface Props {
   account: AccountInterface;
   children: JSX.Element;
+  offset?:
+    | [number, number]
+    | (({
+        placement,
+        popper,
+        reference,
+      }: {
+        placement: Placement;
+        popper: Rect;
+        reference: Rect;
+      }) => [number, number])
+    | undefined;
 }
 
-function AccountPopup({ account, children }: Props) {
-  // handle click follow button
-  const handleClick = (e: React.MouseEvent) => {
-    console.log("Clicked Follow button of " + account.nickname);
-  };
+function AccountPopup({ offset, account, children }: Props) {
+  const accountName =
+    account.full_name || `${account.first_name} ${account.last_name}`;
 
   return (
     //
     <div>
       <Tippy
+        zIndex={10000}
         appendTo={document.body}
+        offset={offset}
         interactive
         placement="bottom-start"
         delay={[500, 100]}
@@ -44,7 +57,6 @@ function AccountPopup({ account, children }: Props) {
                 <Image src={account.avatar} width={44} height={44} />
               </Link>
               <FollowButton
-                onClick={handleClick}
                 accountId={account.id}
                 isFollowed={account.is_followed}
               />
@@ -55,10 +67,7 @@ function AccountPopup({ account, children }: Props) {
                   <span className={styles["username"]}>{account.nickname}</span>
                   {account.tick && <VerifyBadge />}
                 </h4>
-                <small className={styles["desc"]}>
-                  {account.full_name ||
-                    `${account.first_name} ${account.last_name}`}
-                </small>
+                <small className={styles["desc"]}>{accountName}</small>
               </div>
             </Link>
             <div className={styles["numbers"]}>

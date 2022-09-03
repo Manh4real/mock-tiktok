@@ -12,10 +12,15 @@ import { BsChevronDown } from "react-icons/bs";
 // config
 import routes from "_/config/routes";
 
+// hooks
+import { useRedirect } from "_/hooks";
+
 // styles
 import styles from "../Login/Login.module.scss";
 
 const Signup = () => {
+  const { redirectSearchParamString: redirectSearchParams } = useRedirect();
+
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const handleMoreButtonClick = () => {
@@ -34,7 +39,7 @@ const Signup = () => {
             </p>
             <div className={styles["boxes"]}>
               <Link
-                to={routes.signup + "/phone-email"}
+                to={routes.signup + "/phone-email" + redirectSearchParams}
                 className={styles["box"]}
               >
                 <div className={styles["icon"]}>
@@ -90,7 +95,11 @@ const Signup = () => {
             </p>
             <div className={styles["footer__text"]}>
               Already have an account?
-              <Link to={routes.login} replace={true} className="pink-font">
+              <Link
+                to={routes.login + redirectSearchParams}
+                replace={true}
+                className="pink-font"
+              >
                 Log in
               </Link>
             </div>

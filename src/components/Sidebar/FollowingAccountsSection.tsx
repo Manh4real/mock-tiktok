@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import clsx from "clsx";
 
 // icons
@@ -17,31 +17,35 @@ import { useLoginContext } from "_/contexts/AppContext";
 // services
 import { getFollowingAccounts } from "_/services/account";
 
+// hooks
+import { usePagesFetch } from "_/hooks";
+
 // types
 import { Account as AccountInterface } from "_/types";
 
 const FollowingAccountsSection = () => {
-  const [accounts, setAccounts] = useState<AccountInterface[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { currentUser, isLoggedIn } = useLoginContext();
 
-  const { currentUser, isLoggedIn, token } = useLoginContext();
+  const {
+    results: accounts,
+    end,
+    loading,
+    setResults,
+    setPage,
+    handleFetchNext,
+  } = usePagesFetch<AccountInterface>(getFollowingAccounts, !currentUser, {
+    errorMessage: "Error: Can't get following accounts.",
+  });
 
-  useEffect(() => {
-    if (!currentUser) return;
+  const handleLoadMore = () => {
+    if (end) {
+      setResults((prev) => prev.slice(0, 5));
+      setPage(1);
+      return;
+    }
 
-    if (!token) return;
-
-    getFollowingAccounts()
-      .then((accounts) => {
-        setAccounts(accounts);
-      })
-      .catch(() => {
-        console.log("Error: Can't get following accounts.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [currentUser, token]);
+    handleFetchNext();
+  };
 
   if (!isLoggedIn) return <></>;
 
@@ -55,32 +59,28 @@ const FollowingAccountsSection = () => {
       >
         <h5 className={styles["sidebar__header-title"]}>Following accounts</h5>
         <div className={styles["sidebar__accs__cnt"]}>
+          {!loading && accounts.length <= 0 && <NoAccounts />}
+          {accounts.length > 0 && (
+            <div>
+              {accounts.map((acc) => (
+                <Account key={acc.id} account={acc} />
+              ))}
+            </div>
+          )}
           {loading ? (
             <Spinner />
-          ) : accounts.length <= 0 ? (
-            <NoAccounts />
           ) : (
-            <Accounts accounts={accounts} />
+            <button
+              className={clsx("pink-font", styles["sidebar__more-btn"])}
+              onClick={handleLoadMore}
+            >
+              See {end ? "less" : "more"}
+            </button>
           )}
         </div>
       </div>
       <SidebarDelimiter />
     </>
-  );
-};
-
-const Accounts = ({ accounts }: { accounts: AccountInterface[] }) => {
-  return (
-    <React.Fragment>
-      <div>
-        {accounts.map((acc) => (
-          <Account key={acc.id} account={acc} />
-        ))}
-      </div>
-      <button className={clsx("pink-font", styles["sidebar__more-btn"])}>
-        See more
-      </button>
-    </React.Fragment>
   );
 };
 

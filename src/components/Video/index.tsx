@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import clsx from "clsx";
 
 // icons
@@ -20,6 +26,7 @@ import { useCurrentVideo } from "_/contexts";
 
 // types
 import { VoiceRefObject, VideoTimeRefObject } from "./types";
+import { VideoRefObject } from "_/types";
 
 interface AdditionalVideoProps {
   postId?: number;
@@ -28,18 +35,40 @@ interface AdditionalVideoProps {
 }
 type Props = React.VideoHTMLAttributes<HTMLVideoElement> & AdditionalVideoProps;
 
-function Video(props: Props) {
-  const { className, hasWindowHeight, postId, placeholder, ...otherProps } =
-    props;
+function Video(props: Props, ref: React.Ref<VideoRefObject>) {
+  const {
+    className,
+    hasWindowHeight,
+    postId,
+    placeholder,
+    autoPlay = false,
+    ...otherProps
+  } = props;
 
   const { currentVideo, handleVideoChange } = useCurrentVideo();
 
-  const [isReady, setIsReady] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(false);
+  const [isReady, setIsReady] = useState<boolean>(autoPlay);
+  const [playing, setPlaying] = useState<boolean>(autoPlay);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const voiceRef = useRef<VoiceRefObject>(null);
   const timeRef = useRef<VideoTimeRefObject>(null);
+
+  const videoRefObject = {
+    pause: () => {
+      try {
+        videoRef.current?.pause();
+      } catch (e: any) {
+        console.log({ postId }, e.message);
+      }
+    },
+    play: () => {
+      console.log("??");
+
+      setIsReady(true);
+      setPlaying(true);
+    },
+  };
 
   // #region
   // ⚠️🆘 Experiment
@@ -60,7 +89,7 @@ function Video(props: Props) {
 
     // change current videos info
     if (postId !== undefined && currentVideo.postId !== postId) {
-      handleVideoChange(postId);
+      handleVideoChange(postId, videoRefObject);
     }
 
     setPlaying((prev) => !prev);
@@ -138,11 +167,13 @@ function Video(props: Props) {
 
   // when switching videos
   useEffect(() => {
-    if (currentVideo.postId !== postId) {
+    if (!autoPlay && currentVideo.postId !== postId) {
       setIsReady(false);
       setPlaying(false);
     }
-  }, [currentVideo.postId, postId]);
+  }, [autoPlay, currentVideo.postId, postId]);
+
+  useImperativeHandle(ref, () => videoRefObject);
 
   return (
     <div
@@ -159,6 +190,7 @@ function Video(props: Props) {
           poster={placeholder}
           muted={currentVideo.muted}
           loop={true}
+          autoPlay={autoPlay}
           onPause={handlePause}
           onPlay={handlePlay}
           onEnded={handleEnded}
@@ -194,4 +226,4 @@ function Video(props: Props) {
   );
 }
 
-export default Video;
+export default React.forwardRef(Video);

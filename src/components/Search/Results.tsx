@@ -10,8 +10,6 @@ import styles from "./Results.module.scss";
 // types
 import { Account } from "_/types";
 
-// components
-
 interface Props {
   results: Account[];
   search: string;

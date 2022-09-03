@@ -18,24 +18,13 @@ import styles from "./Home.module.scss";
 import { Video, Video as VideoInterface } from "_/types";
 
 const Posts = () => {
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(1);
   // const [end, setEnd] = useState<boolean>(false);
   const [posts, setPosts] = useState<VideoInterface[]>([]);
 
   const handleLoadMore = () => {
     // if (end) return;
-
-    // const nextPage = page + 1;
-    // getPosts(nextPage).then((newPosts) => {
-    //   if (newPosts.length <= 0) {
-    //     setEnd(true);
-    //     return;
-    //   }
-
-    //   setPosts((prev) => [...prev, ...newPosts]);
-    //   setPage(nextPage);
-    // });
 
     if (page >= totalPage) return;
 
@@ -51,20 +40,11 @@ const Posts = () => {
   };
 
   //
-  useEffect(() => {
-    if (page === 1) window.scrollTo(0, 0);
-  });
+  // useEffect(() => {
+  //   if (page === 1) window.scrollTo(0, 0);
+  // });
 
   useEffect(() => {
-    // initial
-    // getPosts().then((newPosts) => {
-    //   if (newPosts.length === 0) {
-    //     setEnd(true);
-    //     return;
-    //   }
-
-    //   setPosts(newPosts);
-    // });
     getVideoList().then((data) => {
       const rs = data.data as Video[];
 
@@ -78,11 +58,6 @@ const Posts = () => {
       setPage(currentPage);
     });
   }, []);
-
-  //
-  // useEffect(() => {
-  //   if (page === 1) window.scrollTo(0, 0);
-  // }, [posts, page]);
 
   // #region
   // ⚠️🆘 Experiment: Infinite scroll

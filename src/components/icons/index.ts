@@ -28,3 +28,6 @@ export { default as AnchorIcon } from "./AnchorIcon";
 export { default as Mute } from "./Mute";
 export { default as Unmute } from "./Unmute";
 export { default as Pause } from "./Pause";
+export { default as OutlinedPlayIcon } from "./OutlinedPlayIcon";
+export { default as OutlinedHeart } from "./OutlinedHeart";
+export { default as FilledHeart } from "./FilledHeart";

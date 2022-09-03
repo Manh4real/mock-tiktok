@@ -13,9 +13,9 @@ import {
 } from "_/components/LoginModal/form-elements";
 import { PhoneSignupDesc } from "./components";
 
-// context
 // types
 import { FormLocation } from "../types";
+
 interface Props {
   at: FormLocation;
   toggleToEmail: () => void;

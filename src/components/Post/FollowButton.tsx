@@ -9,19 +9,23 @@ import { withLoginModal } from "_/hoc";
 // hooks
 import { useFollow } from "_/hooks";
 
-// styles
-import styles from "./Post.module.scss";
-
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
 
 interface Props extends WithLoginModal {
+  styles: {
+    readonly [key: string]: string;
+  };
   accountId: number;
   isFollowed: boolean;
 }
 
-function FollowButton({ accountId, isFollowed, showLoginModal }: Props) {
-  // const [followed, setFollowed] = useState<boolean>(isFollowed);
+function FollowButton({
+  styles,
+  accountId,
+  isFollowed,
+  showLoginModal,
+}: Props) {
   const [followed, toggleFollow] = useFollow(isFollowed, accountId);
 
   const { isLoggedIn } = useLoginContext();

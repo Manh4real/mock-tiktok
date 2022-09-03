@@ -16,11 +16,10 @@ import styles from "../LoginModal.module.scss";
 // types
 import { ValidationType } from "_/validation/Validation";
 import { WithInputValidation } from "_/hoc/types";
-import { AllowedInputProperty } from "_/contexts/submit";
+import { SubmitContext__InputProps } from "_/contexts/submit";
 
-interface Props extends WithInputValidation {
+interface Props extends WithInputValidation, SubmitContext__InputProps {
   disabled: boolean;
-  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
 }
 
 function CodeInput({
@@ -63,7 +62,6 @@ function CodeInput({
           type="button"
           onClick={handleSendCodeClick}
           className={styles["normal-button"]}
-          // disabled={!isAllowed.phone.isValid}
           disabled={disabled}
         >
           Send code

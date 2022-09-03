@@ -13,8 +13,6 @@ import { WithPhoneLogin, LoginFooter } from "./login";
 // styles
 import styles from "./LoginModal.module.scss";
 
-// variables
-
 // context
 import { History } from ".";
 

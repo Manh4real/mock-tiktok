@@ -11,3 +11,4 @@ export { default as LoginWithEmail } from './Login/LoginWithEmail';
 export { default as ResetPasswordPage } from './Login/ResetPasswordPage';
 export { default as PhoneEmailSignupPage } from './Signup/PhoneEmailSignupPage';
 export { default as NotFound } from './NotFound';
+export { default as VideoDetails } from './VideoDetails';

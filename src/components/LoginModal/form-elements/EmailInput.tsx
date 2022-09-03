@@ -12,12 +12,10 @@ import withInputValidation from "_/hoc/withInputValidation";
 
 // types
 import { ValidationType } from "_/validation/Validation";
-import { AllowedInputProperty } from "_/contexts/submit";
+import { SubmitContext__InputProps } from "_/contexts/submit";
 import { WithInputValidation } from "_/hoc/types";
 
-interface Props extends WithInputValidation {
-  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
-}
+interface Props extends WithInputValidation, SubmitContext__InputProps {}
 
 function EmailInput({
   isValid,

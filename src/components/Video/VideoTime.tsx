@@ -72,7 +72,12 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
   );
 
   return (
-    <div className={styles["time"]}>
+    <div
+      className={styles["time"]}
+      onDoubleClick={(e: React.MouseEvent) => {
+        e.stopPropagation();
+      }}
+    >
       <div
         ref={progressBarRef}
         className={styles["progress-bar"]}

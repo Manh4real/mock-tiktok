@@ -27,6 +27,9 @@ import { SubmitProvider, useSubmit } from "_/contexts/submit/loginWithPhone";
 // config
 import routes from "_/config/routes";
 
+// hooks
+import { useRedirect } from "_/hooks";
+
 // types
 import { ValidationType } from "_/validation/Validation";
 import { AllowedInputProperty } from "_/contexts/submit";
@@ -43,6 +46,11 @@ const WithPhoneLogin = (props: FormProps) => {
 //
 function Form({ at = FormLocation.MODAL }: FormProps) {
   const { pushHistory } = useContext(History);
+
+  const {
+    // redirect,
+    redirectSearchParamString: redirectSearchParams,
+  } = useRedirect();
 
   // submit
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
@@ -62,6 +70,8 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
     setTimeout(() => {
       setLoading(false);
       console.log("Logged in with phone", isAllowed);
+
+      // redirect();
     }, 1000);
   };
 
@@ -101,7 +111,7 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
           <div className={clsx(styles["row"], styles["form__desc"])}>
             Phone
             <Link
-              to={routes.login + "/email"}
+              to={routes.login + "/email" + redirectSearchParams}
               replace={replace}
               onClick={(e) => {
                 atModalFunc(() => {
@@ -128,7 +138,7 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
               style={{ display: "flex", gap: "8px" }}
             >
               <Link
-                to={routes.reset}
+                to={routes.reset + redirectSearchParams}
                 onClick={(e) => {
                   atModalFunc(() => {
                     e.preventDefault();
@@ -139,7 +149,7 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
                 Forgot password?
               </Link>
               <Link
-                to={routes.login + "/phone/code"}
+                to={routes.login + "/phone/code" + redirectSearchParams}
                 onClick={(e) => {
                   e.preventDefault();
                   setIsWithPassword(false);
@@ -150,7 +160,7 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
             </div>
           ) : (
             <Link
-              to={routes.login + "/phone/password"}
+              to={routes.login + "/phone/password" + redirectSearchParams}
               className={styles["row"]}
               onClick={(e) => {
                 e.preventDefault();

@@ -4,17 +4,11 @@ import React, { useEffect, useState } from "react";
 // styles
 import styles from "../LoginModal.module.scss";
 
-// hoc
-// import withInputValidation from "_/hoc/withInputValidation";
-
 // types
 import Validation, { Birthday, ValidationType } from "_/validation/Validation";
-import { AllowedInputProperty } from "_/contexts/submit";
-// import { WithInputValidation } from "_/hoc/types";
+import { SubmitContext__InputProps } from "_/contexts/submit";
 
-interface Props {
-  setIsAllowed: ({ value, isValid }: AllowedInputProperty) => void;
-}
+interface Props extends SubmitContext__InputProps {}
 
 function BirthdayInput({ setIsAllowed }: Props) {
   const today = new Date();
@@ -24,26 +18,10 @@ function BirthdayInput({ setIsAllowed }: Props) {
     year: today.getFullYear(),
   });
 
-  // const validate = new Validation().validate(
-  //   ValidationType.BIRTHDAY,
-  //   JSON.stringify(value)
-  // );
   const validate = (value: Birthday) =>
     new Validation().validate(ValidationType.BIRTHDAY, JSON.stringify(value));
 
   const [isValid, setIsValid] = useState<boolean>(validate(value).isValid);
-  // const [hasError, setHasError] = useState<boolean>(
-  //   value.day !== "" && value.month !== "" && value.year !== "" && !isValid
-  // );
-
-  // const handleBlur: React.FocusEventHandler<HTMLSelectElement> = () => {
-  //   setHasError(
-  //     value.day !== "" && value.month !== "" && value.year !== "" && !isValid
-  //   );
-  // };
-  // const handleFocus: React.FocusEventHandler<HTMLSelectElement> = () => {
-  //   setHasError(false);
-  // };
 
   useEffect(() => {
     setIsValid(validate(value).isValid);

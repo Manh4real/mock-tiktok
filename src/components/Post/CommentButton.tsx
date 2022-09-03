@@ -1,8 +1,5 @@
 import React, { useCallback } from "react";
 
-// styles
-import styles from "./Post.module.scss";
-
 // icons
 import { Chat } from "_/components/icons";
 
@@ -15,25 +12,41 @@ import { useLoginContext } from "_/contexts";
 // hoc
 import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
 
+// hooks
+import { useNavigateToVideoDetails } from "_/hooks";
+
 // types
 interface Props extends WithLoginModal {
+  styles: {
+    readonly [key: string]: string;
+  };
+  disabled?: boolean;
   postId: number;
   commentsCount: number;
 }
 
-const CommentButton = ({ postId, commentsCount, showLoginModal }: Props) => {
+const CommentButton = ({
+  disabled = false,
+  styles,
+  postId,
+  commentsCount,
+  showLoginModal,
+}: Props) => {
   const { isLoggedIn } = useLoginContext();
+  const navigate = useNavigateToVideoDetails(postId);
 
   const handleClick = useCallback(() => {
     if (!isLoggedIn) {
       showLoginModal();
       return;
     }
-  }, [isLoggedIn, showLoginModal]);
+    if (disabled) return;
+    navigate();
+  }, [disabled, isLoggedIn, navigate, showLoginModal]);
 
   // dom events
   return (
-    <button onClick={handleClick}>
+    <button onClick={handleClick} disabled={disabled}>
       <span className={styles["icon"]}>
         <Chat />
       </span>

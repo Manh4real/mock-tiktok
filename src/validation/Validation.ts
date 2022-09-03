@@ -12,7 +12,11 @@ interface ValidationClass {
     validatePassword: (value: string) => ValidateValue;
     validatePhone: (value: string) => ValidateValue;
     validateUsername: (value: string) => ValidateValue;
-    validateBirthday: (value: string) => ValidateValue
+    validateBio: (value: string) => ValidateValue;
+    validateName: (value: string) => ValidateValue;
+    validatePhoto: (value: string) => ValidateValue;
+    validateVideo: (value: string) => ValidateValue;
+    validateCaption: (value: string) => ValidateValue;
 }
 export enum ValidationType {
     CODE = "code",
@@ -20,7 +24,12 @@ export enum ValidationType {
     PASSWORD = "password",
     PHONE = "phone",
     USERNAME = "username",
-    BIRTHDAY = "birthday"
+    NAME = "name",
+    BIRTHDAY = "birthday",
+    BIO = "bio",
+    PHOTO = "photo",
+    VIDEO = "video",
+    CAPTION = "caption"
 }
 export interface Birthday {
     day: string | number,
@@ -43,8 +52,18 @@ class Validation implements ValidationClass {
                 return this.validatePhone(value);
             case ValidationType.USERNAME:
                 return this.validateUsername(value);
+            case ValidationType.NAME:
+                return this.validateName(value);
             case ValidationType.BIRTHDAY:
                 return this.validateBirthday(value);
+            case ValidationType.BIO:
+                return this.validateBio(value);
+            case ValidationType.PHOTO:
+                return this.validatePhoto(value);
+            case ValidationType.VIDEO:
+                return this.validateVideo(value);
+            case ValidationType.CAPTION:
+                return this.validateCaption(value);
         }
     }
     validateCode(value: string): ValidateValue {
@@ -64,15 +83,44 @@ class Validation implements ValidationClass {
         return { isValid: check, errorMessage: "Enter a valid phone number" };
     }
     validateUsername(value: string): ValidateValue {
-        const check = Patterns.username.test(value);
-        return { isValid: check, errorMessage: "" };
+        const check = value.length >= 2 && Patterns.username.test(value);
+        const mes = value.length < 2 ? "Include at least 2 characters in your username" : "";
+
+        return { isValid: check, errorMessage: mes };
     }
     validateBirthday(value: string): ValidateValue {
         const { day, month, year } = JSON.parse(value) as Birthday;
-        const date = moment(`${year}-${month}-${day}`);
+        const date = moment(`${year}-${month}-${day}`, "YYYY-MM-DD");
         const check = date.isValid();
 
         return { isValid: check, errorMessage: "Please enter your birthday" }
+    }
+    validateBio(value: string): ValidateValue {
+        const check = Patterns.bio.test(value);
+
+        return { isValid: check, errorMessage: "Bio must less than 80 characters" }
+    }
+    validateName(value: string): ValidateValue {
+        const check = Patterns.name.test(value);
+
+        return { isValid: check, errorMessage: "Name ..." }
+    }
+    validatePhoto(value: string): ValidateValue {
+        const ext = value.toLowerCase().split(".").slice(0).pop();
+        const check = ext && ["jpeg", "jpg", "png", "gif"].includes(ext);
+
+        return { isValid: !!check, errorMessage: "Avatar must be a file of type: jpeg, jpg, png, gif" }
+    }
+    validateVideo(value: string): ValidateValue {
+        const ext = value.toLowerCase().split(".").slice(0).pop();
+        const check = ext && ["mp4"].includes(ext);
+
+        return { isValid: !!check, errorMessage: "Video must be a file of type: mp4" }
+    }
+    validateCaption(value: string): ValidateValue {
+        const check = Patterns.caption.test(value);
+
+        return { isValid: check, errorMessage: "Caption must less than 150 characters" }
     }
 }
 

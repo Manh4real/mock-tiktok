@@ -70,7 +70,7 @@ function DiscoverSection() {
           return (
             <Link
               key={item.title}
-              to={item.type + "/" + item.title}
+              to={`/${item.type}/${item.title}`}
               className={styles["sidebar__discover-tag"]}
             >
               {icon}

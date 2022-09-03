@@ -1,0 +1,160 @@
+.comments {
+  flex-grow: 1;
+
+  padding: 24px 32px;
+  height: 200px;
+  overflow: auto;
+  background: #f8f8f8;
+
+  border-top: 1px solid #1212121f;
+  border-bottom: 1px solid #1212121f;
+}
+.container {
+  height: 100%;
+}
+.message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--grey);
+
+  a {
+    color: var(--pink);
+    margin-inline: 4px;
+  }
+}
+.add-comments {
+  height: 82px;
+  padding-block: 21px;
+  margin-inline: 30px;
+}
+.comment-input-container {
+  flex: 1;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  overflow: hidden;
+
+  padding-right: 9px;
+  background: #1618230f;
+
+  &:focus-within {
+    border-color: rgba(22, 24, 35, 0.2);
+  }
+}
+.comment-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  caret-color: var(--pink);
+
+  padding-inline: 9px;
+  height: 40px;
+}
+.post-button {
+  flex: 0 0 48px;
+  cursor: pointer;
+  text-align: right;
+  color: var(--pink);
+
+  &.disabled {
+    color: #16182357;
+    pointer-events: none;
+  }
+}
+
+// ===================================================
+.comment {
+  position: relative;
+  margin-bottom: 16px;
+
+  &:hover .more {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.commenter-avatar {
+  align-self: flex-start;
+  margin-right: 20px;
+}
+.right-container {
+  flex: 1;
+}
+.subtitle {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.comment__content {
+  font-weight: 300;
+}
+.commenter-link {
+  font-weight: 600;
+  font-size: 18px;
+}
+.reply-button {
+  margin-left: 30px;
+  cursor: pointer;
+}
+.reactions-count {
+  margin-top: -12px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+
+  color: var(--grey-200);
+  font-size: 12px;
+
+  .like-icon {
+    cursor: pointer;
+  }
+}
+.more {
+  opacity: 0;
+  visibility: hidden;
+
+  // position: absolute;
+  // top: -14px;
+  // right: -3px;
+
+  font-size: 24px;
+  color: var(--black);
+
+  cursor: pointer;
+}
+.popup {
+  min-width: 200px;
+  padding: 8px 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: rgb(0 0 0 / 12%) 0px 2px 12px;
+
+  max-height: 400px;
+  overflow-y: overlay;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--grey-200);
+    border-radius: 3px;
+  }
+
+  .row {
+    padding-block: 12px;
+    color: var(--black);
+    font-weight: 600;
+    font-size: 16px;
+
+    &:hover {
+      color: var(--pink);
+    }
+    span {
+      margin-left: 10px;
+    }
+  }
+}
