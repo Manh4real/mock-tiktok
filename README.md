@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Note: Login with Phone, Code
 
-# Current Work (1 Sep, 2022)
+# Current Work (4 Sep, 2022)
 
 - Add Redux
 - Fix Modal Implementation
