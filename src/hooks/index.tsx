@@ -5,3 +5,5 @@ export { default as useNavigateToVideoDetails } from "./useNavigateToVideoDetail
 export { default as usePagesFetch } from "./usePagesFetch";
 export { default as useLikeComment } from "./useLikeComment";
 export { default as useRedirect } from "./useRedirect";
+export { default as useVideoTimeProgress } from "./useVideoTimeProgress";
+export { default as useModal } from "./useModal";

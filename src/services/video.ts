@@ -114,3 +114,18 @@ export const uploadVideo = async (body: Body) => {
 
     return data.data;
 }
+
+export const deleteVideo = async (videoId: number) => {
+    const token = getToken();
+
+    if (!token) return;
+
+    const response = await api.delete(`videos/${videoId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    const result = response.data;
+
+    return result;
+}

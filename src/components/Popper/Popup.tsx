@@ -7,13 +7,14 @@ import { BsChevronLeft } from "react-icons/bs";
 
 // components
 import CustomButton from "_/components/CustomButton";
+import PopupItemModal from "./PopupItemModal";
 
 // styles
 import styles from "./Popper.module.scss";
 
 // types
 import { PopupMenuItem } from "_/types";
-import { useModalContext } from "_/contexts";
+// import { useModalContext } from "_/contexts";
 import { PopperRefObject } from "./";
 
 interface PopupMenuChildren {
@@ -28,7 +29,6 @@ type History = PopupMenuChildren[];
 const Popup = React.forwardRef(
   ({ menu }: PopupProps, ref: React.Ref<PopperRefObject>) => {
     //
-    const { setAppModal } = useModalContext();
 
     // menu history
     const [history, setHistory] = useState<History>([
@@ -76,9 +76,7 @@ const Popup = React.forwardRef(
                 [styles["menu-popup__items--titled"]]: !!current.title,
               })}
             >
-              {current.content.map((item, i) =>
-                getItem(setAppModal, item, onNext, i)
-              )}
+              {current.content.map((item, i) => getItem(item, onNext, i))}
             </div>
           </ul>
         )}
@@ -88,13 +86,12 @@ const Popup = React.forwardRef(
 );
 
 function getItem(
-  setAppModal: React.Dispatch<React.SetStateAction<JSX.Element>>,
   current: PopupMenuItem,
   onNext: (item: PopupMenuItem) => void,
   i: number
 ) {
   // outer content
-  let content: JSX.Element;
+  let content: JSX.Element = <></>;
 
   // item props
   const props = {
@@ -117,17 +114,19 @@ function getItem(
         {itemContent}
       </Link>
     );
+  } else if (current.modal) {
+    // has modal
+    content = (
+      <PopupItemModal className={props.className} modal={current.modal}>
+        {itemContent}
+      </PopupItemModal>
+    );
   } else {
     // is a button
 
     // click event handler
     const handleClick = () => {
       if (current.children) onNext(current);
-      if (current.modal) {
-        // has modal
-        const Modal = current.modal;
-        setAppModal(<Modal />);
-      }
     };
 
     // content

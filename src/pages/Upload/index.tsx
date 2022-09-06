@@ -139,7 +139,10 @@ const Form = () => {
               <VideoUploader setIsAllowed={setIsAllowed_video} />
             </div>
             <div className={styles["right"]}>
-              <CaptionInput setIsAllowed={setIsAllowed_caption} />
+              <CaptionInput
+                value={isAllowed.video.value?.name || ""}
+                setIsAllowed={setIsAllowed_caption}
+              />
               <div className={styles["form__field"]}>
                 <div className={clsx(styles["form__title"])}>Cover</div>
                 <div

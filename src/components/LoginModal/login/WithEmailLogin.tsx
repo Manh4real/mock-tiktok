@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 
 // services
-import { login } from "_/services/auth";
+// import { login } from "_/services/auth";
 
 // components
 import {
@@ -24,13 +24,15 @@ import styles from "../LoginModal.module.scss";
 
 // context
 import { History } from "..";
-import { CurrentUser } from "_/contexts";
+// import { CurrentUser } from "_/contexts";
 
 // config
 import routes from "_/config/routes";
 
 // context
-import { useLoginContext, useModalContext } from "_/contexts";
+import // useLoginContext,
+// useModalContext,
+"_/contexts";
 import { SubmitProvider, useSubmit } from "_/contexts/submit/loginWithEmail";
 
 // hooks
@@ -40,6 +42,13 @@ import { useRedirect } from "_/hooks";
 import { FormLocation, FormProps } from "../types";
 import { ValidationType } from "_/validation/Validation";
 import { AllowedInputProperty } from "_/contexts/submit";
+
+// context
+import { useLoginModalToggle } from "../context";
+
+// Redux
+import { login } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 function WithEmailLogin(props: FormProps) {
   return (
@@ -51,9 +60,9 @@ function WithEmailLogin(props: FormProps) {
 
 const Form = ({ at = FormLocation.MODAL }: FormProps) => {
   const { pushHistory } = useContext(History);
-  const { clearModal } = useModalContext();
+  const { handleClose: clearModal } = useLoginModalToggle();
 
-  const { setCurrentUserInfo } = useLoginContext();
+  const dispatch = useAppDispatch();
 
   const { redirect, redirectSearchParamString: redirectSearchParams } =
     useRedirect();
@@ -75,13 +84,19 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
 
     setLoading(true);
 
-    login(isAllowed.email.value, isAllowed.password.value)
-      .then((result: CurrentUser["info"]) => {
-        if (at === FormLocation.MODAL) clearModal();
-        else if (at === FormLocation.PAGE) redirect();
+    dispatch(
+      login({
+        email: isAllowed.email.value,
+        password: isAllowed.password.value,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        if (at === FormLocation.MODAL) {
+          clearModal(e as React.MouseEvent);
+        } else if (at === FormLocation.PAGE) redirect();
 
         alert("Logged in.");
-        setCurrentUserInfo(result);
       })
       .catch(() => {
         alert("Invalid Email or Password.");

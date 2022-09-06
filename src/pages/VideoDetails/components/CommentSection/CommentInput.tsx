@@ -4,25 +4,31 @@ import clsx from "clsx";
 // styles
 import styles from "./CommentSection.module.scss";
 
+// components
+import { Spinner } from "_/components/icons";
+
 // services
-import { createNewComment } from "_/services/comment";
+import { createNewComment as api_createNewComment } from "_/services/comment";
 
 // contexts
-import { useLoginContext } from "_/contexts";
+import { useCommentCommand } from "_/contexts";
 import { withLoginModal } from "_/hoc";
 
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
-import { Comment as CommentInterface } from "_/types";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
   video_uuid: string;
-  addNewComment: (comment: CommentInterface) => void;
 }
 
-const CommentInput = ({ addNewComment, video_uuid, showLoginModal }: Props) => {
-  const { isLoggedIn } = useLoginContext();
+const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
+  const isLoggedIn = useIsLoggedIn();
+  const { addComment: UI_addNewComment } = useCommentCommand();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,11 +41,18 @@ const CommentInput = ({ addNewComment, video_uuid, showLoginModal }: Props) => {
       return;
     }
 
-    createNewComment(video_uuid, value).then((result) => {
-      setValue("");
+    if (loading) return;
 
-      addNewComment(result);
-    });
+    setLoading(true);
+    api_createNewComment(video_uuid, value)
+      .then((result) => {
+        setValue("");
+
+        UI_addNewComment(result);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -60,7 +73,7 @@ const CommentInput = ({ addNewComment, video_uuid, showLoginModal }: Props) => {
         })}
         onClick={handlePostComment}
       >
-        Post
+        {loading ? <Spinner style={{ width: 16, height: 16 }} /> : "Post"}
       </div>
     </div>
   );

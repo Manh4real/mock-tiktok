@@ -21,17 +21,17 @@ import { EmailSignupDesc } from "./components";
 import { SubmitProvider } from "_/contexts/submit/signupWithEmail";
 import { useSubmit } from "_/contexts/submit/signupWithEmail";
 
-// services
-import { signup } from "_/services/auth";
-
 // context
-import { useModalContext } from "_/contexts";
-import { CurrentUser, useLoginContext } from "_/contexts";
+import { useLoginModalToggle } from "../context";
 
 // types
 import { AllowedInputProperty } from "_/contexts/submit";
 import { ValidationType } from "_/validation/Validation";
 import { FormLocation } from "../types";
+
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import { signup } from "_/features/currentUser/currentUserSlice";
 
 interface Props {
   at: FormLocation;
@@ -47,8 +47,8 @@ function WithEmailSignup(props: Props) {
 }
 
 const Form = ({ at, toggleToEmail }: Props) => {
-  const { clearModal } = useModalContext();
-  const { setCurrentUserInfo } = useLoginContext();
+  const dispatch = useAppDispatch();
+  const { handleClose: clearModal } = useLoginModalToggle();
 
   // submit
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
@@ -66,12 +66,19 @@ const Form = ({ at, toggleToEmail }: Props) => {
     setLoading(true);
 
     //
-    signup(isAllowed.email.value, isAllowed.password.value)
-      .then((result: CurrentUser["info"]) => {
-        if (at === FormLocation.MODAL) clearModal();
+    dispatch(
+      signup({
+        email: isAllowed.email.value,
+        password: isAllowed.password.value,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        if (at === FormLocation.MODAL) {
+          clearModal(e);
+        }
 
         alert("Signed up.");
-        setCurrentUserInfo(result);
       })
       .catch(() => {
         alert("This email has been used.");

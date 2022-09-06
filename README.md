@@ -8,8 +8,5 @@ Note: Login with Phone, Code
 
 # Current Work (1 Sep, 2022)
 
-- Video details ✅
-- update profile: avatar, name, bio (username just for illustration) ✅
-- upload video ✅
-- comment on a video
-- delete own's comment, like a comment
+- Add Redux
+- Fix Modal Implementation

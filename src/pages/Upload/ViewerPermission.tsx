@@ -38,8 +38,20 @@ const ViewerPermission = ({ setIsAllowed }: Props) => {
   const { createNewDiscardObserver } = useSubmit();
 
   useEffect(() => {
-    createNewDiscardObserver({ reset });
-  }, [createNewDiscardObserver, reset]);
+    createNewDiscardObserver({
+      reset: () => {
+        reset();
+
+        const a = Object.entries(initialValue)
+          .filter(([, checked]) => checked)
+          .map(([key]) => {
+            return key;
+          });
+
+        setIsAllowed(a as ViewerPermissionType);
+      },
+    });
+  }, [createNewDiscardObserver, reset, setIsAllowed]);
   //=====================================================
 
   //

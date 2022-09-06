@@ -11,14 +11,14 @@ import { PROFILE_MENU_LIST } from "./constants";
 // icons
 import { CgProfile } from "react-icons/cg";
 
-// context
-import { useLoginContext } from "_/contexts";
+// Redux
+import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
 // styles
 import styles from "./Header.module.scss";
 
 const ProfileButton = () => {
-  const { currentUser } = useLoginContext();
+  const currentUserInfo = useCurrentUserInfo();
 
   return (
     <Popper
@@ -26,8 +26,7 @@ const ProfileButton = () => {
         {
           icon: <CgProfile />,
           to:
-            "/@" +
-            ((currentUser && currentUser.info.data.nickname) || "unknown"),
+            "/@" + ((currentUserInfo && currentUserInfo.nickname) || "unknown"),
           title: "View profile",
         },
         ...PROFILE_MENU_LIST,
@@ -35,7 +34,7 @@ const ProfileButton = () => {
       hideOnClick={false}
     >
       <CustomButton className={styles["header__profile"]} unset>
-        <Image src="" />
+        <Image src={currentUserInfo?.avatar || ""} />
       </CustomButton>
     </Popper>
   );

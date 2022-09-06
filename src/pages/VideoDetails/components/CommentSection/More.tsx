@@ -9,11 +9,11 @@ import { FiFlag } from "react-icons/fi";
 // components
 import DeleteCommentButton from "./DeleteCommentButton";
 
-// context
-import { useLoginContext } from "_/contexts";
-
 // styles
 import styles from "./CommentSection.module.scss";
+
+// Redux
+import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
 // types
 interface Props {
@@ -22,9 +22,9 @@ interface Props {
 }
 
 function More({ authorId, commentId }: Props) {
-  const { currentUser } = useLoginContext();
+  const currentUserInfo = useCurrentUserInfo();
 
-  const byCurrentUser = authorId === currentUser?.info.data.id;
+  const byCurrentUser = authorId === currentUserInfo?.id;
 
   const content = useMemo(() => {
     if (byCurrentUser) return <DeleteCommentButton commentId={commentId} />;

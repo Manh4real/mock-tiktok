@@ -3,11 +3,13 @@ import clsx from "clsx";
 
 // components
 import CustomButton from "_/components/CustomButton";
-import { useLoginContext } from "_/contexts";
 import { withLoginModal } from "_/hoc";
 
 // hooks
 import { useFollow } from "_/hooks";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
@@ -28,7 +30,7 @@ function FollowButton({
 }: Props) {
   const [followed, toggleFollow] = useFollow(isFollowed, accountId);
 
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {

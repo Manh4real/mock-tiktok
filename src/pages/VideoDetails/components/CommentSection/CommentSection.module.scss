@@ -97,7 +97,7 @@
   cursor: pointer;
 }
 .reactions-count {
-  margin-top: -12px;
+  align-self: flex-start;
 
   display: flex;
   flex-direction: column;
@@ -125,6 +125,8 @@
 
   cursor: pointer;
 }
+
+//================================================================
 .popup {
   min-width: 200px;
   padding: 8px 16px;

@@ -6,7 +6,12 @@ import Sidebar from "_/components/Sidebar";
 
 import styles from "./DefaultLayout.module.scss";
 
-function DefaultLayout() {
+// types
+interface Props {
+  children?: React.ReactNode;
+}
+
+function DefaultLayout({ children }: Props) {
   return (
     <React.Fragment>
       <Header isFullWidth={false} />
@@ -14,6 +19,7 @@ function DefaultLayout() {
         <Sidebar />
         <main style={{ marginLeft: 356 }}>
           <Outlet />
+          {children}
         </main>
       </div>
     </React.Fragment>

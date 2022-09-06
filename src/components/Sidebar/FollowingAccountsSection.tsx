@@ -12,7 +12,7 @@ import Account from "./Account";
 import styles from "./Sidebar.module.scss";
 
 // hooks
-import { useLoginContext } from "_/contexts/AppContext";
+// import { useLoginContext } from "_/contexts/AppContext";
 
 // services
 import { getFollowingAccounts } from "_/services/account";
@@ -22,9 +22,13 @@ import { usePagesFetch } from "_/hooks";
 
 // types
 import { Account as AccountInterface } from "_/types";
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 const FollowingAccountsSection = () => {
-  const { currentUser, isLoggedIn } = useLoginContext();
+  // const { currentUser, isLoggedIn } = useLoginContext();
+  // const currentUserInfo = currentUser?.info.data;
+
+  const isLoggedIn = useIsLoggedIn();
 
   const {
     results: accounts,
@@ -33,7 +37,7 @@ const FollowingAccountsSection = () => {
     setResults,
     setPage,
     handleFetchNext,
-  } = usePagesFetch<AccountInterface>(getFollowingAccounts, !currentUser, {
+  } = usePagesFetch<AccountInterface>(getFollowingAccounts, !isLoggedIn, {
     errorMessage: "Error: Can't get following accounts.",
   });
 

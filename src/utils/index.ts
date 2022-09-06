@@ -22,7 +22,7 @@ export function numberCompact(number: number | undefined) {
     return temp.toFixed(1) + affix;
 }
 
-export function formatTime(sec: number) {
+export function formatTime(sec: number, compact: boolean = false) {
     const sec_num = sec;
     let hours: number | string = Math.floor(sec_num / 3600);
     let minutes: number | string = Math.floor((sec_num - (hours * 3600)) / 60);

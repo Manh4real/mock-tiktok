@@ -6,15 +6,18 @@ import { KeyboardUp } from "_/components/icons";
 // components
 import Modal from "_/components/Modal";
 
+// hooks
+
 // styles
 import styles from "./KeyboardModal.module.scss";
 
 // types
-import { ModalRefObject } from "_/types";
+import { ModalProps } from "_/types";
+interface Props extends ModalProps {}
 
-const KeyboardModal = React.forwardRef((_, ref: React.Ref<ModalRefObject>) => {
+const KeyboardModal = ({ handleClose }: Props) => {
   return (
-    <Modal ref={ref}>
+    <Modal handleClose={handleClose}>
       <div className={styles["container"]}>
         <div className={styles["title"]}>Keyboard Shortcuts</div>
         <div className={styles["content"]}>
@@ -52,6 +55,6 @@ const KeyboardModal = React.forwardRef((_, ref: React.Ref<ModalRefObject>) => {
       </div>
     </Modal>
   );
-});
+};
 
 export default KeyboardModal;

@@ -20,11 +20,15 @@ import More from "./More";
 // hoc
 import { withLoginModal } from "_/hoc";
 
+// hooks
+import { useLikeComment } from "_/hooks";
+
 // types
 import { Comment as CommentInterface } from "_/types";
 import { WithLoginModal } from "_/hoc/withLoginModal";
-import { useLikeComment } from "_/hooks";
-import { useLoginContext } from "_/contexts";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props {
   comment: CommentInterface;
@@ -81,7 +85,8 @@ const ReactionsCount = withLoginModal(
     isLiked,
     showLoginModal,
   }: ReactionsCountProps) => {
-    const { isLoggedIn } = useLoginContext();
+    // const { isLoggedIn } = useLoginContext();
+    const isLoggedIn = useIsLoggedIn();
 
     const [liked, toggle, likesCount] = useLikeComment(
       isLiked,

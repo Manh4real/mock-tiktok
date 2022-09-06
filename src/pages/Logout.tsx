@@ -1,24 +1,28 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useLoginContext } from "_/contexts";
-import { logout } from "_/services/auth";
+
+// Redux
+import { logout, useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { clearCurrentUser, token } = useLoginContext();
+
+  const isLoggedIn = useIsLoggedIn();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!token) {
+    if (!isLoggedIn) {
       navigate("/", { replace: true });
       return;
     }
 
-    logout()
+    dispatch(logout())
+      .unwrap()
       .then((response) => {
         console.log("logged out", response);
 
         localStorage.setItem("tiktok_access_token", JSON.stringify(null));
-        clearCurrentUser();
       })
       .catch(() => {
         console.log("Logout Error: Something went wrong.");
@@ -26,7 +30,7 @@ const Logout = () => {
       .finally(() => {
         navigate("/", { replace: true });
       });
-  }, [navigate, clearCurrentUser, token]);
+  }, [dispatch, isLoggedIn, navigate]);
 
   return <></>;
 };

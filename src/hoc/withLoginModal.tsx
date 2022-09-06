@@ -1,14 +1,12 @@
-import React, { useRef } from "react";
+import React from "react";
 
 // components
 import LoginModal from "_/components/LoginModal";
 
-// context
-import { useModalContext } from "_/contexts";
+// hooks
+import { useModal } from "_/hooks";
 
 // types
-import { ModalRefObject } from "_/types";
-
 export interface WithLoginModal {
   showLoginModal: () => void;
 }
@@ -17,18 +15,16 @@ function withLoginModal<T extends WithLoginModal = WithLoginModal>(
   WrappedComponent: React.ComponentType<T>
 ) {
   const ReturnedComponent = (props: Omit<T, keyof WithLoginModal>) => {
-    const { setAppModal } = useModalContext();
-
-    const loginModalRef = useRef<ModalRefObject>(null);
+    const { handleOpen, isOpened, handleClose } = useModal();
 
     const showLoginModal = () => {
-      loginModalRef.current?.handleOpen();
-      setAppModal(<LoginModal ref={loginModalRef} />);
+      handleOpen();
     };
 
     return (
       <>
         <WrappedComponent {...(props as T)} showLoginModal={showLoginModal} />
+        {isOpened && <LoginModal handleClose={handleClose} />}
       </>
     );
   };

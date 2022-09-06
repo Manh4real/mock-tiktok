@@ -1,8 +1,11 @@
 import React from "react";
 import { useParams } from "react-router";
 
-// context
-import { useLoginContext } from "_/contexts";
+// Redux
+import {
+  useCurrentUserInfo,
+  useIsLoggedIn,
+} from "_/features/currentUser/currentUserSlice";
 
 // components
 import CommonSidebar, { SidebarDelimiter } from "../common";
@@ -13,11 +16,12 @@ import Suggested from "../Suggested";
 function CompactSidebar() {
   const params = useParams();
 
-  const { isLoggedIn, currentUser } = useLoginContext();
+  const currentUserInfo = useCurrentUserInfo();
+  const isLoggedIn = useIsLoggedIn();
 
   // current page is of current logged-in user
   const isSelf =
-    isLoggedIn && params.usernameParam === currentUser?.info.data.nickname;
+    isLoggedIn && params.usernameParam === currentUserInfo?.nickname;
 
   return (
     <CommonSidebar compact>

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 // variables
 import routes, { pagesTitle } from "_/config/routes";
+import Posts from "_/pages/Home/Posts";
 
 function Following() {
   // page title
@@ -9,7 +10,11 @@ function Following() {
     document.title = pagesTitle[routes.following] as string;
   }, []);
 
-  return <h1>Following page</h1>;
+  return (
+    <div>
+      <Posts type="following" />
+    </div>
+  );
 }
 
 export default Following;

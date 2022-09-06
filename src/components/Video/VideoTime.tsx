@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import React, { useImperativeHandle, useRef } from "react";
 
 // styles
 import styles from "./Video.module.scss";
@@ -12,7 +7,8 @@ import styles from "./Video.module.scss";
 import { formatTime } from "_/utils";
 
 // hooks
-import { useProgress } from "_/hooks";
+// import { useProgress } from "_/hooks";
+import { useVideoTimeProgress } from "_/hooks";
 
 // types
 import { VideoTimeRefObject } from "./types";
@@ -22,44 +18,17 @@ interface Props {
 }
 
 const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
-  const [shownTime, setShownTime] = useState<number>(0);
-
   const progressBarRef = useRef<HTMLDivElement>(null);
-
   const {
-    hasMouseDown,
     handleMouseDown,
-    progress,
-    setProgress,
+    handleTimeUpdate,
     interactiveUpdateProgress,
-    current,
-  } = useProgress(progressBarRef, {
-    direction: "horizontal",
-    initialValue: 0,
-    target: videoRef.current?.duration || 0,
-    onMouseUp: (hadMouseDownOnProgressBar) => {
-      if (!hadMouseDownOnProgressBar) return;
-
-      if (videoRef.current) {
-        videoRef.current.currentTime = current;
-      }
-    },
-    onMouseMove: () => {
-      setShownTime(current);
-    },
-  });
-
-  const handleTimeUpdate = useCallback(() => {
-    if (hasMouseDown) return;
-
-    if (videoRef.current) {
-      setShownTime(videoRef.current.currentTime);
-      setProgress(videoRef.current.currentTime / videoRef.current.duration);
-    }
-  }, [hasMouseDown, setProgress, videoRef]);
-  const resetTime = useCallback(() => {
-    setProgress(0);
-  }, [setProgress]);
+    progress,
+    resetTime,
+    setShownTime,
+    shownTime,
+    currentProgress,
+  } = useVideoTimeProgress(progressBarRef, videoRef);
 
   //
   useImperativeHandle(
@@ -89,7 +58,7 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
                 newProgress * videoRef.current.duration;
             }
           });
-          setShownTime(current);
+          setShownTime(currentProgress);
         }}
       >
         <div className={styles["currentTimeTrackContainer"]}>

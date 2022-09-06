@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  // useEffect,
-  useCallback,
-} from "react";
+import React, { useState, useCallback } from "react";
 import clsx from "clsx";
 import { To, useNavigate } from "react-router";
 
@@ -17,24 +13,22 @@ import BioInput from "./BioInput";
 // styles
 import styles from "./EditProfileModal.module.scss";
 
-// services
-import {
-  // getCurrentUser,
-  updateCurrentUser,
-} from "_/services/account";
-
 // context
 import { SubmitProvider, useSubmit } from "_/contexts/submit/updateProfile";
 
 // types
-import { Account } from "_/types";
+import { Account, ModalProps } from "_/types";
 import { ValidationType } from "_/validation/Validation";
 import { AllowedInputProperty } from "_/contexts/submit";
 import { Spinner } from "_/components/icons";
-import { CurrentUser, useLoginContext, useModalContext } from "_/contexts";
+import { CurrentUser } from "_/contexts";
+
+// Redux
+import { updateCurrentUser } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 // types
-interface Props {
+interface Props extends ModalProps {
   account: Account;
 }
 
@@ -46,11 +40,10 @@ const EditProfileModal = (props: Props) => {
   );
 };
 
-const Form = ({ account }: Props) => {
+const Form = ({ account, handleClose }: Props) => {
   const navigate = useNavigate();
 
-  const { clearModal } = useModalContext();
-  const { setCurrentUserInfoData } = useLoginContext();
+  const dispatch = useAppDispatch();
 
   // submit
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
@@ -86,11 +79,10 @@ const Form = ({ account }: Props) => {
         }
       : textBody;
 
-    updateCurrentUser(body)
-      .then((result: CurrentUser["info"]["data"]) => {
-        console.log(result);
-
-        clearModal();
+    dispatch(updateCurrentUser(body))
+      .unwrap()
+      .then((result: CurrentUser["info"]["data"] | null) => {
+        if (!result) return;
 
         alert("Updated profile.");
 
@@ -101,7 +93,6 @@ const Form = ({ account }: Props) => {
             : "/@" + result.nickname,
           { replace: true }
         );
-        setCurrentUserInfoData(result);
       })
       .catch(() => {
         alert(
@@ -154,7 +145,7 @@ const Form = ({ account }: Props) => {
     [setIsAllowed]
   );
 
-  // ⚠️
+  // ⚠️ call API or pass through props
   // const [account, setAccount] = useState<Account>();
 
   // useEffect(() => {
@@ -176,7 +167,7 @@ const Form = ({ account }: Props) => {
   if (!account) return null;
 
   return (
-    <Modal>
+    <Modal handleClose={handleClose}>
       <div className={styles["container"]}>
         <header className={styles["header"]}>Edit profile</header>
         <form
@@ -240,8 +231,9 @@ const Form = ({ account }: Props) => {
             <button
               type="button"
               className={clsx("grey-outlined", styles["cancel-button"])}
-              onClick={() => {
-                clearModal();
+              onClick={(e: React.MouseEvent) => {
+                // clearModal();
+                handleClose(e);
               }}
             >
               Cancel

@@ -1,9 +1,13 @@
+import { ValidateValue } from "_/validation/Validation";
+
 export interface WithInputValidation {
     hasError: boolean;
     isEmpty: boolean;
     isValid: boolean;
     errorMessage: string;
     reset: () => void;
+    setIsValid: React.Dispatch<React.SetStateAction<boolean>>;
+    validate: (value: string) => ValidateValue;
     inputProps: {
         value: string;
         onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;

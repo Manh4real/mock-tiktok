@@ -3,10 +3,14 @@ import clsx from "clsx";
 
 // icons
 import { FiUploadCloud } from "react-icons/fi";
+import { BiCheckCircle } from "react-icons/bi";
 
 // styles
 import styles from "./Upload.module.scss";
 import { ValidationType } from "_/validation/Validation";
+
+// components
+import UploadVideo from "./UploadVideo";
 
 // hoc
 import { withFileValidation } from "_/hoc";
@@ -52,7 +56,7 @@ const VideoUploader = ({
     <div className={styles["video-file-container"]}>
       {videoUrl && isValid ? (
         <div className={clsx("flex-center", styles["video-container"])}>
-          <video src={videoUrl} controls className={styles["video"]} />
+          <UploadVideo src={videoUrl} className={styles["video"]} />
           <VideoName
             content={videoFile.name}
             onClick={() => {
@@ -124,6 +128,12 @@ const VideoName = ({
 }) => {
   return (
     <div className={clsx("flex-space-between", styles["video__title"])}>
+      <span
+        className={clsx("flex-center")}
+        style={{ marginRight: 3, fontSize: 16, fill: "currentcolor" }}
+      >
+        <BiCheckCircle />
+      </span>
       <span className={clsx("text-overflow-elipse")}>{content}</span>
 
       <span
@@ -132,7 +142,7 @@ const VideoName = ({
           fontWeight: 500,
           cursor: "pointer",
           whiteSpace: "nowrap",
-          marginLeft: 4,
+          marginLeft: 10,
         }}
         onClick={() => {
           onClick();

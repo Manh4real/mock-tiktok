@@ -27,6 +27,7 @@ const VideoContainer = ({ video }: Props) => {
         e.preventDefault();
         e.stopPropagation();
 
+        videoRef.current?.pause();
         //PostDetails
         navigate();
       }}

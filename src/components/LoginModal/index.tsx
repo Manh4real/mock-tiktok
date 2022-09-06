@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef, useState } from "react";
+import React, { useState } from "react";
 
 // icons
 import { BsChevronLeft } from "react-icons/bs";
@@ -6,18 +6,18 @@ import { BsChevronLeft } from "react-icons/bs";
 // components
 import Modal from "_/components/Modal";
 import LoginStart from "./LoginStart";
+import { Provider } from "./context";
 
 // styles
 import styles from "./LoginModal.module.scss";
 
 // types
-import { ModalRefObject } from "_/types";
-
+import { ModalProps } from "_/types";
 export enum FormState {
   LOG_IN,
   SIGN_UP,
 }
-interface Props {}
+interface Props extends ModalProps {}
 
 interface HistoryContextValue {
   history: JSX.Element[];
@@ -31,9 +31,7 @@ export const History = React.createContext<HistoryContextValue>({
 const initialState = [<LoginStart />];
 const initialFormState = [FormState.LOG_IN];
 
-function LoginModal(props: Props, ref: React.Ref<ModalRefObject | null>) {
-  const modalRef = useRef<ModalRefObject>(null);
-
+function LoginModal({ handleClose }: Props) {
   // log in <-> sign up
   // form state history
   const [stateHistory, setStateHistory] =
@@ -59,28 +57,28 @@ function LoginModal(props: Props, ref: React.Ref<ModalRefObject | null>) {
   };
 
   // show / hide modal
-  useImperativeHandle(ref, () => modalRef.current);
 
   return (
-    <Modal
-      ref={modalRef}
-      closeButtonStyle={{ transform: "scale(1.7)" }}
-      onHide={() => setHistory(initialState)}
-    >
-      <History.Provider value={{ history, pushHistory }}>
-        <div className={styles["wrapper"]}>
-          {history.length > 1 && (
-            <div className={styles["back-btn"]} onClick={goBack}>
-              <BsChevronLeft />
+    <Provider handleClose={handleClose}>
+      <Modal
+        handleClose={handleClose}
+        closeButtonStyle={{ transform: "scale(1.7)" }}
+      >
+        <History.Provider value={{ history, pushHistory }}>
+          <div className={styles["wrapper"]}>
+            {history.length > 1 && (
+              <div className={styles["back-btn"]} onClick={goBack}>
+                <BsChevronLeft />
+              </div>
+            )}
+            <div className={styles["container"]}>
+              <div className={styles["content"]}>{currentElement}</div>
             </div>
-          )}
-          <div className={styles["container"]}>
-            <div className={styles["content"]}>{currentElement}</div>
           </div>
-        </div>
-      </History.Provider>
-    </Modal>
+        </History.Provider>
+      </Modal>
+    </Provider>
   );
 }
 
-export default React.forwardRef(LoginModal);
+export default LoginModal;

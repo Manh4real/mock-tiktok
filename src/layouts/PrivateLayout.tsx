@@ -5,7 +5,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import routes from "_/config/routes";
 
 // context
-import { useLoginContext } from "_/contexts";
+// import { useLoginContext } from "_/contexts";
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 // types
 interface Props {
@@ -13,9 +14,10 @@ interface Props {
 }
 
 function PrivateLayout({ children }: Props) {
-  const { token } = useLoginContext();
+  // const { token } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
-  if (!token) return <Navigate to={routes.login} replace={true} />;
+  if (!isLoggedIn) return <Navigate to={routes.login} replace={true} />;
 
   return (
     <>

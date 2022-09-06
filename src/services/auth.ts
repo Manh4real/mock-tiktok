@@ -1,4 +1,5 @@
 import api from "_/api";
+import { Account } from "_/types";
 import { getToken } from "./account";
 
 export const login = async (email: string, password: string) => {
@@ -11,7 +12,7 @@ export const login = async (email: string, password: string) => {
     // 
     localStorage.setItem("tiktok_access_token", JSON.stringify(result.meta.token));
 
-    return result;
+    return result.data as Account;
 }
 
 export const signup = async (email: string, password: string) => {
@@ -24,7 +25,7 @@ export const signup = async (email: string, password: string) => {
 
     localStorage.setItem("tiktok_access_token", JSON.stringify(result.meta.token));
 
-    return result;
+    return result.data as Account;
 }
 
 export const logout = async () => {

@@ -1,15 +1,15 @@
 import React from "react";
 
-// hooks
-import { useLoginContext } from "_/contexts/AppContext";
-
 // components
 import CommonSidebar, { SidebarDelimiter } from "./common";
 import LogInSection from "./LogInSection";
 import Suggested from "./Suggested";
 
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+
 function Sidebar() {
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
   return (
     <CommonSidebar>

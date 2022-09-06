@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface IconProps {
   solid?: boolean;
 }
@@ -12,11 +14,11 @@ export interface PopupMenuItem {
     content: PopupMenuItem[];
   };
   delimited?: boolean;
-  modal?: React.ForwardRefExoticComponent<React.RefAttributes<ModalRefObject>>;
+  modal?: React.FC<ModalProps>;
 }
 
-export interface ModalRefObject {
-  handleOpen: () => void;
+export interface ModalProps {
+  handleOpen?: () => void;
   handleClose: (e: React.MouseEvent) => void;
 }
 

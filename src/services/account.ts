@@ -1,4 +1,5 @@
 import api from "_/api";
+import { Account } from "_/types";
 
 export const getToken = () => {
     const a = localStorage.getItem("tiktok_access_token") || "null";
@@ -37,7 +38,7 @@ export const updateCurrentUser = async (body: Body) => {
 
     const token = getToken();
 
-    if (!token) return;
+    if (!token) return null;
 
     const response = await api.post(`auth/me`, formData, {
         params: {
@@ -49,20 +50,16 @@ export const updateCurrentUser = async (body: Body) => {
     })
     const data = response.data;
 
-    return data.data;
+    return data.data as Account;
 }
 
-export const getAccount = async (id: number) => {
-
-}
-
-export const getAccountByNickname = async (nickname: string, token: string | null) => {
-    const _token = getToken();
+export const getAccountByNickname = async (nickname: string) => {
+    const token = getToken();
     let headers = {};
 
-    if (_token !== null) {
+    if (token) {
         headers = {
-            Authorization: `Bearer ${_token}`
+            Authorization: `Bearer ${token}`
         }
     }
 
@@ -76,7 +73,7 @@ export const getSuggestedAccounts = async () => {
     const token = getToken();
     let headers = {};
 
-    if (token !== null) {
+    if (token) {
         headers = {
             Authorization: `Bearer ${token}`
         }
@@ -104,7 +101,6 @@ export const getFollowingAccounts = async (page: number = 1) => {
             page
         },
         headers: {
-            // Authorization: `Bearer ${ACCESS_TOKEN}`
             Authorization: `Bearer ${token}`
         }
     });

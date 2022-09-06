@@ -9,14 +9,14 @@ import CustomButton from "_/components/CustomButton";
 // hoc
 import { withLoginModal } from "_/hoc";
 
-// context
-import { useLoginContext } from "_/contexts";
-
 // styles
 import styles from "./Profile.module.scss";
 
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
   accountId: number;
@@ -30,7 +30,7 @@ const FollowingButton = ({
   setFollowing_profile,
   showLoginModal,
 }: Props) => {
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
   const [followed, toggleFollow] = useFollow(following, accountId);
 

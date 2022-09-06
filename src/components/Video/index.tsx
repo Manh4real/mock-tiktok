@@ -15,18 +15,19 @@ import { Pause } from "_/components/icons";
 import Voice from "./Voice";
 import VideoTime from "./VideoTime";
 
-// hooks
-// import { useElementOnScreen } from "_/hooks";
-
 // styles
 import styles from "./Video.module.scss";
-
-// context
-import { useCurrentVideo } from "_/contexts";
 
 // types
 import { VoiceRefObject, VideoTimeRefObject } from "./types";
 import { VideoRefObject } from "_/types";
+
+// Redux
+import {
+  changeVideo,
+  useCurrentVideo,
+} from "_/features/currentVideo/currentVideoSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 interface AdditionalVideoProps {
   postId?: number;
@@ -45,7 +46,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     ...otherProps
   } = props;
 
-  const { currentVideo, handleVideoChange } = useCurrentVideo();
+  const currentVideo = useCurrentVideo();
+  const dispatch = useAppDispatch();
 
   const [isReady, setIsReady] = useState<boolean>(autoPlay);
   const [playing, setPlaying] = useState<boolean>(autoPlay);
@@ -89,7 +91,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
     // change current videos info
     if (postId !== undefined && currentVideo.postId !== postId) {
-      handleVideoChange(postId, videoRefObject);
+      dispatch(changeVideo({ postId }));
     }
 
     setPlaying((prev) => !prev);

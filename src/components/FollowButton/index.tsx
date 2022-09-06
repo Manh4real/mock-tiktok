@@ -10,10 +10,12 @@ import styles from "./FollowButton.module.scss";
 
 // hooks
 import { useFollow } from "_/hooks";
-import { useLoginContext } from "_/contexts/AppContext";
 
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
   isFollowed: boolean;
@@ -22,7 +24,7 @@ interface Props extends WithLoginModal {
 }
 
 function FollowButton({ isFollowed, accountId, showLoginModal, style }: Props) {
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
   const [followed, toggleFollow] = useFollow(isFollowed, accountId);
 

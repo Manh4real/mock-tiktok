@@ -23,8 +23,13 @@ const ViewerAllowance = ({ setIsAllowed }: Props) => {
   //=====================================================
   const { createNewDiscardObserver } = useSubmit();
   useEffect(() => {
-    createNewDiscardObserver({ reset });
-  }, [createNewDiscardObserver, reset]);
+    createNewDiscardObserver({
+      reset: () => {
+        reset();
+        setIsAllowed(initialValue);
+      },
+    });
+  }, [createNewDiscardObserver, reset, setIsAllowed]);
   //=====================================================
 
   //

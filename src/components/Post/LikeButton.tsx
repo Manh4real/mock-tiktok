@@ -8,14 +8,20 @@ import { BsFillHeartFill } from "react-icons/bs";
 import { numberCompact } from "_/utils";
 
 // context
-import { useCurrentVideo, useLoginContext } from "_/contexts";
+import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
 
 // services
 import { dislikePost, likePost } from "_/services/post";
-import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
-import { Video } from "_/types";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 // types
+import { Video } from "_/types";
+
+// Redux
+import { useCurrentVideo } from "_/features/currentVideo/currentVideoSlice";
+
 interface Props extends WithLoginModal {
   isLiked: boolean;
   styles: {
@@ -32,11 +38,9 @@ const LikeButton = ({
   likesCount,
   showLoginModal,
 }: Props) => {
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
-  const {
-    currentVideo: { postId: currentPostId },
-  } = useCurrentVideo();
+  const { postId: currentPostId } = useCurrentVideo();
 
   const [value, setValue] = useState<number>(likesCount);
   const [active, setActive] = useState<boolean>(isLiked);

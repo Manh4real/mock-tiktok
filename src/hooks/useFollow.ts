@@ -1,16 +1,19 @@
 import { AxiosError } from "axios";
 import { useState } from "react";
-import { useLoginContext } from "_/contexts";
+
+// Redux
+import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
 import { followAccount, unfollowAccount } from "_/services/account";
 
 const useFollow = (initialState: boolean, accountId: number) => {
     const [followed, setFollowed] = useState<boolean>(initialState);
 
-    const { currentUser } = useLoginContext();
+    const currentUserInfo = useCurrentUserInfo();
+
 
     const toggle = () => {
-        const currentUserId = currentUser?.info.data.id;
+        const currentUserId = currentUserInfo?.id;
 
         if (currentUserId === accountId) {
             alert("You cannot follow yourself.");

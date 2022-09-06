@@ -25,12 +25,15 @@ import { numberCompact } from "_/utils";
 // services
 import { getAccountByNickname } from "_/services/account";
 
-// context
-import { useLoginContext } from "_/contexts";
-
 // types
 import { Account, Video } from "_/types";
 import { getLikedVideos } from "_/services/video";
+
+// Redux
+import {
+  useCurrentUserInfo,
+  useIsLoggedIn,
+} from "_/features/currentUser/currentUserSlice";
 
 type PageTitleFunc = (name: string, username: string) => string;
 
@@ -39,25 +42,29 @@ function Profile() {
   const [account, setAccount] = useState<Account>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { isLoggedIn, currentUser, token } = useLoginContext();
+  const currentUserInfo = useCurrentUserInfo();
+  const isLoggedIn = useIsLoggedIn();
 
-  const isCurrentUser = currentUser
+  const isCurrentUser = currentUserInfo
     ? isLoggedIn &&
-      currentUser &&
-      account?.nickname === currentUser.info.data.nickname
+      currentUserInfo &&
+      account?.nickname === currentUserInfo.nickname
     : false;
 
   //
   useEffect(() => {
     setLoading(true);
-    getAccountByNickname(params.usernameParam as string, token)
+    getAccountByNickname(params.usernameParam as string)
       .then((acc) => {
         setAccount(acc);
+      })
+      .catch(() => {
+        console.log("Can't get profile.");
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [params.usernameParam, token]);
+  }, [params.usernameParam]);
 
   // page title
   useEffect(() => {
@@ -147,7 +154,9 @@ function Profile() {
 const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
 
 const VideoList = ({ account }: { account: Account }) => {
-  const { currentUser } = useLoginContext();
+  // const { currentUser } = useLoginContext();
+  // const currentUserInfo = currentUser?.info.data;
+  const currentUserInfo = useCurrentUserInfo();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [active, setActive] = useState<"videos" | "liked">("videos");
@@ -160,8 +169,8 @@ const VideoList = ({ account }: { account: Account }) => {
       catchedVideos.set("videos", account.videos);
       setLoading(false);
     } else if (active === "liked") {
-      if (!currentUser) return;
-      if (currentUser.info.data.id !== account.id) return;
+      if (!currentUserInfo) return;
+      if (currentUserInfo.id !== account.id) return;
 
       //
       const catchedLikedVideos = catchedVideos.get("liked");
@@ -180,7 +189,7 @@ const VideoList = ({ account }: { account: Account }) => {
           });
       }
     }
-  }, [account.id, account.videos, active, currentUser]);
+  }, [account.id, account.videos, active, currentUserInfo]);
 
   return (
     <>
@@ -194,11 +203,11 @@ const VideoList = ({ account }: { account: Account }) => {
           Videos
         </button>
         <button
-          disabled={currentUser?.info.data.id !== account.id}
+          disabled={currentUserInfo?.id !== account.id}
           className={clsx({ [styles["active"]]: active === "liked" })}
           onClick={() => {
-            if (!currentUser) return;
-            if (currentUser.info.data.id !== account.id) return;
+            if (!currentUserInfo) return;
+            if (currentUserInfo.id !== account.id) return;
 
             if (active !== "liked") setActive("liked");
           }}

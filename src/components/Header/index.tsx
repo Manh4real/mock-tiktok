@@ -18,8 +18,8 @@ import styles from "./Header.module.scss";
 // variables
 import routes from "_/config/routes";
 
-// hooks
-import { useLoginContext } from "_/contexts/AppContext";
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 // types
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
 }
 
 function Header({ isFullWidth }: Props) {
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
   return (
     <div className={styles["header__container"]}>

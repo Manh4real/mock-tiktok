@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Comment } from "_/types";
 
 interface ContextValue {
+  commentsCount: number;
   addComment: (comment: Comment) => void;
   deleteComment: (commentId: number) => void;
 }
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const initialValue: ContextValue = {
+  commentsCount: 0,
   addComment: () => {},
   deleteComment: () => {},
 };

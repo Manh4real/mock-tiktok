@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ResponseWithPagination } from "_/types";
 
 // type Data<T> = ResponseWithPagination<T>;
 type FetchApiFunc<T> = (page?: number) => Promise<ResponseWithPagination<T> | undefined>;
-
+// type HashMapResults<T> = {
+//     [key: string]: T
+// }
 /**
  * fetchApi function must be memoized, otherwise component re-renders infinitely
 */
 const usePagesFetch =
-    <T>(
+    <T extends { id: number }>(
         fetchApi: FetchApiFunc<T>,
         pauseCallCheck: boolean = false,
         options: Partial<{
@@ -24,6 +26,17 @@ const usePagesFetch =
         const [page, setPage] = useState<number>(-1);
         const [totalPage, setTotalPage] = useState<number>(1);
 
+        // const hashMapResults = useRef(new Map<number, T>([])).current;
+
+        const saveResults = useMemo(() => {
+            const hashMapResults = new Map<number, T>([]);
+            results.forEach((result) => {
+                hashMapResults.set(result.id, result);
+            })
+
+            return Array.from(hashMapResults.values());
+        }, [results]);
+
         const handleFetchNext = () => {
             if (pauseCallCheck) return;
 
@@ -32,12 +45,15 @@ const usePagesFetch =
                 return;
             }
 
+            if (loading) return;
+
             setLoading(true);
             fetchApi(page + 1)
                 .then((data) => {
                     if (!data) return;
 
                     setResults((prev) => [...prev, ...data.data]);
+                    // setResults([...data.data]);
 
                     //
                     const currentPage = data.meta.pagination.current_page;
@@ -45,7 +61,7 @@ const usePagesFetch =
                     setPage(currentPage);
                 })
                 .catch(() => {
-                    console.log(options.errorMessage);
+                    console.log("Error: ", options.errorMessage);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -80,7 +96,7 @@ const usePagesFetch =
 
 
         return {
-            results,
+            results: saveResults,
             loading,
             hasMore: page < totalPage,
             end: page >= totalPage,

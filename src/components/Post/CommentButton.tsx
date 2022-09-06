@@ -6,14 +6,14 @@ import { Chat } from "_/components/icons";
 // utils
 import { numberCompact } from "_/utils";
 
-// context
-import { useLoginContext } from "_/contexts";
-
 // hoc
 import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
 
 // hooks
 import { useNavigateToVideoDetails } from "_/hooks";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 // types
 interface Props extends WithLoginModal {
@@ -32,7 +32,8 @@ const CommentButton = ({
   commentsCount,
   showLoginModal,
 }: Props) => {
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
+
   const navigate = useNavigateToVideoDetails(postId);
 
   const handleClick = useCallback(() => {

@@ -21,10 +21,14 @@ import LikeButton from "_/components/Post/LikeButton";
 import CommentButton from "_/components/Post/CommentButton";
 
 import CommentSection from "./components/CommentSection";
+import VideoMoreButton from "./components/VideoMoreButton";
 
 // icons
 import { BsChevronLeft } from "react-icons/bs";
-import { Close, MusicNote } from "_/components/icons";
+import { Close, MusicNote, Spinner } from "_/components/icons";
+
+// pages
+import { UnavailableVideoPage } from "_/pages";
 
 // styles
 import styles from "./VideoDetails.module.scss";
@@ -35,11 +39,13 @@ import { getVideo } from "_/services/video";
 // config
 import routes from "_/config/routes";
 
-// context
-import { useLoginContext } from "_/contexts";
-
 // types
 import { Video as VideoInterface } from "_/types";
+
+// Redux
+import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
+
+type ProgressState = "start" | "loading" | "fulfilled";
 
 function VideoDetails() {
   const navigate = useNavigate();
@@ -51,18 +57,46 @@ function VideoDetails() {
   const params = useParams();
   const videoId = params.videoId;
 
-  const { currentUser } = useLoginContext();
+  const currentUserInfo = useCurrentUserInfo();
+
   const [video, setVideo] = useState<VideoInterface>();
+  const [state, setState] = useState<ProgressState>("start");
 
   useEffect(() => {
     if (!videoId) return;
 
-    getVideo(+videoId).then((data) => {
-      setVideo(data);
-    });
-  }, [videoId]);
+    setState("loading");
+    getVideo(+videoId)
+      .then((data) => {
+        setVideo(data);
+      })
+      .catch(() => {
+        console.log("Can't get the video");
+        location.state = null;
+        document.title = "This video is unavailable.";
+      })
+      .finally(() => {
+        setState("fulfilled");
+      });
+  }, [location, videoId]);
 
-  if (!video) return null;
+  if (state === "loading")
+    return (
+      <Spinner
+        style={{
+          marginTop: 30,
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      />
+    );
+  if (!video && state === "fulfilled") {
+    return <UnavailableVideoPage />;
+  }
+  if (!video) {
+    return null;
+  }
 
   const author = video.user;
   const authorName =
@@ -114,7 +148,10 @@ function VideoDetails() {
               </div>
             </Link>
           </AccountPopup>
-          {currentUser?.info.data.id !== video.user_id && (
+          {currentUserInfo?.id === video.user_id && (
+            <VideoMoreButton videoId={video.id} />
+          )}
+          {currentUserInfo?.id !== video.user_id && (
             <div className={styles["follow-button"]}>
               <FollowButton
                 styles={styles}

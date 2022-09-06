@@ -10,11 +10,17 @@ import styles from "./Video.module.scss";
 // hooks
 import { useProgress } from "_/hooks";
 
-// context
-import { useCurrentVideo } from "_/contexts";
-
 // types
 import { VoiceRefObject } from "./types";
+
+// Redux
+import {
+  // setMute,
+  setVolume,
+  toggleMute,
+  useCurrentVideo,
+} from "_/features/currentVideo/currentVideoSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 interface Props {
   videoRef: React.MutableRefObject<HTMLVideoElement | null>;
@@ -26,12 +32,8 @@ const Voice = (
   { setActualVideoVolume }: Props,
   ref: React.Ref<VoiceRefObject>
 ) => {
-  const {
-    currentVideo: { muted, volume },
-    handleToggleMute,
-    setMute,
-    saveVolume,
-  } = useCurrentVideo();
+  const { muted, volume } = useCurrentVideo();
+  const dispatch = useAppDispatch();
 
   const volumeTrackbarRef = useRef<HTMLDivElement>(null);
 
@@ -48,14 +50,14 @@ const Voice = (
     target: 1,
     onChange: (newValue) => {
       setActualVideoVolume(newValue);
-      saveVolume(newValue);
-      setMute(newValue === 0);
+
+      dispatch(setVolume(newValue));
     },
   });
 
   // toggle mute/unmute video
   const handleVoice = () => {
-    handleToggleMute();
+    dispatch(toggleMute());
   };
 
   // ⚠️ may update later

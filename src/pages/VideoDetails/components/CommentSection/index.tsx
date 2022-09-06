@@ -18,9 +18,12 @@ import { getComments } from "_/services/comment";
 
 // types
 import { Comment as CommentInterface } from "_/types";
-import { CommentCommandProvider, useLoginContext } from "_/contexts";
+import { CommentCommandProvider } from "_/contexts";
 import { Link, useLocation } from "react-router-dom";
 import routes from "_/config/routes";
+
+// Redux
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props {
   video_uuid: string;
@@ -41,7 +44,7 @@ const CommentSection = ({ video_uuid }: Props) => {
     setResults: setComments,
   } = usePagesFetch<CommentInterface>(fetchComments, false, {});
 
-  const { isLoggedIn } = useLoginContext();
+  const isLoggedIn = useIsLoggedIn();
 
   const sortedComments = useMemo(() => {
     return comments
@@ -68,6 +71,7 @@ const CommentSection = ({ video_uuid }: Props) => {
   );
 
   const contextValue = useRef({
+    commentsCount: comments.length,
     addComment: addNewComment,
     deleteComment,
   }).current;
@@ -89,7 +93,7 @@ const CommentSection = ({ video_uuid }: Props) => {
         <div className={styles["container"]}>{content}</div>
       </div>
 
-      <CommentInput video_uuid={video_uuid} addNewComment={addNewComment} />
+      <CommentInput video_uuid={video_uuid} />
     </CommentCommandProvider>
   );
 };

@@ -2,9 +2,10 @@
   padding-top: var(--header-height);
   margin-inline: auto;
   display: flex;
-  min-height: calc(100vh - 350px);
+  min-height: 100vh;
 
   > main {
     flex: 1;
+    // overflow-x: auto;
   }
 }

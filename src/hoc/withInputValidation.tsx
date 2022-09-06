@@ -18,8 +18,10 @@ const withInputValidation = <
   const ReturnedComponent = (props: Omit<T, keyof WithInputValidation>) => {
     const [value, setValue] = useState<string>("");
 
-    const validate = (value: string) =>
-      validation.validate(validationType, value);
+    const validate = useCallback(
+      (value: string) => validation.validate(validationType, value),
+      []
+    );
     const validatingResult = validate(value);
 
     const [isValid, setIsValid] = useState<boolean>(validate(value).isValid);
@@ -47,6 +49,8 @@ const withInputValidation = <
       isValid: isValid,
       errorMessage: validatingResult.errorMessage,
       reset: reset,
+      setIsValid,
+      validate,
     };
     const inputProps = {
       value: value,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 // icons
@@ -15,49 +15,27 @@ import { getVideoList } from "_/services/video";
 import styles from "./Home.module.scss";
 
 // types
-import { Video, Video as VideoInterface } from "_/types";
+import { Video as VideoInterface } from "_/types";
+import { usePagesFetch } from "_/hooks";
 
-const Posts = () => {
-  const [page, setPage] = useState<number>(-1);
-  const [totalPage, setTotalPage] = useState<number>(1);
-  // const [end, setEnd] = useState<boolean>(false);
-  const [posts, setPosts] = useState<VideoInterface[]>([]);
+interface Props {
+  type?: "for-you" | "following";
+}
+const Posts = ({ type = "for-you" }: Props) => {
+  const fetchVideoList = useCallback(
+    (page?: number) => {
+      return getVideoList(type, page);
+    },
+    [type]
+  );
 
-  const handleLoadMore = () => {
-    // if (end) return;
-
-    if (page >= totalPage) return;
-
-    getVideoList("for-you", page + 1).then((data) => {
-      const rs = data.data as Video[];
-
-      setPosts((prev) => [...prev, ...rs]);
-
-      //
-      const currentPage = data.meta.pagination.current_page;
-      setPage(currentPage);
-    });
-  };
-
-  //
-  // useEffect(() => {
-  //   if (page === 1) window.scrollTo(0, 0);
-  // });
-
-  useEffect(() => {
-    getVideoList().then((data) => {
-      const rs = data.data as Video[];
-
-      setPosts(rs);
-
-      //
-      const total = data.meta.pagination.total_pages;
-      setTotalPage(total);
-
-      const currentPage = data.meta.pagination.current_page;
-      setPage(currentPage);
-    });
-  }, []);
+  const {
+    results: posts,
+    hasMore,
+    handleFetchNext: handleLoadMore,
+  } = usePagesFetch<VideoInterface>(fetchVideoList, false, {
+    errorMessage: "Can't get video list of" + type,
+  });
 
   // #region
   // ⚠️🆘 Experiment: Infinite scroll
@@ -110,7 +88,7 @@ const Posts = () => {
     <InfiniteScroll
       dataLength={posts.length} //This is important field to render the next data
       next={handleLoadMore}
-      hasMore={page < totalPage}
+      hasMore={hasMore}
       scrollThreshold={0.8}
       loader={
         <div className={styles["loader"]}>

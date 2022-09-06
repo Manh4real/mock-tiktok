@@ -14,8 +14,9 @@ import styles from "./Header.module.scss";
 // hoc
 import { withLoginModal } from "_/hoc";
 
-// hooks
-import { useLoginContext } from "_/contexts/AppContext";
+// Redux
+import { useSelector } from "react-redux";
+import { selectCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
 // types
 import { WithLoginModal } from "_/hoc/withLoginModal";
@@ -23,7 +24,8 @@ import { WithLoginModal } from "_/hoc/withLoginModal";
 interface Props extends WithLoginModal {}
 
 const UploadButton = ({ showLoginModal }: Props) => {
-  const { isLoggedIn } = useLoginContext();
+  const currentUserInfo = useSelector(selectCurrentUserInfo);
+  const isLoggedIn = !!currentUserInfo;
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {
