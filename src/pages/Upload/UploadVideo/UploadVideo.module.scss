@@ -1,0 +1,139 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &:not(.has--windowHeight)::after {
+    content: "";
+
+    position: absolute;
+    inset: 50% 0 0;
+
+    background: linear-gradient(to top, #121212c2, transparent);
+    z-index: 1;
+
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &:hover {
+    &:not(.has--windowHeight)::after,
+    .controller {
+      transition: all 0.2s ease-out;
+
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.controller {
+  opacity: 0;
+  visibility: hidden;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+
+  color: #fff;
+  padding: 12px 24px;
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+
+    position: absolute;
+    top: 12px;
+    left: 24px;
+    right: 24px;
+  }
+  .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 16px;
+    height: 16px;
+
+    cursor: pointer;
+  }
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+}
+.voice {
+  position: relative;
+  user-select: none;
+}
+.mute-btn.has--mouseDown {
+  pointer-events: none;
+}
+
+.time {
+  font-size: 10px;
+  font-weight: 300;
+
+  .progress-bar {
+    flex: 1;
+
+    height: 2px;
+    padding-block: 10px;
+
+    position: relative;
+
+    &:hover .currentTimeTrack::after {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  .currentTimeTrackContainer {
+    position: relative;
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    height: 2px;
+    transition: all 0.1s ease-out;
+  }
+  .currentTimeTrack {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+
+    width: 0;
+    background: #fff;
+
+    &::after {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+
+      content: "";
+      position: absolute;
+
+      right: 0;
+      top: 1px;
+      transform: translate(50%, -50%);
+
+      width: 12px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #fff;
+    }
+  }
+}
+
+.time-num {
+  font-size: 12px;
+  font-weight: 600;
+
+  width: 65px;
+  user-select: none;
+  margin-left: 26px;
+}
