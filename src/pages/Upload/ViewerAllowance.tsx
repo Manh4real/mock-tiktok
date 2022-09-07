@@ -6,14 +6,15 @@ import styles from "./Upload.module.scss";
 
 // types
 import { Viewer } from "_/types";
-import { useSubmit } from "_/contexts/submit/upload";
+import { FormFieldRefObject } from "_/contexts/submit/upload";
 
 interface Props {
   setIsAllowed: (value: Viewer) => void;
+  createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
 }
 //
 const initialValue = "public";
-const ViewerAllowance = ({ setIsAllowed }: Props) => {
+const ViewerAllowance = ({ setIsAllowed, createNewDiscardObserver }: Props) => {
   const [value, setValue] = useState<Viewer>(initialValue);
 
   const reset = useCallback(() => {
@@ -21,7 +22,7 @@ const ViewerAllowance = ({ setIsAllowed }: Props) => {
   }, []);
 
   //=====================================================
-  const { createNewDiscardObserver } = useSubmit();
+  // const { createNewDiscardObserver } = useSubmit();
   useEffect(() => {
     createNewDiscardObserver({
       reset: () => {
@@ -59,4 +60,4 @@ const ViewerAllowance = ({ setIsAllowed }: Props) => {
   );
 };
 
-export default ViewerAllowance;
+export default React.memo(ViewerAllowance);

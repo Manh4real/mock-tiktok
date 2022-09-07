@@ -5,13 +5,14 @@ import clsx from "clsx";
 import styles from "./Upload.module.scss";
 
 // context
-import { useSubmit } from "_/contexts/submit/upload";
+import { FormFieldRefObject } from "_/contexts/submit/upload";
 
 // types
 import { ViewerPermission as ViewerPermissionType } from "_/types";
 
 interface Props {
   setIsAllowed: (value: ViewerPermissionType) => void;
+  createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
 }
 
 interface State {
@@ -27,7 +28,10 @@ const initialValue = {
   stitch: true,
 };
 
-const ViewerPermission = ({ setIsAllowed }: Props) => {
+const ViewerPermission = ({
+  setIsAllowed,
+  createNewDiscardObserver,
+}: Props) => {
   const [value, setValue] = useState<State>(initialValue);
 
   const reset = useCallback(() => {
@@ -35,7 +39,7 @@ const ViewerPermission = ({ setIsAllowed }: Props) => {
   }, []);
 
   //=====================================================
-  const { createNewDiscardObserver } = useSubmit();
+  // const { createNewDiscardObserver } = useSubmit();
 
   useEffect(() => {
     createNewDiscardObserver({
@@ -110,4 +114,4 @@ const ViewerPermission = ({ setIsAllowed }: Props) => {
   );
 };
 
-export default ViewerPermission;
+export default React.memo(ViewerPermission);

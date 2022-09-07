@@ -8,7 +8,7 @@ import styles from "./Upload.module.scss";
 import { withInputValidation } from "_/hoc";
 
 // contexts
-import { useSubmit } from "_/contexts/submit/upload";
+import { FormFieldRefObject } from "_/contexts/submit/upload";
 
 // types
 import { WithInputValidation } from "_/hoc/types";
@@ -17,6 +17,7 @@ import { ValidationType } from "_/validation/Validation";
 
 interface Props extends WithInputValidation, SubmitContext__InputProps {
   value: string;
+  createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
 }
 
 const CaptionInput = ({
@@ -30,17 +31,20 @@ const CaptionInput = ({
   setIsValid,
   reset,
   setIsAllowed,
+  createNewDiscardObserver,
 }: Props) => {
+  const [initialValue, setInitialValue] = useState<string>(firstValue);
   const [first, setFirst] = useState<boolean>(true);
-  const caption = first ? firstValue : inputProps.value;
+  const caption = first ? initialValue : inputProps.value;
 
   //=====================================================
-  const { createNewDiscardObserver } = useSubmit();
+  // const { createNewDiscardObserver } = useSubmit();
 
   useEffect(() => {
     createNewDiscardObserver({
       reset: () => {
         reset();
+        setInitialValue("");
         setFirst(true);
         setIsAllowed({ isValid: false, value: "" });
       },
@@ -48,6 +52,10 @@ const CaptionInput = ({
   }, [createNewDiscardObserver, reset, setIsAllowed]);
   //=====================================================
 
+  //
+  useEffect(() => {
+    setInitialValue(firstValue);
+  }, [firstValue]);
   //
   useEffect(() => {
     if (first) setIsValid(validate(caption).isValid);
@@ -96,4 +104,6 @@ const CaptionInput = ({
   );
 };
 
-export default withInputValidation(CaptionInput, ValidationType.CAPTION);
+export default React.memo(
+  withInputValidation(CaptionInput, ValidationType.CAPTION)
+);

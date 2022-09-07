@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import routes from "_/config/routes";
 
@@ -8,11 +9,11 @@ const useRedirect = () => {
         ? `?redirect_url=${redirect_url}`
         : "";
     const navigate = useNavigate();
-    const redirect = () => {
+    const redirect = useCallback(() => {
         navigate(redirect_url || routes.root, {
             replace: true,
         })
-    };
+    }, [navigate, redirect_url]);
 
     return { redirectSearchParamString: redirectSearchParams, redirect_url, redirect };
 }

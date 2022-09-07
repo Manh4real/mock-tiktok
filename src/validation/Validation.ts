@@ -98,7 +98,7 @@ class Validation implements ValidationClass {
     validateBio(value: string): ValidateValue {
         const check = Patterns.bio.test(value);
 
-        return { isValid: check, errorMessage: "Bio must less than 80 characters" }
+        return { isValid: check, errorMessage: "Bio must be less than 80 characters" }
     }
     validateName(value: string): ValidateValue {
         const check = Patterns.name.test(value);
@@ -120,7 +120,7 @@ class Validation implements ValidationClass {
     validateCaption(value: string): ValidateValue {
         const check = Patterns.caption.test(value);
 
-        return { isValid: check, errorMessage: "Caption must less than 150 characters" }
+        return { isValid: check, errorMessage: "Caption must be less than 150 characters" }
     }
 }
 

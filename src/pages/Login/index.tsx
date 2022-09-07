@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // icons
@@ -15,9 +15,17 @@ import { useRedirect } from "_/hooks";
 
 // styles
 import styles from "./Login.module.scss";
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 const Login = () => {
-  const { redirectSearchParamString: redirectSearchParams } = useRedirect();
+  const { redirectSearchParamString: redirectSearchParams, redirect } =
+    useRedirect();
+
+  const isLoggedIn = useIsLoggedIn();
+
+  useEffect(() => {
+    if (isLoggedIn) redirect();
+  }, [isLoggedIn, redirect]);
 
   return (
     <div className={styles["wrapper"]}>

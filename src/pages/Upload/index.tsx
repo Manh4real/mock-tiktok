@@ -10,6 +10,7 @@ import CaptionInput from "./CaptionInput";
 import VideoUploader from "./VideoUploader";
 import ViewerAllowance from "./ViewerAllowance";
 import ViewerPermission from "./ViewerPermission";
+import Cover from "./Cover";
 
 // services
 import { uploadVideo } from "_/services/video";
@@ -42,7 +43,13 @@ function Upload() {
 }
 
 const Form = () => {
-  const { discardEvent, setIsAllowed, isAllowed, isAllGood } = useSubmit();
+  const {
+    discardEvent,
+    setIsAllowed,
+    isAllowed,
+    isAllGood,
+    createNewDiscardObserver,
+  } = useSubmit();
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,7 +71,7 @@ const Form = () => {
       const body = {
         description: isAllowed.caption.value,
         upload_file: isAllowed.video.value,
-        thumbnail_time: 5,
+        thumbnail_time: isAllowed.thumbnail_time,
         viewable: isAllowed.viewable,
         "allows[]": isAllowed["allows[]"],
       };
@@ -122,7 +129,18 @@ const Form = () => {
     },
     [setIsAllowed]
   );
+  const setIsAllowed_thumbnailTime = useCallback(
+    (value: number) => {
+      setIsAllowed((prev) => ({
+        ...prev,
+        thumbnail_time: value,
+      }));
+    },
+    [setIsAllowed]
+  );
   //=======================================================
+
+  // console.log(isAllowed);
 
   return (
     <div className={styles["container"]}>
@@ -136,26 +154,30 @@ const Form = () => {
         <div className={styles["form-container"]}>
           <form action="" className={styles["form"]}>
             <div className={styles["left"]}>
-              <VideoUploader setIsAllowed={setIsAllowed_video} />
+              <VideoUploader
+                setIsAllowed={setIsAllowed_video}
+                createNewDiscardObserver={createNewDiscardObserver}
+              />
             </div>
             <div className={styles["right"]}>
               <CaptionInput
                 value={isAllowed.video.value?.name || ""}
                 setIsAllowed={setIsAllowed_caption}
+                createNewDiscardObserver={createNewDiscardObserver}
               />
-              <div className={styles["form__field"]}>
-                <div className={clsx(styles["form__title"])}>Cover</div>
-                <div
-                  className={clsx(
-                    styles["form__cover-images"],
-                    styles["form__input-container"]
-                  )}
-                >
-                  <div className={styles["form__cover-image"]}></div>
-                </div>
-              </div>
-              <ViewerAllowance setIsAllowed={setIsAllowed_viewer} />
-              <ViewerPermission setIsAllowed={setIsAllowed_permission} />
+              <Cover
+                setIsAllowed={setIsAllowed_thumbnailTime}
+                createNewDiscardObserver={createNewDiscardObserver}
+                videoFile={isAllowed.video.value}
+              />
+              <ViewerAllowance
+                setIsAllowed={setIsAllowed_viewer}
+                createNewDiscardObserver={createNewDiscardObserver}
+              />
+              <ViewerPermission
+                setIsAllowed={setIsAllowed_permission}
+                createNewDiscardObserver={createNewDiscardObserver}
+              />
               <div className={styles["form__field"]}>
                 <div
                   className={clsx("flex-align-center", styles["form__title"])}

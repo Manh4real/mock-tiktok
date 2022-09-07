@@ -4,9 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 # This is a mock Tiktok web app
 
-Note: Login with Phone, Code
+Note: Login/Signup with Email, Password
 
 # Current Work (4 Sep, 2022)
 
-- Add Redux
-- Fix Modal Implementation
+- Auto play video

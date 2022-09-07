@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -21,6 +22,12 @@ import styles from "./Video.module.scss";
 // types
 import { VoiceRefObject, VideoTimeRefObject } from "./types";
 import { VideoRefObject } from "_/types";
+
+// hooks
+// import { useElementOnScreen } from "_/hooks";
+
+// context
+import { useCurrentVideo as context_useCurrentVideo } from "_/contexts";
 
 // Redux
 import {
@@ -46,8 +53,12 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     ...otherProps
   } = props;
 
+  // Redux
   const currentVideo = useCurrentVideo();
   const dispatch = useAppDispatch();
+  // ===============================
+
+  const { changeVideoRef } = context_useCurrentVideo();
 
   const [isReady, setIsReady] = useState<boolean>(autoPlay);
   const [playing, setPlaying] = useState<boolean>(autoPlay);
@@ -56,30 +67,36 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const voiceRef = useRef<VoiceRefObject>(null);
   const timeRef = useRef<VideoTimeRefObject>(null);
 
-  const videoRefObject = {
-    pause: () => {
-      try {
-        videoRef.current?.pause();
-      } catch (e: any) {
-        console.log({ postId }, e.message);
-      }
-    },
-    play: () => {
-      console.log("??");
+  const videoRefObject = useMemo(
+    () => ({
+      pause: () => {
+        try {
+          videoRef.current?.pause();
+        } catch (e: any) {
+          console.log({ postId }, e.message);
+        }
+      },
+      play: () => {
+        console.log("??");
 
-      setIsReady(true);
-      setPlaying(true);
-    },
-  };
+        setIsReady(true);
+        setPlaying(true);
+      },
+    }),
+    [postId]
+  );
 
   // #region
   // ⚠️🆘 Experiment
   // const videoContainerRef = useRef<HTMLDivElement>(null);
-  // const options = {
-  //   root: null,
-  //   rootMargin: "0px",
-  //   threshold: 0.8,
-  // };
+  // const options: IntersectionObserverInit = useMemo(
+  //   () => ({
+  //     root: null,
+  //     rootMargin: "0px",
+  //     threshold: 0.3,
+  //   }),
+  //   []
+  // );
   // const isVisibileOnScreen = useElementOnScreen(options, videoContainerRef);
   // #endregion
 
@@ -92,6 +109,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     // change current videos info
     if (postId !== undefined && currentVideo.postId !== postId) {
       dispatch(changeVideo({ postId }));
+      changeVideoRef(videoRefObject);
     }
 
     setPlaying((prev) => !prev);
@@ -153,19 +171,18 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   // ⚠️🆘  Experiment: play as if visible on screen
   // useEffect(() => {
-  //   const timeID = setTimeout(() => {
+  //   // change current videos info
+  //   if (postId !== undefined && isVisibileOnScreen) {
+  //     // handleVideoChange(postId);
   //     setIsReady(true);
-
-  //     // change current videos info
-  //     if (postId !== undefined) {
-  //       handleVideoChange(postId);
-  //     }
-
   //     setPlaying(true);
-  //   }, 500);
-
-  //   return () => clearTimeout(timeID);
-  // }, [isVisibileOnScreen, handleVideoChange, postId]);
+  //     dispatch(changeVideo({ postId }));
+  //     changeVideoRef(videoRefObject);
+  //   } else {
+  //     setIsReady(false);
+  //     setPlaying(false);
+  //   }
+  // }, [isVisibileOnScreen, dispatch, postId, changeVideoRef, videoRefObject]);
 
   // when switching videos
   useEffect(() => {

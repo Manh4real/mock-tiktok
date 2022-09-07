@@ -16,13 +16,15 @@ import UploadVideo from "./UploadVideo";
 import { withFileValidation } from "_/hoc";
 
 // context
-import { useSubmit } from "_/contexts/submit/upload";
+import { FormFieldRefObject } from "_/contexts/submit/upload";
 
 // types
 import { WithFileValidation } from "_/hoc/types";
 import { SubmitContext__InputProps } from "_/contexts/submit";
 
-interface Props extends WithFileValidation, SubmitContext__InputProps<File> {}
+interface Props extends WithFileValidation, SubmitContext__InputProps<File> {
+  createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
+}
 
 const VideoUploader = ({
   isEmpty,
@@ -31,15 +33,21 @@ const VideoUploader = ({
   errorMessage,
   setIsAllowed,
   reset,
+  createNewDiscardObserver,
 }: Props) => {
   const { url: videoUrl, file: videoFile } = inputProps;
 
   //=====================================================
-  const { createNewDiscardObserver } = useSubmit();
+  // const { createNewDiscardObserver } = useSubmit();
 
   useEffect(() => {
-    createNewDiscardObserver({ reset });
-  }, [createNewDiscardObserver, reset]);
+    createNewDiscardObserver({
+      reset: () => {
+        reset();
+        setIsAllowed({ isValid: false, value: null });
+      },
+    });
+  }, [createNewDiscardObserver, reset, setIsAllowed]);
   //=====================================================
 
   //
@@ -154,4 +162,6 @@ const VideoName = ({
   );
 };
 
-export default withFileValidation(VideoUploader, ValidationType.VIDEO);
+export default React.memo(
+  withFileValidation(VideoUploader, ValidationType.VIDEO)
+);

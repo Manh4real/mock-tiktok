@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 // styles
 import styles from "./Post.module.scss";
@@ -10,14 +10,13 @@ import Video from "_/components/Video";
 import { useNavigateToVideoDetails } from "_/hooks";
 
 // types
-import { Video as VideoInterface, VideoRefObject } from "_/types";
+import { Video as VideoInterface } from "_/types";
 
 interface Props {
   video: VideoInterface;
 }
 
 const VideoContainer = ({ video }: Props) => {
-  const videoRef = useRef<VideoRefObject>(null);
   const navigate = useNavigateToVideoDetails(video.id);
 
   return (
@@ -27,13 +26,11 @@ const VideoContainer = ({ video }: Props) => {
         e.preventDefault();
         e.stopPropagation();
 
-        videoRef.current?.pause();
         //PostDetails
         navigate();
       }}
     >
       <Video
-        ref={videoRef}
         src={video.file_url}
         placeholder={video.thumb_url}
         postId={video.id}

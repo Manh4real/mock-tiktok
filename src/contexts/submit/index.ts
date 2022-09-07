@@ -5,7 +5,7 @@ import { ValidationType } from "_/validation/Validation";
 import { Viewer, ViewerPermission } from "_/types";
 
 export interface AllowedInputProperty<T extends string | File = string> {
-    value: T;
+    value: T extends File ? T | null : T;
     isValid: boolean;
 }
 
@@ -57,6 +57,7 @@ export interface Upload {
     [ValidationType.CAPTION]: AllowedInputProperty;
     "viewable": Viewer;
     "allows[]": ViewerPermission;
+    thumbnail_time: number;
 }
 
 interface FormSet {
@@ -124,7 +125,8 @@ export const formSet: FormSet = {
         },
         caption: formFieldValue,
         "allows[]": ["comment"],
-        viewable: "public"
+        viewable: "public",
+        thumbnail_time: 2
     }
 };
 

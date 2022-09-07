@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 // variables
 import routes from "_/config/routes";
@@ -16,8 +16,17 @@ interface Props {
 function PrivateLayout({ children }: Props) {
   // const { token } = useLoginContext();
   const isLoggedIn = useIsLoggedIn();
+  const location = useLocation();
 
-  if (!isLoggedIn) return <Navigate to={routes.login} replace={true} />;
+  if (!isLoggedIn)
+    return (
+      <Navigate
+        to={
+          routes.login + "?redirect_url=" + location.pathname + location.search
+        }
+        replace={true}
+      />
+    );
 
   return (
     <>
