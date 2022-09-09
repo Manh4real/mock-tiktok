@@ -56,7 +56,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
     const observer = createAutoplayScrollObserver({
       elem: current,
       action: () => {
-        videoRef.current?.play();
+        videoRef.current.play();
       },
     });
 
@@ -83,6 +83,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
               <Link
                 to={"/@" + author.nickname}
                 className={styles["author-avatar"]}
+                aria-haspopup={"true"}
               >
                 <Image width="100%" height="100%" src={author.avatar} />
               </Link>
@@ -100,6 +101,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
                 <Link
                   to={"/@" + author?.nickname}
                   className={styles["post__header-link"]}
+                  aria-haspopup={"true"}
                 >
                   <h3
                     className={clsx(

@@ -2,9 +2,6 @@ import React, { useState, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
-// services
-// import { login } from "_/services/auth";
-
 // components
 import {
   PasswordInput,
@@ -24,15 +21,10 @@ import styles from "../LoginModal.module.scss";
 
 // context
 import { History } from "..";
-// import { CurrentUser } from "_/contexts";
 
 // config
 import routes from "_/config/routes";
 
-// context
-import // useLoginContext,
-// useModalContext,
-"_/contexts";
 import { SubmitProvider, useSubmit } from "_/contexts/submit/loginWithEmail";
 
 // hooks

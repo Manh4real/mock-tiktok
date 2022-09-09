@@ -85,7 +85,6 @@ const ReactionsCount = withLoginModal(
     isLiked,
     showLoginModal,
   }: ReactionsCountProps) => {
-    // const { isLoggedIn } = useLoginContext();
     const isLoggedIn = useIsLoggedIn();
 
     const [liked, toggle, likesCount] = useLikeComment(

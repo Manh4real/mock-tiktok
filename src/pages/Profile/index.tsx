@@ -154,8 +154,6 @@ function Profile() {
 const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
 
 const VideoList = ({ account }: { account: Account }) => {
-  // const { currentUser } = useLoginContext();
-  // const currentUserInfo = currentUser?.info.data;
   const currentUserInfo = useCurrentUserInfo();
 
   const [loading, setLoading] = useState<boolean>(false);

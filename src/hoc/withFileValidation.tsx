@@ -24,13 +24,52 @@ const withFileValidation = <T extends WithFileValidation = WithFileValidation>(
     const [isValid, setIsValid] = useState<boolean>(false);
     // const [hasError, setHasError] = useState<boolean>(false);
 
+    const setFileInfo = (file: File) => {
+      setURL(URL.createObjectURL(file));
+      setFile(file);
+      setIsValid(validate(file.name).isValid);
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!e.target.files) return;
 
-      setURL(URL.createObjectURL(e.target.files[0]));
-      setFile(e.target.files[0]);
-      setIsValid(validate(e.target.files[0].name).isValid);
+      setFileInfo(e.target.files[0]);
     };
+    const handleDrop = <T extends HTMLElement>(e: React.DragEvent<T>) => {
+      console.log("File(s) dropped");
+      e.preventDefault();
+
+      if (e.dataTransfer.items) {
+        // Use DataTransferItemList interface to access the file(s)
+        const items = Array.from(e.dataTransfer.items);
+
+        // If more than 1 items, reject
+        if (items.length > 1) return;
+
+        const firstItem = items[0];
+
+        // If dropped item isn't file, reject it
+        if (firstItem.kind === "file") {
+          const file = firstItem.getAsFile();
+
+          if (file) setFileInfo(file);
+        }
+      } else {
+        // Use DataTransfer interface to access the file(s)
+        const files = Array.from(e.dataTransfer.files);
+
+        // If more than 1 file, reject
+        if (files.length > 1) return;
+
+        const firstFile = files[0];
+
+        setFileInfo(firstFile);
+      }
+    };
+    const handleDragOver = <T extends HTMLElement>(e: React.DragEvent<T>) => {
+      console.log("File(s) in drop zone");
+      e.preventDefault();
+    };
+
     const reset = useCallback(() => {
       setURL("");
       setFile(undefined);
@@ -48,11 +87,16 @@ const withFileValidation = <T extends WithFileValidation = WithFileValidation>(
       file: file,
       onChange: handleChange,
     };
+    const dragAndDropHandlers = {
+      handleDrop,
+      handleDragOver,
+    };
 
     return (
       <WrappedComponent
         {...(props as T)}
         inputProps={inputProps}
+        dragAndDropHandlers={dragAndDropHandlers}
         {...otherProps}
       />
     );

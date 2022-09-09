@@ -11,9 +11,6 @@ import Account from "./Account";
 // styles
 import styles from "./Sidebar.module.scss";
 
-// hooks
-// import { useLoginContext } from "_/contexts/AppContext";
-
 // services
 import { getFollowingAccounts } from "_/services/account";
 
@@ -25,9 +22,6 @@ import { Account as AccountInterface } from "_/types";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 const FollowingAccountsSection = () => {
-  // const { currentUser, isLoggedIn } = useLoginContext();
-  // const currentUserInfo = currentUser?.info.data;
-
   const isLoggedIn = useIsLoggedIn();
 
   const {

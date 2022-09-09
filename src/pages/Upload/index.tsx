@@ -166,9 +166,10 @@ const Form = () => {
                 createNewDiscardObserver={createNewDiscardObserver}
               />
               <Cover
+                isVideo={isAllowed.video.isValid}
+                videoFile={isAllowed.video.value}
                 setIsAllowed={setIsAllowed_thumbnailTime}
                 createNewDiscardObserver={createNewDiscardObserver}
-                videoFile={isAllowed.video.value}
               />
               <ViewerAllowance
                 setIsAllowed={setIsAllowed_viewer}

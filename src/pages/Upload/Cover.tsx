@@ -12,6 +12,7 @@ import { FormFieldRefObject } from "_/contexts/submit/upload";
 import { Spinner } from "_/components/icons";
 
 interface Props {
+  isVideo: boolean;
   videoFile: File | null;
   setIsAllowed: (value: number) => void;
   createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
@@ -21,6 +22,7 @@ const IMAGES_NUM = 8;
 const timeIDs: NodeJS.Timeout[] = [];
 
 const Cover = ({
+  isVideo,
   videoFile,
   setIsAllowed,
   createNewDiscardObserver,
@@ -55,7 +57,7 @@ const Cover = ({
   }, [images.length, loadingImages, setProgress, videoFile]);
 
   useEffect(() => {
-    if (!videoFile) return;
+    if (!videoFile || !isVideo) return;
 
     let canvas = document.createElement("canvas");
     video.src = URL.createObjectURL(videoFile);
@@ -73,7 +75,6 @@ const Cover = ({
           setLoadingImages(false);
           return;
         }
-        //   if (!video.duration) return;
 
         const timeID = setTimeout(function () {
           video.currentTime = Math.floor((_i * video.duration) / IMAGES_NUM);
@@ -116,11 +117,9 @@ const Cover = ({
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("seeked", handleSeeked);
     };
-  }, [video, videoFile]);
+  }, [isVideo, video, videoFile]);
 
   useEffect(() => {
-    // console.log(images);
-
     if (images.length >= IMAGES_NUM) {
       setCover(images[0]);
     }
@@ -135,8 +134,6 @@ const Cover = ({
   }, [setProgress]);
 
   //=====================================================
-  //   const { createNewDiscardObserver } = useSubmit();
-
   useEffect(() => {
     createNewDiscardObserver({ reset });
   }, [createNewDiscardObserver, reset]);

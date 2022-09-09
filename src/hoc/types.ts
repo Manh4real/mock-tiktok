@@ -1,3 +1,4 @@
+import React from "react";
 import { ValidateValue } from "_/validation/Validation";
 
 export interface WithInputValidation {
@@ -27,4 +28,8 @@ export interface WithFileValidation {
         file: File;
         onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     };
+    dragAndDropHandlers: {
+        handleDrop: React.DragEventHandler;
+        handleDragOver: React.DragEventHandler;
+    }
 }

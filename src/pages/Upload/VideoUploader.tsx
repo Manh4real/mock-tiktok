@@ -34,12 +34,11 @@ const VideoUploader = ({
   setIsAllowed,
   reset,
   createNewDiscardObserver,
+  dragAndDropHandlers,
 }: Props) => {
   const { url: videoUrl, file: videoFile } = inputProps;
 
   //=====================================================
-  // const { createNewDiscardObserver } = useSubmit();
-
   useEffect(() => {
     createNewDiscardObserver({
       reset: () => {
@@ -79,6 +78,12 @@ const VideoUploader = ({
           className={clsx(styles["video-file-label"], {
             [styles["on--error"]]: !isEmpty && !isValid,
           })}
+          onDrop={(e: React.DragEvent<HTMLLabelElement>) => {
+            dragAndDropHandlers.handleDrop(e);
+          }}
+          onDragOver={(e: React.DragEvent<HTMLLabelElement>) => {
+            dragAndDropHandlers.handleDragOver(e);
+          }}
         >
           <div className={clsx("flex-center", styles["form__upload-icon"])}>
             <FiUploadCloud />
