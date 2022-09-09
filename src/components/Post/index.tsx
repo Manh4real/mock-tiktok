@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
@@ -23,19 +23,52 @@ import VideoContainer from "./VideoContainer";
 import { numberCompact } from "_/utils";
 
 // types
-import { Video as VideoInterface } from "_/types";
+import { Video as VideoInterface, VideoRefObject } from "_/types";
+import {
+  AutoplayScrollObserver,
+  AutoplayScrollObserverProps,
+} from "_/features/autoplayScroll";
 
 interface Props {
   item: VideoInterface;
+  createAutoplayScrollObserver: (
+    props: AutoplayScrollObserverProps
+  ) => AutoplayScrollObserver;
+  unsubscribe: (observer: AutoplayScrollObserver) => void;
 }
 
-function Post({ item }: Props) {
+function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
   const author = item.user;
   const authorName =
     author.full_name || `${author.first_name} ${author.last_name}`;
 
+  //===============================================================
+  // ⚠️ Autoplay scroll
+  const videoRef = useRef<VideoRefObject>({
+    pause: () => {},
+    play: () => {},
+  });
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const current = ref.current;
+
+    const observer = createAutoplayScrollObserver({
+      elem: current,
+      action: () => {
+        videoRef.current?.play();
+      },
+    });
+
+    return () => unsubscribe(observer);
+  }, [createAutoplayScrollObserver, unsubscribe]);
+  //===============================================================
+
   return (
-    <div className={clsx(styles["container"], "scroll-snap-alignCenter")}>
+    <div
+      ref={ref}
+      className={clsx(styles["container"], "scroll-snap-alignCenter")}
+    >
       <div className={styles["post__follow-button"]}>
         <FollowButton
           styles={styles}
@@ -94,15 +127,13 @@ function Post({ item }: Props) {
             >
               <MusicNote />
               <span style={{ marginLeft: "5px" }}>
-                original sound -{" "}
-                {author?.full_name ||
-                  `${author.first_name} ${author.last_name}`}
+                original sound - {authorName}
               </span>
             </Link>
           </h4>
         </div>
         <div className={styles["post__watch"]}>
-          <VideoContainer video={item} />
+          <VideoContainer ref={videoRef} video={item} />
           <div style={{ display: "flex" }}>
             <div className={styles["post__buttons"]}>
               <LikeButton
@@ -136,7 +167,7 @@ function Post({ item }: Props) {
   );
 }
 
-export default Post;
+export default React.memo(Post);
 
 /*
 <span>Lifting is for ALL AGES!</span>

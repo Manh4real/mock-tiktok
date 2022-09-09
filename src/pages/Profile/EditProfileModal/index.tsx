@@ -96,7 +96,9 @@ const Form = ({ account, handleClose }: Props) => {
       })
       .catch(() => {
         alert(
-          "Wrong information. \nMake sure the last name must be at least 2 characters. \nAvatar must be a file of type: jpeg, jpg, png, gif."
+          `Wrong information. 
+          \nMake sure the last name must be at least 2 characters. 
+          \nIf you had, avatar must be a file of type: jpeg, jpg, png, gif.`
         );
       })
       .finally(() => {
@@ -162,7 +164,7 @@ const Form = ({ account, handleClose }: Props) => {
       `${account.first_name} ${account.last_name}`.trim() !==
         isAllowed.name.value ||
       account.bio !== isAllowed.bio.value ||
-      !!(isAllowed.photo.value as File));
+      !!isAllowed.photo.value);
 
   if (!account) return null;
 

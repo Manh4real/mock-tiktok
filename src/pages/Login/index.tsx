@@ -100,7 +100,11 @@ const Login = () => {
           <div className={styles["footer"]}>
             <div className={styles["footer__text"]}>
               Don't have an account
-              <Link to={routes.signup} replace={true} className="pink-font">
+              <Link
+                to={routes.signup + redirectSearchParams}
+                replace={true}
+                className="pink-font"
+              >
                 Sign up
               </Link>
             </div>

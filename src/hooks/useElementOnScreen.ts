@@ -43,29 +43,13 @@ const useElementOnScreen = (
   }, [targetRef, optionsMemo, callbackFunction]);
 
   const check = useMemo(() => {
-    // if (!currentElementRef && isVisibile) currentElementRef = targetRef;
-    // else if (!isVisibile && currentElementRef === targetRef) {
-    //   currentElementRef = null;
-    // }
-
-    // return currentElementRef === targetRef;
-
     if (isVisibile) currentElementRefs.set(targetRef, targetRef);
     else currentElementRefs.delete(targetRef);
 
     return currentElementRefs.values().next().value === targetRef;
   }, [isVisibile, targetRef]);
 
-  // console.log({ isVisibile, check, cur: currentElementRefs.values().next().value, targetRef });
-  // console.log(currentElementRefs.values());
-  // console.log(currentElementRefs.values().next().value);
-  if (isVisibile) console.log(targetRef);
-
-
   return check;
-
-  // return isVisibile && check;
-  // return isVisibile;
 };
 
 export default useElementOnScreen;

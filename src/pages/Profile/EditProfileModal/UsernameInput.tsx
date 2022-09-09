@@ -64,4 +64,6 @@ const UsernameInput = ({
   );
 };
 
-export default withInputValidation(UsernameInput, ValidationType.USERNAME);
+export default React.memo(
+  withInputValidation(UsernameInput, ValidationType.USERNAME)
+);

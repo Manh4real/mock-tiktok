@@ -72,4 +72,4 @@ const BioInput = ({
   );
 };
 
-export default withInputValidation(BioInput, ValidationType.BIO);
+export default React.memo(withInputValidation(BioInput, ValidationType.BIO));

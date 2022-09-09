@@ -95,7 +95,11 @@ const ReactionsCount = withLoginModal(
     );
 
     return (
-      <div className={styles["reactions-count"]}>
+      <div
+        className={clsx(styles["reactions-count"], {
+          [styles["is--liked"]]: liked,
+        })}
+      >
         <More commentId={commentId} authorId={authorId} />
         <div
           className={clsx("flex-center", styles["like-icon"])}

@@ -23,9 +23,6 @@ import styles from "./Video.module.scss";
 import { VoiceRefObject, VideoTimeRefObject } from "./types";
 import { VideoRefObject } from "_/types";
 
-// hooks
-// import { useElementOnScreen } from "_/hooks";
-
 // context
 import { useCurrentVideo as context_useCurrentVideo } from "_/contexts";
 
@@ -56,7 +53,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   // Redux
   const currentVideo = useCurrentVideo();
   const dispatch = useAppDispatch();
-  // ===============================
+  // ======================================================
 
   const { changeVideoRef } = context_useCurrentVideo();
 
@@ -67,37 +64,28 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const voiceRef = useRef<VoiceRefObject>(null);
   const timeRef = useRef<VideoTimeRefObject>(null);
 
+  // ======================================================
+  // #region
+  // ⚠️🆘 Experiment: Auto play on scroll
   const videoRefObject = useMemo(
     () => ({
       pause: () => {
-        try {
-          videoRef.current?.pause();
-        } catch (e: any) {
-          console.log({ postId }, e.message);
-        }
+        videoRef.current?.pause();
       },
       play: () => {
-        console.log("??");
+        if (!postId) return;
+
+        if (currentVideo.postId === postId) return;
+
+        dispatch(changeVideo({ postId }));
+        changeVideoRef(videoRefObject);
 
         setIsReady(true);
         setPlaying(true);
       },
     }),
-    [postId]
+    [changeVideoRef, currentVideo.postId, dispatch, postId]
   );
-
-  // #region
-  // ⚠️🆘 Experiment
-  // const videoContainerRef = useRef<HTMLDivElement>(null);
-  // const options: IntersectionObserverInit = useMemo(
-  //   () => ({
-  //     root: null,
-  //     rootMargin: "0px",
-  //     threshold: 0.3,
-  //   }),
-  //   []
-  // );
-  // const isVisibileOnScreen = useElementOnScreen(options, videoContainerRef);
   // #endregion
 
   // handling events
@@ -107,7 +95,11 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     }
 
     // change current videos info
-    if (postId !== undefined && currentVideo.postId !== postId) {
+    if (
+      postId !== undefined &&
+      postId !== -999 &&
+      currentVideo.postId !== postId
+    ) {
       dispatch(changeVideo({ postId }));
       changeVideoRef(videoRefObject);
     }
@@ -169,24 +161,9 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     else pause();
   }, [playing, play, pause]);
 
-  // ⚠️🆘  Experiment: play as if visible on screen
-  // useEffect(() => {
-  //   // change current videos info
-  //   if (postId !== undefined && isVisibileOnScreen) {
-  //     // handleVideoChange(postId);
-  //     setIsReady(true);
-  //     setPlaying(true);
-  //     dispatch(changeVideo({ postId }));
-  //     changeVideoRef(videoRefObject);
-  //   } else {
-  //     setIsReady(false);
-  //     setPlaying(false);
-  //   }
-  // }, [isVisibileOnScreen, dispatch, postId, changeVideoRef, videoRefObject]);
-
   // when switching videos
   useEffect(() => {
-    if (!autoPlay && currentVideo.postId !== postId) {
+    if (!autoPlay && postId !== -999 && currentVideo.postId !== postId) {
       setIsReady(false);
       setPlaying(false);
     }
@@ -196,7 +173,6 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   return (
     <div
-      // ref={videoContainerRef}
       className={clsx(styles["container"], {
         [styles["has--windowHeight"]]: hasWindowHeight,
       })}

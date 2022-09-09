@@ -46,6 +46,15 @@ const Cover = ({
   // ====================================================
 
   useEffect(() => {
+    if (!videoFile && (loadingImages || images.length > 0)) {
+      setImages([]);
+      setCover("");
+      setProgress(0);
+      setLoadingImages(false);
+    }
+  }, [images.length, loadingImages, setProgress, videoFile]);
+
+  useEffect(() => {
     if (!videoFile) return;
 
     let canvas = document.createElement("canvas");
@@ -122,6 +131,7 @@ const Cover = ({
     setImages([]);
     setCover("");
     setProgress(0);
+    setLoadingImages(false);
   }, [setProgress]);
 
   //=====================================================
@@ -152,26 +162,9 @@ const Cover = ({
           <div className={styles["form__cover-image"]}></div>
         ) : (
           <>
-            {images.map((image, index) => {
-              return (
-                <div
-                  key={index}
-                  className={clsx("flex-center", styles["form__cover-image"])}
-                  aria-selected={false}
-                >
-                  <img
-                    src={image}
-                    alt="uploaded-video-cover"
-                    width="100%"
-                    height="100%"
-                  />
-                </div>
-              );
-            })}
+            <ImagesWithMemo images={images} />
             <div
-              //   ref={dragItemRef}
               className={styles["form__cover--active"]}
-              //   onDrag={handleDrag}
               style={{ left: `${progress * 100}%` }}
             >
               <div className={styles["form__cover-image--active"]}>
@@ -189,5 +182,33 @@ const Cover = ({
     </div>
   );
 };
+
+//
+interface ImagesProps {
+  images: string[];
+}
+const Images = ({ images }: ImagesProps) => {
+  return (
+    <>
+      {images.map((image, index) => {
+        return (
+          <div
+            key={index}
+            className={clsx("flex-center", styles["form__cover-image"])}
+            aria-selected={false}
+          >
+            <img
+              src={image}
+              alt="uploaded-video-cover"
+              width="100%"
+              height="100%"
+            />
+          </div>
+        );
+      })}
+    </>
+  );
+};
+const ImagesWithMemo = React.memo(Images);
 
 export default Cover;

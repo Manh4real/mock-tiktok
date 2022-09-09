@@ -98,4 +98,6 @@ const PhotoFileInput = ({
   );
 };
 
-export default withFileValidation(PhotoFileInput, ValidationType.PHOTO);
+export default React.memo(
+  withFileValidation(PhotoFileInput, ValidationType.PHOTO)
+);

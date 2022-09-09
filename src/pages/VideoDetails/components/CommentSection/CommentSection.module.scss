@@ -108,6 +108,9 @@
   color: var(--grey-200);
   font-size: 12px;
 
+  &.is--liked {
+    color: var(--pink);
+  }
   .like-icon {
     cursor: pointer;
   }

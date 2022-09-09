@@ -19,11 +19,12 @@ import { getComments } from "_/services/comment";
 // types
 import { Comment as CommentInterface } from "_/types";
 import { CommentCommandProvider } from "_/contexts";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import routes from "_/config/routes";
 
 // Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+import { useRedirectURL } from "_/hooks/useRedirect";
 
 interface Props {
   video_uuid: string;
@@ -100,26 +101,14 @@ const CommentSection = ({ video_uuid }: Props) => {
 
 //=============================================================================
 const Message = () => {
-  const location = useLocation();
+  const redirectUrlSearchParam = useRedirectURL();
 
   return (
     <p className={styles["message"]}>
       Want to comment? Please
-      <Link
-        to={
-          routes.login + `?redirect_url=${location.pathname + location.search}`
-        }
-      >
-        Login
-      </Link>
+      <Link to={routes.login + redirectUrlSearchParam}>Login</Link>
       or
-      <Link
-        to={
-          routes.signup + `?redirect_url=${location.pathname + location.search}`
-        }
-      >
-        Signup
-      </Link>
+      <Link to={routes.signup + redirectUrlSearchParam}>Signup</Link>
     </p>
   );
 };

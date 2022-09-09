@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 // icons
@@ -8,8 +8,14 @@ import { Spinner } from "_/components/icons";
 import Post from "_/components/Post";
 
 // services
-// import { getPosts } from "_/services/post";
 import { getVideoList } from "_/services/video";
+
+// features
+import {
+  AutoplayScroll,
+  AutoplayScrollObserver,
+  AutoplayScrollObserverProps,
+} from "_/features/autoplayScroll";
 
 // styles
 import styles from "./Home.module.scss";
@@ -34,55 +40,40 @@ const Posts = ({ type = "for-you" }: Props) => {
     hasMore,
     handleFetchNext: handleLoadMore,
   } = usePagesFetch<VideoInterface>(fetchVideoList, false, {
-    errorMessage: "Can't get video list of" + type,
+    errorMessage: "Can't get video list of " + type,
   });
 
-  // #region
-  // ⚠️🆘 Experiment: Infinite scroll
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (loading || end) return;
+  //===============================================================
+  // auto play scroll
+  const autoplayScrollSubject = useMemo(() => new AutoplayScroll(), []);
+  const createAutoplayScrollObserver = useCallback(
+    (props: AutoplayScrollObserverProps) => {
+      const observer = new AutoplayScrollObserver(props);
+      autoplayScrollSubject.subscribe(observer);
 
-  //     const threshold = 0.8;
-  //     const a = Math.trunc(
-  //       document.documentElement.scrollTop + window.innerHeight
-  //     );
-  //     const b = document.documentElement.offsetHeight;
+      return observer;
+    },
+    [autoplayScrollSubject]
+  );
+  const unsubscribe = useCallback(
+    (observer: AutoplayScrollObserver) => {
+      autoplayScrollSubject.unsubscribe(observer);
+    },
+    [autoplayScrollSubject]
+  );
 
-  //     if (Math.abs(a - b) <= 1) {
-  //     if (a >= b * threshold) {
-  //       console.log({ page });
+  useEffect(() => {
+    const handleScroll = () => {
+      autoplayScrollSubject.fire();
+    };
 
-  //       const nextPage = page + 1;
+    window.addEventListener("scroll", handleScroll);
 
-  //       setLoading(true);
-
-  //       // prevent user from scrolling to the end
-  //       // of the document too fast (sometimes)
-  //       // thus call the same api twice (undesired)
-  //       window.scrollBy(0, -5); // ⚠️ No test taken
-
-  //       getPosts(nextPage)
-  //         .then((newPosts) => {
-  //           if (newPosts.length === 0) {
-  //             setEnd(true);
-  //             return;
-  //           }
-
-  //           setPosts((prev) => [...prev, ...newPosts]);
-  //           setPage(nextPage);
-  //         })
-  //         .finally(() => {
-  //           setLoading(false);
-  //         });
-  //     }
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [end, page, loading]);
-  // #endregion
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [autoplayScrollSubject]);
+  //===============================================================
 
   return (
     <InfiniteScroll
@@ -109,7 +100,14 @@ const Posts = ({ type = "for-you" }: Props) => {
     >
       <div className={styles["posts"]}>
         {posts.map((post) => {
-          return <Post key={post.id} item={post} />;
+          return (
+            <Post
+              key={post.id}
+              item={post}
+              createAutoplayScrollObserver={createAutoplayScrollObserver}
+              unsubscribe={unsubscribe}
+            />
+          );
         })}
       </div>
     </InfiniteScroll>

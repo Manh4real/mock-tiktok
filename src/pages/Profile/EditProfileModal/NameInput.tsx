@@ -60,4 +60,4 @@ const NameInput = ({
     </>
   );
 };
-export default withInputValidation(NameInput, ValidationType.NAME);
+export default React.memo(withInputValidation(NameInput, ValidationType.NAME));

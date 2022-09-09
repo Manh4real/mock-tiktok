@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useImperativeHandle, useRef } from "react";
 
 // styles
 import styles from "./Post.module.scss";
@@ -10,14 +10,20 @@ import Video from "_/components/Video";
 import { useNavigateToVideoDetails } from "_/hooks";
 
 // types
-import { Video as VideoInterface } from "_/types";
+import { Video as VideoInterface, VideoRefObject } from "_/types";
 
 interface Props {
   video: VideoInterface;
 }
 
-const VideoContainer = ({ video }: Props) => {
+const VideoContainer = ({ video }: Props, ref: React.Ref<VideoRefObject>) => {
   const navigate = useNavigateToVideoDetails(video.id);
+
+  const videoRef = useRef<VideoRefObject>({
+    pause: () => {},
+    play: () => {},
+  });
+  useImperativeHandle(ref, () => videoRef.current);
 
   return (
     <div
@@ -31,6 +37,7 @@ const VideoContainer = ({ video }: Props) => {
       }}
     >
       <Video
+        ref={videoRef}
         src={video.file_url}
         placeholder={video.thumb_url}
         postId={video.id}
@@ -39,4 +46,4 @@ const VideoContainer = ({ video }: Props) => {
   );
 };
 
-export default VideoContainer;
+export default React.forwardRef(VideoContainer);

@@ -69,6 +69,7 @@ const VideoUploader = ({
             content={videoFile.name}
             onClick={() => {
               reset();
+              setIsAllowed({ isValid: false, value: null });
             }}
           />
         </div>
