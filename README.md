@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Note: Login/Signup with Email, Password
 
-# Current Work (8 Sep, 2022)
+# Current Work (10 Sep, 2022)
 
-- Auto play video ✅
-- Drag and drop file upload
+- Drag and drop file upload ✅
+- Navigate to next/prev video using buttons on VideoDetails ✅

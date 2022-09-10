@@ -13,23 +13,27 @@
     z-index: 1;
 
     opacity: 0;
-    visibility: hidden;
+    transition: all 0.3s ease-out;
   }
 
   &:hover {
     &:not(.has--windowHeight)::after,
-    .controller {
-      transition: all 0.2s ease-out;
-
+    .play-button,
+    .voice,
+    .time {
       opacity: 1;
-      visibility: visible;
     }
   }
 }
 
-.controller {
+.play-button,
+.voice,
+.time {
   opacity: 0;
-  visibility: hidden;
+}
+
+.controller {
+  transition: all 0.3s ease-out;
 
   position: absolute;
   bottom: 0;
@@ -37,8 +41,14 @@
   right: 0;
   z-index: 2;
 
+  height: 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
   color: #fff;
-  padding: 12px;
+  padding-inline: 12px;
+  padding-block: 12px 6px;
 
   .buttons {
     display: flex;
@@ -67,6 +77,10 @@
 .voice {
   position: relative;
   user-select: none;
+
+  &.is--visible {
+    opacity: 1;
+  }
 
   &:hover {
     .volume {

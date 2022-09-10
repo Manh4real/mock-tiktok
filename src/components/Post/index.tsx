@@ -23,13 +23,18 @@ import VideoContainer from "./VideoContainer";
 import { numberCompact } from "_/utils";
 
 // types
-import { Video as VideoInterface, VideoRefObject } from "_/types";
+import {
+  Video as VideoInterface,
+  VideoListType,
+  VideoRefObject,
+} from "_/types";
 import {
   AutoplayScrollObserver,
   AutoplayScrollObserverProps,
 } from "_/features/autoplayScroll";
 
 interface Props {
+  videoListType: VideoListType;
   item: VideoInterface;
   createAutoplayScrollObserver: (
     props: AutoplayScrollObserverProps
@@ -37,7 +42,12 @@ interface Props {
   unsubscribe: (observer: AutoplayScrollObserver) => void;
 }
 
-function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
+function Post({
+  videoListType,
+  item,
+  createAutoplayScrollObserver,
+  unsubscribe,
+}: Props) {
   const author = item.user;
   const authorName =
     author.full_name || `${author.first_name} ${author.last_name}`;
@@ -99,7 +109,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
             {author && (
               <AccountPopup account={author}>
                 <Link
-                  to={"/@" + author?.nickname}
+                  to={"/@" + author.nickname}
                   className={styles["post__header-link"]}
                   aria-haspopup={"true"}
                 >
@@ -109,7 +119,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
                       "hover-underlined"
                     )}
                   >
-                    {author?.nickname}
+                    {author.nickname}
                   </h3>
                   <span className="author-nickname">{authorName}</span>
                   <span>&middot;</span>
@@ -135,7 +145,11 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
           </h4>
         </div>
         <div className={styles["post__watch"]}>
-          <VideoContainer ref={videoRef} video={item} />
+          <VideoContainer
+            ref={videoRef}
+            video={item}
+            videoListType={videoListType}
+          />
           <div style={{ display: "flex" }}>
             <div className={styles["post__buttons"]}>
               <LikeButton

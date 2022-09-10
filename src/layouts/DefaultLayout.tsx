@@ -16,8 +16,10 @@ function DefaultLayout({ children }: Props) {
     <React.Fragment>
       <Header isFullWidth={false} />
       <div className={styles["container"]}>
-        <Sidebar />
-        <main style={{ marginLeft: 356 }}>
+        <div className={styles["sidebar"]}>
+          <Sidebar />
+        </div>
+        <main className={styles["main"]}>
           <Outlet />
           {children}
         </main>

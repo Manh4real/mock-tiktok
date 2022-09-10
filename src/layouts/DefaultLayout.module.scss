@@ -3,4 +3,18 @@
 .container {
   width: var(--primary-layout-main-width);
   max-width: 100%;
+
+  justify-content: space-between;
+}
+
+.sidebar {
+  width: 356px;
+  flex-basis: 356px;
+}
+
+@media screen and (max-width: 1071px) {
+  .sidebar {
+    width: 72px;
+    flex: 0 0 72px;
+  }
 }

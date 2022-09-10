@@ -10,13 +10,21 @@ import Video from "_/components/Video";
 import { useNavigateToVideoDetails } from "_/hooks";
 
 // types
-import { Video as VideoInterface, VideoRefObject } from "_/types";
+import {
+  Video as VideoInterface,
+  VideoListType,
+  VideoRefObject,
+} from "_/types";
 
 interface Props {
   video: VideoInterface;
+  videoListType: VideoListType;
 }
 
-const VideoContainer = ({ video }: Props, ref: React.Ref<VideoRefObject>) => {
+const VideoContainer = (
+  { videoListType, video }: Props,
+  ref: React.Ref<VideoRefObject>
+) => {
   const navigate = useNavigateToVideoDetails(video.id);
 
   const videoRef = useRef<VideoRefObject>({

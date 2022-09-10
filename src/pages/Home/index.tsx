@@ -6,7 +6,17 @@ import routes, { pagesTitle } from "_/config/routes";
 // components
 import Posts from "./Posts";
 
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import { resetVideos } from "_/features/videos/videosSlice";
+
 function Home() {
+  const dispatch = useAppDispatch();
+  //
+  useEffect(() => {
+    dispatch(resetVideos());
+  }, [dispatch]);
+
   //
   useEffect(() => {
     document.title = pagesTitle[routes.root] as string;

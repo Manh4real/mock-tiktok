@@ -55,7 +55,9 @@ const FollowingAccountsSection = () => {
           styles["sidebar__following-accs"]
         )}
       >
-        <h5 className={styles["sidebar__header-title"]}>Following accounts</h5>
+        <h5 className={clsx(styles["text"], styles["sidebar__header-title"])}>
+          Following accounts
+        </h5>
         <div className={styles["sidebar__accs__cnt"]}>
           {!loading && accounts.length <= 0 && <NoAccounts />}
           {accounts.length > 0 && (
@@ -69,7 +71,11 @@ const FollowingAccountsSection = () => {
             <Spinner />
           ) : (
             <button
-              className={clsx("pink-font", styles["sidebar__more-btn"])}
+              className={clsx(
+                "pink-font",
+                styles["text"],
+                styles["sidebar__more-btn"]
+              )}
               onClick={handleLoadMore}
             >
               See {end ? "less" : "more"}

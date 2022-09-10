@@ -12,7 +12,11 @@ const useNavigateToVideoDetails = (postId: number) => {
 
     return useCallback(() => {
         currentVideo.videoRef?.pause();
-        navigate(`/video/${postId}`, { state: { background: location } });
+        navigate(`/video/${postId}`, {
+            state: {
+                background: location,
+            }
+        });
     }, [currentVideo.videoRef, location, navigate, postId]);
 }
 

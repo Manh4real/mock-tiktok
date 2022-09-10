@@ -13,10 +13,18 @@ import { useRedirectURL } from "_/hooks/useRedirect";
 
 // Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
+import { resetVideos } from "_/features/videos/videosSlice";
 
 function Following() {
   const isLoggedIn = useIsLoggedIn();
   const redirectUrlSearchParam = useRedirectURL();
+
+  const dispatch = useAppDispatch();
+  //
+  useEffect(() => {
+    dispatch(resetVideos());
+  }, [dispatch]);
 
   // page title
   useEffect(() => {

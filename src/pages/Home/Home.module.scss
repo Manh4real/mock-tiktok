@@ -3,6 +3,10 @@
 
   position: relative;
   scroll-behavior: smooth;
+
+  display: flex;
+  flex-direction: column;
+  padding-inline: 30px;
 }
 
 .loading {

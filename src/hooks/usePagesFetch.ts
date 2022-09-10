@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { ResponseWithPagination } from "_/types";
+import { ResponseWithPagination, Video } from "_/types";
+
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import { selectAllVideos, setVideos } from "_/features/videos/videosSlice";
+import { useSelector } from "react-redux";
 
 // type Data<T> = ResponseWithPagination<T>;
 type FetchApiFunc<T> = (page?: number) => Promise<ResponseWithPagination<T> | undefined>;
-// type HashMapResults<T> = {
-//     [key: string]: T
-// }
+
 /**
  * fetchApi function must be memoized, otherwise component re-renders infinitely
 */
@@ -25,8 +28,6 @@ const usePagesFetch =
         const [loading, setLoading] = useState<boolean>(false);
         const [page, setPage] = useState<number>(-1);
         const [totalPage, setTotalPage] = useState<number>(1);
-
-        // const hashMapResults = useRef(new Map<number, T>([])).current;
 
         const saveResults = useMemo(() => {
             const hashMapResults = new Map<number, T>([]);
@@ -53,9 +54,7 @@ const usePagesFetch =
                     if (!data) return;
 
                     setResults((prev) => [...prev, ...data.data]);
-                    // setResults([...data.data]);
 
-                    //
                     const currentPage = data.meta.pagination.current_page;
 
                     setPage(currentPage);
@@ -107,3 +106,92 @@ const usePagesFetch =
     };
 
 export default usePagesFetch
+
+// ==================================================================================
+export const usePagesFetch__videos =
+    <T extends Video>(
+        fetchApi: FetchApiFunc<T>,
+        pauseCallCheck: boolean = false,
+        options: Partial<{
+            errorMessage: string,
+            reachEndFunc: () => void,
+
+        }>
+    ) => {
+        const { reachEndFunc = () => { } } = options;
+
+        // const [results, setResults] = useState<T[]>([]);
+        const videos = useSelector(selectAllVideos);
+        const dispatch = useAppDispatch();
+
+        const [loading, setLoading] = useState<boolean>(false);
+        const [page, setPage] = useState<number>(-1);
+        const [totalPage, setTotalPage] = useState<number>(1);
+
+        const handleFetchNext = () => {
+            if (pauseCallCheck) return;
+
+            if (page >= totalPage) {
+                reachEndFunc();
+                return;
+            }
+
+            if (loading) return;
+
+            setLoading(true);
+            fetchApi(page + 1)
+                .then((data) => {
+                    if (!data) return;
+
+                    // setResults((prev) => [...prev, ...data.data]);
+                    dispatch(setVideos(data.data));
+
+                    const currentPage = data.meta.pagination.current_page;
+
+                    setPage(currentPage);
+                })
+                .catch(() => {
+                    console.log("Error: ", options.errorMessage);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+
+        //
+        useEffect(() => {
+            if (pauseCallCheck) return;
+
+            setLoading(true);
+            fetchApi()
+                .then((data) => {
+                    if (!data) return;
+
+                    // setResults(data.data);
+                    dispatch(setVideos(data.data));
+
+                    //
+                    const currentPage = data.meta.pagination.current_page;
+                    const total = data.meta.pagination.total_pages;
+
+                    setPage(currentPage);
+                    setTotalPage(total);
+                })
+                .catch(() => {
+                    console.log("Error: ", options.errorMessage);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }, [pauseCallCheck, fetchApi, options.errorMessage, dispatch]);
+
+
+        return {
+            results: videos,
+            loading,
+            hasMore: page < totalPage,
+            end: page >= totalPage,
+            setPage,
+            handleFetchNext
+        }
+    };

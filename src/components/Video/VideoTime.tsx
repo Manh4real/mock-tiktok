@@ -24,10 +24,11 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
     handleTimeUpdate,
     interactiveUpdateProgress,
     progress,
-    resetTime,
-    setShownTime,
     shownTime,
     currentProgress,
+
+    resetTime,
+    setShownTime,
   } = useVideoTimeProgress(progressBarRef, videoRef);
 
   //

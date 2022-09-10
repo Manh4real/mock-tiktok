@@ -42,6 +42,8 @@ const useVideoTimeProgress = (
     }, [hasMouseDown, setProgress, videoRef]);
 
     const resetTime = useCallback(() => {
+        console.log("??");
+
         setProgress(0);
     }, [setProgress]);
 

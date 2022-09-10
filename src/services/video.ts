@@ -2,23 +2,7 @@ import api from "_/api"
 import { ResponseWithPagination, Video, Viewer, ViewerPermission } from "_/types";
 import { getToken } from "./account";
 
-// export const getVideos = async () => {
-//     const result = await videoApi.get("popular", {
-//         params: {
-//             page: 1,
-//             per_page: 10
-//         },
-//         headers: {
-//             Authorization: process.env.REACT_APP_VIDEO_API_KEY as string
-//         }
-//     })
-
-//     const data = result.data.videos;
-
-//     return data;
-// }
-
-export const getVideo = async (id: number) => {
+export const getVideo = async (id: number | string) => {
     const token = getToken();
     let headers = {};
 

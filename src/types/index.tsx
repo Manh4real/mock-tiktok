@@ -119,6 +119,8 @@ export interface VideoRefObject {
   play: () => void;
 }
 
+export type VideoListType = "for-you" | "following" | "profile";
+
 //
 export type ResponseWithPagination<T> = {
   data: T[];

@@ -50,7 +50,7 @@ function Suggested() {
             styles["sidebar__suggested-accs"]
           )}
         >
-          <h5 className={styles["sidebar__header-title"]}>
+          <h5 className={clsx(styles["text"], styles["sidebar__header-title"])}>
             Suggested accounts
           </h5>
           <div className={styles["sidebar__accs__cnt"]}>
@@ -65,7 +65,11 @@ function Suggested() {
               {loading && <Spinner />}
             </div>
             <button
-              className={clsx("pink-font", styles["sidebar__more-btn"])}
+              className={clsx(
+                "pink-font",
+                styles["text"],
+                styles["sidebar__more-btn"]
+              )}
               onClick={handleShowAll}
             >
               See {showAll ? "less" : "all"}

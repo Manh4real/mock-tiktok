@@ -12,6 +12,7 @@ import styles from "./Sidebar.module.scss";
 
 // types
 import { Account as AccountInterface } from "_/types";
+import clsx from "clsx";
 
 interface Props {
   account: Partial<AccountInterface>;
@@ -29,7 +30,7 @@ function Account({ account }: Props, ref: React.Ref<HTMLDivElement>) {
   const onLiveImageStyle = onLive ? { width: "26px", height: "26px" } : {};
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={"flex-center"}>
       <Link to={"/@" + nickname} className={styles["sidebar__accs-link"]}>
         <div className={styles["sidebar__acc-avatar"]}>
           <div className={styles["avatar__image-ctn"]} style={onLiveImageStyle}>
@@ -37,7 +38,7 @@ function Account({ account }: Props, ref: React.Ref<HTMLDivElement>) {
           </div>
           {onLive && <OnLiveIndicator className={styles["onlive-indicator"]} />}
         </div>
-        <div className={styles["sidebar__accs-text"]}>
+        <div className={clsx(styles["text"], styles["sidebar__accs-text"])}>
           <div className={styles["sidebar__acc-username"]}>
             <span>{nickname}</span>
             {tick && <VerifyBadge />}

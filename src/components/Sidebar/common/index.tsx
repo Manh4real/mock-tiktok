@@ -47,7 +47,7 @@ function CommonSidebar({ compact = false, style, children }: Props) {
       return (
         <>
           <Icon solid={isActive} />
-          <h3>{title}</h3>
+          <h3 className={styles["text"]}>{title}</h3>
         </>
       );
     };

@@ -82,7 +82,11 @@ const Voice = (
   useImperativeHandle(ref, (): VoiceRefObject => ({ handleVolumeChange }));
 
   return (
-    <div className={clsx(styles["voice"], styles["button"])}>
+    <div
+      className={clsx(styles["voice"], styles["button"], {
+        [styles["is--visible"]]: muted,
+      })}
+    >
       <div
         role="button"
         className={clsx(styles["mute-btn"], {

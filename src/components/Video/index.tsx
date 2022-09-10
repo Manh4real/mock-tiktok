@@ -46,7 +46,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     hasWindowHeight,
     postId,
     placeholder,
-    autoPlay = false,
+    autoPlay: _autoplay = false,
     ...otherProps
   } = props;
 
@@ -57,8 +57,9 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   const { changeVideoRef } = context_useCurrentVideo();
 
-  const [isReady, setIsReady] = useState<boolean>(autoPlay);
-  const [playing, setPlaying] = useState<boolean>(autoPlay);
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [autoplay, setAutoplay] = useState<boolean>(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const voiceRef = useRef<VoiceRefObject>(null);
@@ -155,6 +156,22 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     [videoRef]
   );
 
+  // autoplay
+  useEffect(() => {
+    const timeID = setTimeout(() => {
+      setAutoplay(_autoplay);
+    }, 600);
+
+    return () => clearTimeout(timeID);
+  }, [_autoplay]);
+
+  useEffect(() => {
+    if (autoplay) {
+      setIsReady(true);
+      setPlaying(true);
+    }
+  }, [autoplay]);
+
   // play / pause on click
   useEffect(() => {
     if (playing) play();
@@ -163,11 +180,11 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   // when switching videos
   useEffect(() => {
-    if (!autoPlay && postId !== -999 && currentVideo.postId !== postId) {
+    if (!autoplay && postId !== -999 && currentVideo.postId !== postId) {
       setIsReady(false);
       setPlaying(false);
     }
-  }, [autoPlay, currentVideo.postId, postId]);
+  }, [autoplay, currentVideo.postId, postId]);
 
   useImperativeHandle(ref, () => videoRefObject);
 
@@ -185,7 +202,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
           poster={placeholder}
           muted={currentVideo.muted}
           loop={true}
-          autoPlay={autoPlay}
+          autoPlay={autoplay}
           onPause={handlePause}
           onPlay={handlePlay}
           onEnded={handleEnded}
@@ -202,7 +219,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
       <div className={styles["controller"]}>
         <div className={styles["buttons"]}>
           <div
-            className={clsx(styles["play-icon"], styles["button"])}
+            className={clsx(styles["play-button"], styles["button"])}
             role="button"
             onClick={handlePlayClick}
           >

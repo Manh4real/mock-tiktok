@@ -26,7 +26,7 @@ import { numberCompact } from "_/utils";
 import { getAccountByNickname } from "_/services/account";
 
 // types
-import { Account, Video } from "_/types";
+import { Account } from "_/types";
 import { getLikedVideos } from "_/services/video";
 
 // Redux
@@ -34,6 +34,13 @@ import {
   useCurrentUserInfo,
   useIsLoggedIn,
 } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
+import {
+  resetVideos,
+  selectAllVideos,
+  setVideos,
+} from "_/features/videos/videosSlice";
+import { useSelector } from "react-redux";
 
 type PageTitleFunc = (name: string, username: string) => string;
 
@@ -65,6 +72,14 @@ function Profile() {
         setLoading(false);
       });
   }, [params.usernameParam]);
+
+  //
+
+  const dispatch = useAppDispatch();
+  //
+  useEffect(() => {
+    dispatch(resetVideos());
+  }, [dispatch]);
 
   // page title
   useEffect(() => {
@@ -151,43 +166,48 @@ function Profile() {
 
 //============================================================================
 
-const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
+// const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
 
 const VideoList = ({ account }: { account: Account }) => {
   const currentUserInfo = useCurrentUserInfo();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [active, setActive] = useState<"videos" | "liked">("videos");
-  const [videos, setVideos] = useState<Video[]>([]);
+  // const [videos, setVideos] = useState<Video[]>([]);
+
+  // Redux
+  const videos = useSelector(selectAllVideos);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setLoading(true);
     if (active === "videos") {
-      setVideos(account.videos);
-      catchedVideos.set("videos", account.videos);
+      dispatch(setVideos(account.videos));
+      // setVideos(account.videos);
+      // catchedVideos.set("videos", account.videos);
       setLoading(false);
     } else if (active === "liked") {
       if (!currentUserInfo) return;
       if (currentUserInfo.id !== account.id) return;
 
       //
-      const catchedLikedVideos = catchedVideos.get("liked");
+      // const catchedLikedVideos = catchedVideos.get("liked");
 
-      if (catchedLikedVideos) {
-        setVideos(catchedLikedVideos);
-        setLoading(false);
-      } else {
-        getLikedVideos(account.id)
-          .then((result) => {
-            setVideos(result.data);
-            catchedVideos.set("liked", result.data);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
+      // if (catchedLikedVideos) {
+      // setVideos(catchedLikedVideos);
+      // setLoading(false);
+      // } else {
+      getLikedVideos(account.id)
+        .then((result) => {
+          dispatch(setVideos(result.data));
+          // setVideos(result.data);
+          // catchedVideos.set("liked", result.data);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [account.id, account.videos, active, currentUserInfo]);
+  }, [account.id, account.videos, active, currentUserInfo, dispatch]);
 
   return (
     <>

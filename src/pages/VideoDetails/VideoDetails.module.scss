@@ -21,17 +21,12 @@
     }
   }
   .background {
-    /* The image used */
     position: absolute;
     inset: 0;
     opacity: 0.3;
 
-    /* Add the blur effect */
     filter: blur(8px);
 
-    /* Full height */
-
-    /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -157,9 +152,12 @@
   position: absolute;
   top: 20px;
   left: 20px;
+  z-index: 2;
+}
+
+.basic-button {
   border-radius: 50%;
   border: none;
-  z-index: 2;
 
   background: #ffffff1f;
   color: #fff;
@@ -181,15 +179,30 @@
   }
 }
 
+.nav-buttons {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+
+  translate: 0 -50%;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+
+  .prev svg {
+    margin-top: -2px;
+  }
+  .next svg {
+    margin-top: 2px;
+  }
+}
+
 // =====================================================
 .more {
-  // opacity: 0;
-  // visibility: hidden;
-
-  // position: absolute;
-  // top: -14px;
-  // right: -3px;
-
   font-size: 24px;
   color: var(--black);
 
