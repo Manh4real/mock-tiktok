@@ -114,7 +114,6 @@ const Posts = ({ type = "for-you" }: Props) => {
         {posts.map((post) => {
           return (
             <Post
-              videoListType={type}
               key={post.id}
               item={post}
               createAutoplayScrollObserver={createAutoplayScrollObserver}

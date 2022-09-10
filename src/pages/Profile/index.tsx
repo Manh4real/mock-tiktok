@@ -7,6 +7,7 @@ import routes, { pagesTitle } from "_/config/routes";
 
 // icons
 import { IoMdShareAlt } from "react-icons/io";
+import { HiLockClosed } from "react-icons/hi";
 import { Spinner } from "_/components/icons";
 
 // components
@@ -26,7 +27,7 @@ import { numberCompact } from "_/utils";
 import { getAccountByNickname } from "_/services/account";
 
 // types
-import { Account } from "_/types";
+import { Account, Video } from "_/types";
 import { getLikedVideos } from "_/services/video";
 
 // Redux
@@ -166,14 +167,13 @@ function Profile() {
 
 //============================================================================
 
-// const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
+const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
 
 const VideoList = ({ account }: { account: Account }) => {
   const currentUserInfo = useCurrentUserInfo();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [active, setActive] = useState<"videos" | "liked">("videos");
-  // const [videos, setVideos] = useState<Video[]>([]);
 
   // Redux
   const videos = useSelector(selectAllVideos);
@@ -181,31 +181,37 @@ const VideoList = ({ account }: { account: Account }) => {
 
   useEffect(() => {
     setLoading(true);
+    dispatch(resetVideos());
     if (active === "videos") {
       dispatch(setVideos(account.videos));
+
       // setVideos(account.videos);
-      // catchedVideos.set("videos", account.videos);
+      catchedVideos.set("videos", account.videos);
       setLoading(false);
     } else if (active === "liked") {
       if (!currentUserInfo) return;
       if (currentUserInfo.id !== account.id) return;
 
       //
-      // const catchedLikedVideos = catchedVideos.get("liked");
+      const catchedLikedVideos = catchedVideos.get("liked");
 
-      // if (catchedLikedVideos) {
-      // setVideos(catchedLikedVideos);
-      // setLoading(false);
-      // } else {
-      getLikedVideos(account.id)
-        .then((result) => {
-          dispatch(setVideos(result.data));
-          // setVideos(result.data);
-          // catchedVideos.set("liked", result.data);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      if (catchedLikedVideos) {
+        dispatch(setVideos(catchedLikedVideos));
+
+        // setVideos(catchedLikedVideos);
+        setLoading(false);
+      } else {
+        getLikedVideos(account.id)
+          .then((result) => {
+            dispatch(setVideos(result.data));
+
+            // setVideos(result.data);
+            catchedVideos.set("liked", result.data);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     }
   }, [account.id, account.videos, active, currentUserInfo, dispatch]);
 
@@ -222,7 +228,9 @@ const VideoList = ({ account }: { account: Account }) => {
         </button>
         <button
           disabled={currentUserInfo?.id !== account.id}
-          className={clsx({ [styles["active"]]: active === "liked" })}
+          className={clsx("flex-center", {
+            [styles["active"]]: active === "liked",
+          })}
           onClick={() => {
             if (!currentUserInfo) return;
             if (currentUserInfo.id !== account.id) return;
@@ -230,7 +238,8 @@ const VideoList = ({ account }: { account: Account }) => {
             if (active !== "liked") setActive("liked");
           }}
         >
-          Liked
+          <HiLockClosed />
+          <span>Liked</span>
         </button>
       </div>
       <main className={styles["main"]}>
