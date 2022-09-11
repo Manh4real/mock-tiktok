@@ -32,7 +32,7 @@
   flex: 1;
   border-radius: 4px;
   border: 1px solid transparent;
-  overflow: hidden;
+  // overflow: hidden;
 
   padding-right: 9px;
   background: #1618230f;
@@ -49,9 +49,37 @@
   font-size: 14px;
   caret-color: var(--pink);
 
+  border-radius: 4px;
+
   padding-inline: 9px;
   height: 40px;
 }
+.emoji-button-container {
+  position: relative;
+}
+.emoji-button {
+  border: none;
+  outline: none;
+
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+  margin: 3px;
+
+  font-size: 24px;
+  cursor: pointer;
+
+  background-color: transparent;
+  border-radius: 8px;
+
+  &:hover,
+  &:focus-within {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+}
+
+//
 .post-button {
   flex: 0 0 48px;
   cursor: pointer;

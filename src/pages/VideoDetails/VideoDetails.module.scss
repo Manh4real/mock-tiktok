@@ -7,6 +7,9 @@
 
   .left {
     flex: 1 1 896px;
+
+    min-width: 400px;
+
     background: #000;
     position: relative;
     overflow: hidden;
@@ -105,12 +108,43 @@
 .interaction {
   padding-block: 16px;
 }
+
+.copy-link {
+  height: 34px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  border-radius: 2px;
+  overflow: hidden;
+
+  .link-text {
+    flex: 1;
+    height: 100%;
+    padding: 7px 0 5px 12px;
+
+    background: #1618230f;
+    color: var(--grey);
+
+    border: 1px solid #1618231f;
+    border-right: 0;
+  }
+  .copy-link-button {
+    height: 100%;
+
+    white-space: nowrap;
+    font-weight: 600;
+
+    padding: 7px 18px;
+    border-radius: 2px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
 .buttons {
   button {
     background: transparent;
     border: none;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--grey);
 
     display: flex;
@@ -146,6 +180,8 @@
     }
   }
 }
+
+// .comments-container {}
 
 //
 .closeBtn {

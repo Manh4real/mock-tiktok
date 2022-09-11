@@ -29,9 +29,18 @@ import { useRedirectURL } from "_/hooks/useRedirect";
 interface Props {
   video_uuid: string;
   videoId: number;
+  isAllowed: boolean;
 }
 
-const CommentSection = ({ video_uuid }: Props) => {
+const CommentSection = (props: Props) => {
+  const { isAllowed } = props;
+
+  if (isAllowed) return <AllowedCommentSection {...props} />;
+
+  return <div className={styles["comments"]}>Comments are turned off.</div>;
+};
+
+const AllowedCommentSection = ({ video_uuid }: Omit<Props, "isAllowed">) => {
   const fetchComments = useCallback(
     (page?: number) => {
       return getComments(video_uuid);
@@ -52,7 +61,7 @@ const CommentSection = ({ video_uuid }: Props) => {
       .slice(0)
       .sort(
         (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
   }, [comments]);
 

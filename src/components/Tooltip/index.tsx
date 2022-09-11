@@ -5,17 +5,19 @@ import Tippy from "@tippyjs/react";
 import styles from "./Tooltip.module.scss";
 
 // types
+import { Placement } from "@popperjs/core";
 interface Props {
   title: string;
+  placement?: Placement;
   children: JSX.Element;
 }
 
-function Tooltip({ title, children }: Props) {
+function Tooltip({ title, placement = "bottom", children }: Props) {
   return (
     <Tippy
       zIndex={10000}
       delay={[0, 300]}
-      placement="bottom"
+      placement={placement}
       content={
         <div className={styles["tooltip"]} tabIndex={-1}>
           {title}

@@ -77,7 +77,7 @@ export interface Video {
   shares_count: number;
   views_count: number;
   viewable: Viewer;
-  allows: string[];
+  allows: ViewerPermission;
   published_at: string;
   created_at: string;
   updated_at: string;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import ReactDOM from "react-dom";
-import { Link, To, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 // components
 import Video from "_/components/Video";
@@ -28,6 +28,9 @@ import styles from "./VideoDetails.module.scss";
 
 // services
 import { getVideo } from "_/services/video";
+
+// config
+import routes from "_/config/routes";
 
 // types
 import { Video as VideoInterface } from "_/types";
@@ -182,12 +185,16 @@ function VideoDetailsPage() {
           </div>
         </div>
 
-        <CommentSection videoId={video.id} video_uuid={video.uuid} />
+        <CommentSection
+          videoId={video.id}
+          video_uuid={video.uuid}
+          isAllowed={video.allows.some((a) => a === "comment")}
+        />
       </div>
       <button
         className={clsx(styles["basic-button"], styles["closeBtn"])}
         onClick={() => {
-          navigate(-1 as To);
+          navigate(routes.root);
 
           document.body.style.overflow = "overlay";
         }}

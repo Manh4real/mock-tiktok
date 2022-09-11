@@ -40,13 +40,13 @@ const Cover = ({
       initialValue: 0,
       target: 1,
       onChange: (progress) => {
-        video.currentTime = Math.floor(progress * video.duration);
-        setIsAllowed(Math.floor(progress * video.duration));
+        const duration = video.duration || 0;
+        video.currentTime = Math.floor(progress * duration);
+        setIsAllowed(Math.floor(progress * duration));
       },
     });
 
   // ====================================================
-
   useEffect(() => {
     if (!videoFile && (loadingImages || images.length > 0)) {
       setImages([]);
@@ -64,48 +64,50 @@ const Cover = ({
 
     canvas.width = 1920;
     canvas.height = 1080;
-    let ctx = canvas.getContext("2d");
 
-    const handleLoad = () => {
+    let ctx = canvas.getContext("2d");
+    let i = 0;
+
+    const seekNext = () => {
+      if (i >= IMAGES_NUM) {
+        setLoadingImages(false);
+        return;
+      }
+
+      const timeID = setTimeout(function () {
+        video.currentTime = Math.floor((i * video.duration) / IMAGES_NUM);
+        i++;
+      }, 200);
+
+      timeIDs.push(timeID);
+    };
+
+    const handleLoadStart = () => {
       setLoadingImages(true);
     };
     const handleLoadedMetadata = () => {
-      const getSnapshots = (_i: number) => {
-        if (_i >= IMAGES_NUM) {
-          setLoadingImages(false);
-          return;
-        }
-
-        const timeID = setTimeout(function () {
-          video.currentTime = Math.floor((_i * video.duration) / IMAGES_NUM);
-
-          getSnapshots(_i + 1);
-        }, 100 * _i);
-
-        timeIDs.push(timeID);
-      };
-
-      getSnapshots(0);
+      seekNext();
     };
     const handleSeeked = function (this: HTMLVideoElement, ev: Event) {
       if (ctx) ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       const snapShot = canvas.toDataURL("image/jpeg");
 
+      seekNext();
       setImages((prev) => {
         if (prev.length >= IMAGES_NUM) return prev;
 
-        return [...prev, snapShot];
+        return prev.concat(snapShot);
       });
 
       setCover((prev) => {
-        if (prev === "") return prev;
+        if (!prev) return prev;
+
         return snapShot;
       });
     };
 
-    //   video.addEventListener()
-    video.addEventListener("loadstart", handleLoad);
+    video.addEventListener("loadstart", handleLoadStart);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     video.addEventListener("seeked", handleSeeked);
 
@@ -113,17 +115,17 @@ const Cover = ({
       timeIDs.forEach((timeID) => {
         clearTimeout(timeID);
       });
-      video.removeEventListener("loadstart", handleLoad);
+      video.removeEventListener("loadstart", handleLoadStart);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("seeked", handleSeeked);
     };
   }, [isVideo, video, videoFile]);
 
   useEffect(() => {
-    if (images.length >= IMAGES_NUM) {
+    if (!cover && images.length >= IMAGES_NUM) {
       setCover(images[0]);
     }
-  }, [images]);
+  }, [images, cover]);
 
   //=====================================================
   const reset = useCallback(() => {

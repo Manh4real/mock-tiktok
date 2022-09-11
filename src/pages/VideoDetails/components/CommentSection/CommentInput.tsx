@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import clsx from "clsx";
+import Tippy from "@tippyjs/react/headless";
+import Picker from "emoji-picker-react";
 
 // styles
 import styles from "./CommentSection.module.scss";
 
 // components
 import { Spinner } from "_/components/icons";
+import Tooltip from "_/components/Tooltip";
+
+// icons
+import { BiSmile } from "react-icons/bi";
 
 // services
 import { createNewComment as api_createNewComment } from "_/services/comment";
 
 // contexts
 import { useCommentCommand } from "_/contexts";
+
+// hoc
 import { withLoginModal } from "_/hoc";
 
 // types
@@ -65,6 +73,7 @@ const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
           value={value}
           onChange={handleChange}
         />
+        <EmojiInput setValue={setValue} />
       </div>
       <div
         role={"button"}
@@ -76,6 +85,53 @@ const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
         {loading ? <Spinner style={{ width: 16, height: 16 }} /> : "Post"}
       </div>
     </div>
+  );
+};
+
+// ============================================================================
+const EmojiInput = ({
+  setValue,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const [show, setShow] = useState<boolean>(false);
+
+  return (
+    <Tippy
+      interactive
+      visible={show}
+      onClickOutside={() => {
+        setShow(false);
+      }}
+      placement="top-start"
+      render={(attrs) => {
+        return (
+          <div {...attrs} tabIndex={-1}>
+            <Picker
+              preload={true}
+              onEmojiClick={(e, d) => {
+                setValue((prev) => {
+                  return prev + d.emoji;
+                });
+              }}
+            />
+          </div>
+        );
+      }}
+    >
+      <div className={styles["emoji-button-container"]}>
+        <Tooltip title="Click to add emojis" placement={"top"}>
+          <button
+            className={clsx("flex-center", styles["emoji-button"])}
+            onClick={() => {
+              setShow((prev) => !prev);
+            }}
+          >
+            <BiSmile />
+          </button>
+        </Tooltip>
+      </div>
+    </Tippy>
   );
 };
 
