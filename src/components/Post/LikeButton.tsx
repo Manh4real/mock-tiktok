@@ -98,4 +98,4 @@ const LikeButton = ({
   );
 };
 
-export default React.memo(withLoginModal(LikeButton));
+export default withLoginModal(LikeButton);

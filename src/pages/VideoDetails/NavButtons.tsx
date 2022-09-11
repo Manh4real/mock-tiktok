@@ -1,12 +1,15 @@
 import React from "react";
 import clsx from "clsx";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 // icons
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 // styles
 import styles from "./VideoDetails.module.scss";
+
+// hooks
+import { useBackgroundLocation } from "_/hooks";
 
 // Redux
 import { useVideosIds } from "_/features/videos/videosSlice";
@@ -25,12 +28,11 @@ const NavButtons = ({ videoId }: Props) => {
   const prevVideoId = videosIds[currentVideoIndex - 1];
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as any;
+  const { backgroundLocation } = useBackgroundLocation();
 
   const navigateTo = (id: number | EntityId) => {
     navigate("/video/" + id, {
-      state: { background: locationState?.background },
+      state: { background: backgroundLocation },
       replace: true,
     });
   };

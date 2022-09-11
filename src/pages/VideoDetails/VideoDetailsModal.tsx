@@ -1,14 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import ReactDOM from "react-dom";
-import {
-  Link,
-  Location,
-  To,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Link, To, useNavigate, useParams } from "react-router-dom";
 
 // components
 import Video from "_/components/Video";
@@ -40,13 +33,11 @@ import routes from "_/config/routes";
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useVideoById } from "_/features/videos/videosSlice";
+import { useBackgroundLocation } from "_/hooks";
 
 function VideoDetailsModal() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const locationState = location.state as { background: Location } | null;
-  const locationBackground = locationState?.background;
+  const { backgroundLocation } = useBackgroundLocation();
 
   const params = useParams();
   const videoId = params.videoId;
@@ -146,6 +137,7 @@ function VideoDetailsModal() {
           <div className={styles["interaction"]}>
             <div className={clsx("flex-align-center", styles["buttons"])}>
               <LikeButton
+                key={video.id}
                 isLiked={video.is_liked}
                 styles={styles}
                 postId={video.id}
@@ -172,12 +164,12 @@ function VideoDetailsModal() {
       <button
         className={clsx(styles["basic-button"], styles["closeBtn"])}
         onClick={() => {
-          navigate(locationBackground ? (-1 as To) : routes.root);
+          navigate(backgroundLocation ? (-1 as To) : routes.root);
 
           document.body.style.overflow = "overlay";
         }}
       >
-        {locationBackground ? (
+        {backgroundLocation ? (
           <Close />
         ) : (
           <BsChevronLeft style={{ marginLeft: -4 }} />

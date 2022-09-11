@@ -30,7 +30,12 @@ import {
 // components
 import ToTopButton from "_/components/ToTopButton";
 
+// context
 import { LoginContextProvider, CurrentVideoProvider } from "_/contexts";
+
+// hooks
+import { useBackgroundLocation } from "./hooks";
+
 // variables
 import routes from "_/config/routes";
 
@@ -41,15 +46,13 @@ import { toggleMute } from "./features/currentVideo/currentVideoSlice";
 
 function App() {
   const location = useLocation();
-
-  const locationState = location.state as any;
-  const background = locationState && locationState.background;
+  const { backgroundLocation } = useBackgroundLocation();
 
   useEffect(() => {
-    if (background) {
+    if (backgroundLocation) {
       document.body.style.overflow = "hidden";
     } else document.body.style.overflow = "overlay";
-  }, [background]);
+  }, [backgroundLocation]);
 
   // Redux
   const dispatch = useAppDispatch();
@@ -79,7 +82,7 @@ function App() {
     <LoginContextProvider>
       <CurrentVideoProvider>
         <React.Fragment>
-          <Routes location={background || location}>
+          <Routes location={backgroundLocation || location}>
             <Route element={<DefaultLayout />}>
               <Route path={routes.root} element={<Home />} />
               <Route path={routes.following} element={<Following />} />
@@ -117,7 +120,7 @@ function App() {
             <Route path={routes.logout} element={<Logout />} />
             <Route path={routes.reset} element={<ResetPasswordPage />}></Route>
           </Routes>
-          {background && (
+          {backgroundLocation && (
             <Routes>
               <Route path="/video/:videoId" element={<VideoDetails />} />
             </Routes>
