@@ -8,3 +8,4 @@ export { default as useRedirect } from "./useRedirect";
 export { default as useBackgroundLocation } from "./useBackgroundLocation";
 export { default as useVideoTimeProgress } from "./useVideoTimeProgress";
 export { default as useModal } from "./useModal";
+export { default as useLike } from "./useLike";

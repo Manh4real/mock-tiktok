@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import clsx from "clsx";
 
 // icons
@@ -10,14 +10,11 @@ import { numberCompact } from "_/utils";
 // context
 import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
 
-// services
-import { dislikePost, likePost } from "_/services/post";
+// hooks
+import { useLike } from "_/hooks";
 
 // Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
-
-// types
-import { Video } from "_/types";
 
 // Redux
 import { useCurrentVideo } from "_/features/currentVideo/currentVideoSlice";
@@ -42,8 +39,7 @@ const LikeButton = ({
 
   const { postId: currentPostId } = useCurrentVideo();
 
-  const [value, setValue] = useState<number>(likesCount);
-  const [active, setActive] = useState<boolean>(isLiked);
+  const { active, value, toggle } = useLike({ postId, isLiked, likesCount });
 
   const handleClick = useCallback(() => {
     if (!isLoggedIn) {
@@ -51,19 +47,8 @@ const LikeButton = ({
       return;
     }
 
-    //
-    if (!active) {
-      likePost(postId).then((video: Video) => {
-        setValue(video.likes_count);
-        setActive(video.is_liked);
-      });
-    } else {
-      dislikePost(postId).then((video: Video) => {
-        setValue(video.likes_count);
-        setActive(video.is_liked);
-      });
-    }
-  }, [active, isLoggedIn, postId, showLoginModal]);
+    toggle();
+  }, [isLoggedIn, showLoginModal, toggle]);
 
   // dom events
   useEffect(() => {
@@ -98,4 +83,4 @@ const LikeButton = ({
   );
 };
 
-export default withLoginModal(LikeButton);
+export default React.memo(withLoginModal(LikeButton));

@@ -24,6 +24,7 @@ import { WithLoginModal } from "_/hoc/withLoginModal";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
+  videoId: number;
   video_uuid: string;
 }
 

@@ -139,8 +139,8 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
           <div style={{ display: "flex" }}>
             <div className={styles["post__buttons"]}>
               <LikeButton
-                isLiked={item.is_liked}
                 styles={styles}
+                isLiked={item.is_liked}
                 postId={item.id}
                 likesCount={item.likes_count}
               />

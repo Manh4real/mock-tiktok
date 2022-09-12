@@ -8,7 +8,7 @@ import { FiTrash2 } from "react-icons/fi";
 import styles from "./CommentSection.module.scss";
 
 // services
-import { deleteComment as deleteCommentApi } from "_/services/comment";
+import { deleteComment as api_deleteComment } from "_/services/comment";
 import { useCommentCommand } from "_/contexts";
 
 // types
@@ -26,7 +26,7 @@ const DeleteCommentButton = ({ commentId }: Props) => {
 
     if (!answer) return;
 
-    deleteCommentApi(commentId)
+    api_deleteComment(commentId)
       .then(() => {
         deleteComment(commentId);
       })

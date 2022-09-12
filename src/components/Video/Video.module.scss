@@ -24,6 +24,14 @@
       opacity: 1;
     }
   }
+
+  .loading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    background: rgba(0, 0, 0, 0.1);
+  }
 }
 
 .play-button,

@@ -1,4 +1,9 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, {
+  // useCallback,
+  // useRef,
+  useMemo,
+} from "react";
+import { Link } from "react-router-dom";
 
 // styles
 import styles from "./CommentSection.module.scss";
@@ -9,22 +14,28 @@ import { Spinner } from "_/components/icons";
 // components
 import Comment from "./Comment";
 import CommentInput from "./CommentInput";
+import {
+  // CommentCommandProvider,
+  useCommentCommand,
+} from "_/contexts";
 
 // hooks
-import { usePagesFetch } from "_/hooks";
+// import { usePagesFetch } from "_/hooks";
 
 // services
-import { getComments } from "_/services/comment";
+// import { getComments } from "_/services/comment";
 
 // types
-import { Comment as CommentInterface } from "_/types";
-import { CommentCommandProvider } from "_/contexts";
-import { Link } from "react-router-dom";
+// import { Comment as CommentInterface } from "_/types";
+
+// config
 import routes from "_/config/routes";
 
 // Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 import { useRedirectURL } from "_/hooks/useRedirect";
+// import { updateVideo } from "_/features/videos/videosSlice";
+// import { useAppDispatch } from "_/features/hooks";
 
 interface Props {
   video_uuid: string;
@@ -40,71 +51,43 @@ const CommentSection = (props: Props) => {
   return <div className={styles["comments"]}>Comments are turned off.</div>;
 };
 
-const AllowedCommentSection = ({ video_uuid }: Omit<Props, "isAllowed">) => {
-  const fetchComments = useCallback(
-    (page?: number) => {
-      return getComments(video_uuid);
-    },
-    [video_uuid]
-  );
-
-  const {
-    loading,
-    results: comments,
-    setResults: setComments,
-  } = usePagesFetch<CommentInterface>(fetchComments, false, {});
+const AllowedCommentSection = ({
+  video_uuid,
+  videoId,
+}: Omit<Props, "isAllowed">) => {
+  const { comments, loading } = useCommentCommand();
 
   const isLoggedIn = useIsLoggedIn();
-
-  const sortedComments = useMemo(() => {
-    return comments
-      .slice(0)
-      .sort(
-        (a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-      );
-  }, [comments]);
-
-  const addNewComment = useCallback(
-    (comment: CommentInterface) => {
-      setComments((prev) => [comment, ...prev]);
-    },
-    [setComments]
-  );
-  const deleteComment = useCallback(
-    (commentId: number) => {
-      setComments((prev) => {
-        return prev.filter((cmt) => cmt.id !== commentId);
-      });
-    },
-    [setComments]
-  );
-
-  const contextValue = useRef({
-    commentsCount: comments.length,
-    addComment: addNewComment,
-    deleteComment,
-  }).current;
 
   const content = useMemo(() => {
     if (!isLoggedIn) return <Message />;
     else if (loading) return <Spinner />;
-    else if (!loading && sortedComments.length <= 0)
+    else if (!loading && comments.length <= 0)
       return <strong style={{ fontWeight: "400" }}>No comments yet.</strong>;
     else if (!loading)
-      return sortedComments.map((comment) => {
+      return comments.map((comment) => {
         return <Comment key={comment.id} comment={comment} />;
       });
-  }, [isLoggedIn, loading, sortedComments]);
+  }, [isLoggedIn, loading, comments]);
+
+  // useEffect(() => {
+  //   dispatch(
+  //     updateVideo({
+  //       id: videoId,
+  //       changes: {
+  //         comments_count: comments.length,
+  //       },
+  //     })
+  //   );
+  // }, [comments.length, dispatch, videoId]);
 
   return (
-    <CommentCommandProvider value={contextValue}>
+    <React.Fragment>
       <div className={styles["comments"]}>
         <div className={styles["container"]}>{content}</div>
       </div>
-
-      <CommentInput video_uuid={video_uuid} />
-    </CommentCommandProvider>
+      <CommentInput videoId={videoId} video_uuid={video_uuid} />
+    </React.Fragment>
   );
 };
 

@@ -8,7 +8,8 @@ export const likePost = async (postId: number) => {
 
     const result = await api.post(`videos/${postId}/like`, null, {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            "Access-Control-Allow-Origin": "*"
         }
     })
     const data = result.data;
@@ -23,7 +24,8 @@ export const dislikePost = async (postId: number) => {
 
     const result = await api.post(`videos/${postId}/unlike`, null, {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            "Access-Control-Allow-Origin": "*"
         }
     })
     const data = result.data;

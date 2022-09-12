@@ -8,8 +8,12 @@ import { FiTrash2 } from "react-icons/fi";
 import styles from "../VideoDetails.module.scss";
 
 // services
-import { deleteVideo } from "_/services/video";
+import { deleteVideo as api_deleteVideo } from "_/services/video";
 import { useNavigate } from "react-router";
+
+// Redux
+import { deleteVideo as redux_deleteVideo } from "_/features/videos/videosSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 // types
 interface Props {
@@ -19,6 +23,8 @@ interface Props {
 const DeleteVideoButton = ({ videoId }: Props) => {
   const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
+
   const handleClick = () => {
     const answer = window.confirm(
       "Are you sure you want to delete this video?"
@@ -26,18 +32,13 @@ const DeleteVideoButton = ({ videoId }: Props) => {
 
     if (!answer) return;
 
-    deleteVideo(videoId).then(() => {
+    api_deleteVideo(videoId).then(() => {
+      dispatch(redux_deleteVideo(videoId));
+
       navigate(`/video/${videoId}`, { replace: true });
 
       document.body.style.overflow = "overlay";
     });
-    // deleteCommentApi(commentId)
-    //   .then(() => {
-    //     deleteComment(commentId);
-    //   })
-    //   .catch(() => {
-    //     alert("Cannot delete this comment.");
-    //   });
   };
 
   return (

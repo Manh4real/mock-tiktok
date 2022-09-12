@@ -34,6 +34,7 @@ import routes from "_/config/routes";
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useVideoById } from "_/features/videos/videosSlice";
 import { useBackgroundLocation } from "_/hooks";
+import { CommentCommandProvider, useCommentCommand } from "_/contexts";
 
 function VideoDetailsModal() {
   const navigate = useNavigate();
@@ -75,92 +76,93 @@ function VideoDetailsModal() {
 
         <NavButtons videoId={video.id} />
       </div>
-      <div className={styles["right"]}>
-        <header className={styles["header"]}>
-          <AccountPopup account={author}>
-            <Link
-              to={"/@" + author.nickname}
-              className={clsx(styles["header-link"], "flex-align-center")}
-            >
-              <div className={styles["avatar"]}>
-                <Image src={author.avatar} className={clsx("circle")} />
-              </div>
-              <div>
-                <h3
-                  className={clsx(
-                    styles["author-username"],
-                    "hover-underlined"
-                  )}
-                >
-                  {author.nickname}
-                </h3>
-                <div className={styles["subtitle"]}>
-                  <span className={styles["author-name"]}>{authorName}</span>
-                  <span style={{ marginInline: 5 }}>&middot;</span>
-                  <TimeAgo time={video.created_at} />
-                </div>
-              </div>
-            </Link>
-          </AccountPopup>
-          {currentUserInfo?.id === video.user_id && (
-            <VideoMoreButton videoId={video.id} />
-          )}
-          {currentUserInfo?.id !== video.user_id && (
-            <div className={styles["follow-button"]}>
-              <FollowButton
-                styles={styles}
-                accountId={author.id}
-                isFollowed={author.is_followed}
-              />
-            </div>
-          )}
-        </header>
-
-        <div className={styles["content"]}>
-          <div className={styles["desc"]}>{video.description}</div>
-
-          <div className={styles["audio"]}>
-            <h4>
+      <CommentCommandProvider
+        key={video.uuid}
+        initialCommentsCount={video.comments_count}
+        videoId={video.id}
+        video_uuid={video.uuid}
+      >
+        <div className={styles["right"]}>
+          <header className={styles["header"]}>
+            <AccountPopup account={author}>
               <Link
-                to={video.music || "/"}
-                className="hover-underlined flex-align-center"
-                style={{ width: "max-content" }}
+                to={"/@" + author.nickname}
+                className={clsx(styles["header-link"], "flex-align-center")}
               >
-                <MusicNote />
-                <span style={{ marginLeft: "5px" }}>
-                  original sound - {authorName}
-                </span>
+                <div className={styles["avatar"]}>
+                  <Image src={author.avatar} className={clsx("circle")} />
+                </div>
+                <div>
+                  <h3
+                    className={clsx(
+                      styles["author-username"],
+                      "hover-underlined"
+                    )}
+                  >
+                    {author.nickname}
+                  </h3>
+                  <div className={styles["subtitle"]}>
+                    <span className={styles["author-name"]}>{authorName}</span>
+                    <span style={{ marginInline: 5 }}>&middot;</span>
+                    <TimeAgo time={video.created_at} />
+                  </div>
+                </div>
               </Link>
-            </h4>
-          </div>
-
-          <div className={styles["interaction"]}>
-            <div className={clsx("flex-align-center", styles["buttons"])}>
-              <LikeButton
-                key={video.id}
-                isLiked={video.is_liked}
-                styles={styles}
-                postId={video.id}
-                likesCount={video.likes_count}
-              />
-              <CommentButton
-                disabled
-                styles={styles}
-                postId={video.id}
-                commentsCount={video.comments_count}
-              />
+            </AccountPopup>
+            {currentUserInfo?.id === video.user_id && (
+              <VideoMoreButton videoId={video.id} />
+            )}
+            {currentUserInfo?.id !== video.user_id && (
+              <div className={styles["follow-button"]}>
+                <FollowButton
+                  styles={styles}
+                  accountId={author.id}
+                  isFollowed={author.is_followed}
+                />
+              </div>
+            )}
+          </header>
+          <div className={styles["content"]}>
+            <div className={styles["desc"]}>{video.description}</div>
+            <div className={styles["audio"]}>
+              <h4>
+                <Link
+                  to={video.music || "/"}
+                  className="hover-underlined flex-align-center"
+                  style={{ width: "max-content" }}
+                >
+                  <MusicNote />
+                  <span style={{ marginLeft: "5px" }}>
+                    original sound - {authorName}
+                  </span>
+                </Link>
+              </h4>
             </div>
+            <div className={styles["interaction"]}>
+              <div className={clsx("flex-align-center", styles["buttons"])}>
+                <LikeButton
+                  isLiked={video.is_liked}
+                  styles={styles}
+                  postId={video.id}
+                  likesCount={video.likes_count}
+                />
+                <CommentButtonWithContext
+                  disabled
+                  styles={styles}
+                  postId={video.id}
+                  commentsCount={video.comments_count}
+                />
+              </div>
+            </div>
+            <CopyLinkSection />
           </div>
-
-          <CopyLinkSection />
+          <CommentSection
+            videoId={video.id}
+            video_uuid={video.uuid}
+            isAllowed={video.allows.some((a) => a === "comment")}
+          />
         </div>
-
-        <CommentSection
-          videoId={video.id}
-          video_uuid={video.uuid}
-          isAllowed={video.allows.some((a) => a === "comment")}
-        />
-      </div>
+      </CommentCommandProvider>
       <button
         className={clsx(styles["basic-button"], styles["closeBtn"])}
         onClick={() => {
@@ -239,6 +241,33 @@ const CopyLinkSection = () => {
         Copy link
       </div>
     </div>
+  );
+};
+
+// ====================================================================
+interface CommentButtonWithContextProps {
+  disabled: boolean;
+  styles: {
+    readonly [key: string]: string;
+  };
+  postId: number;
+  commentsCount: number;
+}
+const CommentButtonWithContext = ({
+  disabled,
+  styles,
+  postId,
+}: // commentsCount,
+CommentButtonWithContextProps) => {
+  const { commentsCount } = useCommentCommand();
+
+  return (
+    <CommentButton
+      disabled={disabled}
+      styles={styles}
+      postId={postId}
+      commentsCount={commentsCount}
+    />
   );
 };
 

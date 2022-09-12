@@ -10,7 +10,7 @@ import clsx from "clsx";
 
 // icons
 import { FaPlay } from "react-icons/fa";
-import { Pause } from "_/components/icons";
+import { Pause, Spinner } from "_/components/icons";
 
 // components
 import Voice from "./Voice";
@@ -61,6 +61,9 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const [playing, setPlaying] = useState<boolean>(false);
   const [autoplay, setAutoplay] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState<boolean>(_autoplay);
+  const [error, setError] = useState<boolean>(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const voiceRef = useRef<VoiceRefObject>(null);
   const timeRef = useRef<VideoTimeRefObject>(null);
@@ -108,8 +111,17 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     setPlaying((prev) => !prev);
   };
 
+  const handleLoadStart = () => {
+    setLoading(true);
+  };
   const handleLoadedMetadata = () => {
+    setLoading(false);
     setActualVideoVolume(currentVideo.volume);
+  };
+  const handleError = () => {
+    setLoading(false);
+    setError(true);
+    alert("Can't load the video.");
   };
   const handlePause = () => {
     setPlaying(false);
@@ -128,23 +140,23 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   };
 
   const play = useCallback(async () => {
-    if (!isReady) return;
+    if (!isReady || error) return;
 
     try {
       await videoRef.current?.play();
     } catch (e: any) {
       console.log({ postId }, e.message);
     }
-  }, [isReady, postId]);
+  }, [isReady, error, postId]);
   const pause = useCallback(() => {
-    if (!isReady) return;
+    if (!isReady || error) return;
 
     try {
       videoRef.current?.pause();
     } catch (e: any) {
       console.log({ postId }, e.message);
     }
-  }, [isReady, postId]);
+  }, [isReady, error, postId]);
 
   //
   const setActualVideoVolume = useCallback(
@@ -194,7 +206,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
         [styles["has--windowHeight"]]: hasWindowHeight,
       })}
     >
-      {isReady ? (
+      {isReady && !error ? (
         <video
           {...otherProps}
           className={clsx(styles["video"], className)}
@@ -207,7 +219,9 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
           onPlay={handlePlay}
           onEnded={handleEnded}
           onTimeUpdate={handleTimeUpdate}
+          onLoadStart={handleLoadStart}
           onLoadedMetadata={handleLoadedMetadata}
+          onError={handleError}
           onVolumeChange={handleVolumeChange}
         />
       ) : (
@@ -216,26 +230,39 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
         )
       )}
 
-      <div className={styles["controller"]}>
-        <div className={styles["buttons"]}>
-          <div
-            className={clsx(styles["play-button"], styles["button"])}
-            role="button"
-            onClick={handlePlayClick}
-          >
-            {playing ? <Pause /> : <FaPlay fill="#fff" />}
+      {loading && <Loading />}
+
+      {!loading && !error && (
+        <div className={styles["controller"]}>
+          <div className={styles["buttons"]}>
+            <div
+              className={clsx(styles["play-button"], styles["button"])}
+              role="button"
+              onClick={handlePlayClick}
+            >
+              {playing ? <Pause /> : <FaPlay fill="#fff" />}
+            </div>
+            <Voice
+              ref={voiceRef}
+              videoRef={videoRef}
+              postId={postId !== undefined ? postId : -999}
+              setActualVideoVolume={setActualVideoVolume}
+            />
           </div>
-          <Voice
-            ref={voiceRef}
-            videoRef={videoRef}
-            postId={postId !== undefined ? postId : -999}
-            setActualVideoVolume={setActualVideoVolume}
-          />
+          {isReady && <VideoTime ref={timeRef} videoRef={videoRef} />}
         </div>
-        {isReady && <VideoTime ref={timeRef} videoRef={videoRef} />}
-      </div>
+      )}
     </div>
   );
 }
+
+// =====================================================================
+const Loading = () => {
+  return (
+    <div className={clsx("flex-center", styles["loading"])}>
+      <Spinner style={{ width: "32px", height: "32px", color: "#fff" }} />
+    </div>
+  );
+};
 
 export default React.forwardRef(Video);

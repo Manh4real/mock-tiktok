@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, EntityId, PayloadAction } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, EntityId, PayloadAction, Update } from "@reduxjs/toolkit";
 import { Video } from "_/types";
 
 import { RootState } from "_/features/store";
@@ -19,13 +19,19 @@ const videosSlice = createSlice({
         setVideos: (state, action: PayloadAction<Video[]>) => {
             videosAdapter.upsertMany(state, action.payload)
         },
+        deleteVideo: (state, action: PayloadAction<EntityId>) => {
+            videosAdapter.removeOne(state, action.payload)
+        },
+        updateVideo: (state, action: PayloadAction<Update<Video>>) => {
+            videosAdapter.updateOne(state, action.payload)
+        },
         resetVideos: (state) => {
             videosAdapter.removeAll(state);
         }
     }
 });
 
-export const { setVideos, resetVideos } = videosSlice.actions;
+export const { setVideos, deleteVideo, updateVideo, resetVideos } = videosSlice.actions;
 export const {
     selectAll: selectAllVideos,
     selectById: selectVideoById,
