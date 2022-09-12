@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import axios from "axios";
 
 // pages
 import {
@@ -17,6 +18,7 @@ import {
   PhoneEmailSignupPage,
   Logout,
   VideoDetails,
+  NoInternet,
 } from "./pages";
 
 // layouts
@@ -29,6 +31,9 @@ import {
 
 // components
 import ToTopButton from "_/components/ToTopButton";
+
+// icons
+import { Spinner } from "./components/icons";
 
 // context
 import { LoginContextProvider, CurrentVideoProvider } from "_/contexts";
@@ -43,8 +48,30 @@ import routes from "_/config/routes";
 import { useAppDispatch } from "_/features/hooks";
 import { initCurrentUser } from "_/features/currentUser/currentUserSlice";
 import { toggleMute } from "./features/currentVideo/currentVideoSlice";
+import clsx from "clsx";
 
-function App() {
+const App = () => {
+  const [status, setStatus] = useState<"loading" | "connected" | "no-internet">(
+    "loading"
+  );
+
+  useEffect(() => {
+    axios
+      .get("https://picsum.photos/200/300")
+      .then(() => {
+        setStatus("connected");
+      })
+      .catch(() => {
+        setStatus("no-internet");
+      });
+  }, []);
+
+  if (status === "loading") return <Loading />;
+  else if (status === "no-internet") return <NoInternet />;
+  return <Main />;
+};
+
+const Main = () => {
   const location = useLocation();
   const { backgroundLocation } = useBackgroundLocation();
 
@@ -130,6 +157,17 @@ function App() {
       </CurrentVideoProvider>
     </LoginContextProvider>
   );
-}
+};
+
+const Loading = () => {
+  return (
+    <div
+      className={clsx("flex-center")}
+      style={{ width: "100%", height: "100vh" }}
+    >
+      <Spinner style={{ width: "45px", height: "45px" }} />
+    </div>
+  );
+};
 
 export default App;

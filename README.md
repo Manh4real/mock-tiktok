@@ -6,6 +6,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Note: Login/Signup with Email, Password
 
-# Current Work (11 Sep, 2022)
+# Current Work (12 Sep, 2022)
 
-- Add emoji input, copy link video
+- Add NoInternet component, and some kind of shit ✅
