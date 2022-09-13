@@ -1,8 +1,9 @@
 import React from "react";
 import { useModal } from "_/hooks";
-import { ModalProps } from "_/types";
 
 // types
+import { ModalProps } from "_/types";
+
 interface Props {
   modal: React.FC<ModalProps>;
   className: string;
@@ -15,7 +16,6 @@ const PopupItemModal = ({ className, modal, children }: Props) => {
 
   const handleClick = () => {
     handleOpen();
-    // console.log("??");
   };
 
   return (

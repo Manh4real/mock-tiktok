@@ -9,7 +9,7 @@ interface Props {
   height?: SizeProperty;
 }
 
-const Skeleton = ({ width, height }: Props) => {
+const Skeleton = ({ width = "100%", height = "100%" }: Props) => {
   return <div className={styles["container"]} style={{ width, height }}></div>;
 };
 

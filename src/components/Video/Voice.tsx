@@ -15,7 +15,6 @@ import { VoiceRefObject } from "./types";
 
 // Redux
 import {
-  // setMute,
   setVolume,
   toggleMute,
   useCurrentVideo,

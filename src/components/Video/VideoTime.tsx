@@ -7,7 +7,6 @@ import styles from "./Video.module.scss";
 import { formatTime } from "_/utils";
 
 // hooks
-// import { useProgress } from "_/hooks";
 import { useVideoTimeProgress } from "_/hooks";
 
 // types

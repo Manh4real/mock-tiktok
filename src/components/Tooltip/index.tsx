@@ -6,6 +6,7 @@ import styles from "./Tooltip.module.scss";
 
 // types
 import { Placement } from "@popperjs/core";
+
 interface Props {
   title: string;
   placement?: Placement;

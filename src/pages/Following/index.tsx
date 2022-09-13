@@ -21,6 +21,7 @@ function Following() {
   const redirectUrlSearchParam = useRedirectURL();
 
   const dispatch = useAppDispatch();
+
   //
   useEffect(() => {
     dispatch(resetVideos());

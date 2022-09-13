@@ -16,6 +16,7 @@ import CommentButton from "_/components/Post/CommentButton";
 import CommentSection from "./components/CommentSection";
 import VideoMoreButton from "./components/VideoMoreButton";
 import NavButtons from "./NavButtons";
+import CopyLinkSection from "./CopyLinkSection";
 
 // icons
 import { BsChevronLeft } from "react-icons/bs";
@@ -27,14 +28,18 @@ import { UnavailableVideoPage } from "_/pages";
 // styles
 import styles from "./VideoDetails.module.scss";
 
+// hooks
+import { useBackgroundLocation } from "_/hooks";
+
 // config
 import routes from "_/config/routes";
+
+// context
+import { CommentCommandProvider, useCommentCommand } from "_/contexts";
 
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useVideoById } from "_/features/videos/videosSlice";
-import { useBackgroundLocation } from "_/hooks";
-import { CommentCommandProvider, useCommentCommand } from "_/contexts";
 
 function VideoDetailsModal() {
   const navigate = useNavigate();
@@ -182,68 +187,6 @@ function VideoDetailsModal() {
   );
 }
 
-const CopyLinkSection = () => {
-  const url = window.location.href;
-
-  const fallbackCopyTextToClipboard = (text: string) => {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
-
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    try {
-      var successful = document.execCommand("copy");
-      var msg = successful ? "successful" : "unsuccessful";
-      console.log("Fallback: Copying text command was " + msg);
-      alert("Copied!");
-    } catch (err) {
-      alert("Unable to copy!");
-      console.error("Fallback: Oops, unable to copy", err);
-    }
-
-    document.body.removeChild(textArea);
-  };
-  const copyTextToClipboard = (text: string) => {
-    if (!navigator.clipboard) {
-      fallbackCopyTextToClipboard(text);
-      return;
-    }
-    navigator.clipboard.writeText(text).then(
-      () => {
-        console.log("Async: Copying to clipboard was successful!");
-        alert("Copied!");
-      },
-      (err) => {
-        console.error("Async: Could not copy text: ", err);
-        alert("Unable to copy!");
-      }
-    );
-  };
-
-  return (
-    <div className={clsx("flex-align-center", styles["copy-link"])}>
-      <div className={clsx("text-overflow-elipse", styles["link-text"])}>
-        {url}
-      </div>
-      <div
-        className={clsx("button", "grey-outlined", styles["copy-link-button"])}
-        onClick={() => {
-          copyTextToClipboard(url);
-        }}
-      >
-        Copy link
-      </div>
-    </div>
-  );
-};
-
 // ====================================================================
 interface CommentButtonWithContextProps {
   disabled: boolean;
@@ -257,8 +200,7 @@ const CommentButtonWithContext = ({
   disabled,
   styles,
   postId,
-}: // commentsCount,
-CommentButtonWithContextProps) => {
+}: CommentButtonWithContextProps) => {
   const { commentsCount } = useCommentCommand();
 
   return (

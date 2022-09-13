@@ -14,7 +14,6 @@ import styles from "./Popper.module.scss";
 
 // types
 import { PopupMenuItem } from "_/types";
-// import { useModalContext } from "_/contexts";
 import { PopperRefObject } from "./";
 
 interface PopupMenuChildren {
@@ -28,8 +27,6 @@ type History = PopupMenuChildren[];
 
 const Popup = React.forwardRef(
   ({ menu }: PopupProps, ref: React.Ref<PopperRefObject>) => {
-    //
-
     // menu history
     const [history, setHistory] = useState<History>([
       { title: "", content: [...menu] },

@@ -6,6 +6,7 @@ import { Spinner } from "_/components/icons";
 
 // components
 import Post from "_/components/Post";
+import SomethingWentWrong from "_/components/SomethingWentWrong";
 
 // services
 import { getVideoList } from "_/services/video";
@@ -48,6 +49,7 @@ const Posts = ({ type = "for-you" }: Props) => {
   const {
     results: posts,
     hasMore,
+    error,
     handleFetchNext: handleLoadMore,
   } = usePagesFetch__videos<VideoInterface>(fetchVideoList, false, {
     errorMessage: "Can't get video list of " + type,
@@ -91,7 +93,7 @@ const Posts = ({ type = "for-you" }: Props) => {
     <InfiniteScroll
       dataLength={posts.length} //This is important field to render the next data
       next={handleLoadMore}
-      hasMore={hasMore}
+      hasMore={!error && hasMore}
       scrollThreshold={0.8}
       loader={
         <div className={styles["loader"]}>
@@ -99,15 +101,15 @@ const Posts = ({ type = "for-you" }: Props) => {
         </div>
       }
       endMessage={
-        <p
+        <div
           style={{
             textAlign: "center",
             paddingBottom: "20px",
             fontSize: "22px",
           }}
         >
-          <b>You've seen it all ! 🥂🥳</b>
-        </p>
+          {error ? <SomethingWentWrong /> : <b>You've seen it all ! 🥂🥳</b>}
+        </div>
       }
     >
       <div className={styles["posts"]}>

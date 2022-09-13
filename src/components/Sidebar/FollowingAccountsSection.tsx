@@ -19,6 +19,8 @@ import { usePagesFetch } from "_/hooks";
 
 // types
 import { Account as AccountInterface } from "_/types";
+
+// Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 const FollowingAccountsSection = () => {

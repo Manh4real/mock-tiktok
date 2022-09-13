@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React, { useEffect, useState } from "react";
+import clsx from "clsx";
 
 // styles
 import styles from "../LoginModal.module.scss";

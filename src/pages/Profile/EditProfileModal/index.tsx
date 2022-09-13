@@ -21,7 +21,6 @@ import { Account, ModalProps } from "_/types";
 import { ValidationType } from "_/validation/Validation";
 import { AllowedInputProperty } from "_/contexts/submit";
 import { Spinner } from "_/components/icons";
-import { CurrentUser } from "_/contexts";
 
 // Redux
 import { updateCurrentUser } from "_/features/currentUser/currentUserSlice";
@@ -81,7 +80,7 @@ const Form = ({ account, handleClose }: Props) => {
 
     dispatch(updateCurrentUser(body))
       .unwrap()
-      .then((result: CurrentUser["info"]["data"] | null) => {
+      .then((result) => {
         if (!result) return;
 
         alert("Updated profile.");

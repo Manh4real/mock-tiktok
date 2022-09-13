@@ -41,43 +41,43 @@ function Suggested() {
       });
   }, []);
 
+  if (shownAccounts.length <= 0) return null;
+
   return (
     <React.Fragment>
-      <>
-        <div
-          className={clsx(
-            styles["sidebar__section"],
-            styles["sidebar__suggested-accs"]
-          )}
-        >
-          <h5 className={clsx(styles["text"], styles["sidebar__header-title"])}>
-            Suggested accounts
-          </h5>
-          <div className={styles["sidebar__accs__cnt"]}>
-            <div>
-              {shownAccounts.map((item) => {
-                return (
-                  <AccountPopup account={item} key={item.id}>
-                    <Account account={item} />
-                  </AccountPopup>
-                );
-              })}
-              {loading && <Spinner />}
-            </div>
-            <button
-              className={clsx(
-                "pink-font",
-                styles["text"],
-                styles["sidebar__more-btn"]
-              )}
-              onClick={handleShowAll}
-            >
-              See {showAll ? "less" : "all"}
-            </button>
+      <div
+        className={clsx(
+          styles["sidebar__section"],
+          styles["sidebar__suggested-accs"]
+        )}
+      >
+        <h5 className={clsx(styles["text"], styles["sidebar__header-title"])}>
+          Suggested accounts
+        </h5>
+        <div className={styles["sidebar__accs__cnt"]}>
+          <div>
+            {shownAccounts.map((item) => {
+              return (
+                <AccountPopup account={item} key={item.id}>
+                  <Account account={item} />
+                </AccountPopup>
+              );
+            })}
+            {loading && <Spinner />}
           </div>
+          <button
+            className={clsx(
+              "pink-font",
+              styles["text"],
+              styles["sidebar__more-btn"]
+            )}
+            onClick={handleShowAll}
+          >
+            See {showAll ? "less" : "all"}
+          </button>
         </div>
-        <SidebarDelimiter />
-      </>
+      </div>
+      <SidebarDelimiter />
     </React.Fragment>
   );
 }

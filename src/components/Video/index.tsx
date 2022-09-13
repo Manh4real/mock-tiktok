@@ -69,8 +69,6 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const timeRef = useRef<VideoTimeRefObject>(null);
 
   // ======================================================
-  // #region
-  // ⚠️🆘 Experiment: Auto play on scroll
   const videoRefObject = useMemo(
     () => ({
       pause: () => {
@@ -90,7 +88,6 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     }),
     [changeVideoRef, currentVideo.postId, dispatch, postId]
   );
-  // #endregion
 
   // handling events
   const handlePlayClick = () => {

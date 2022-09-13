@@ -1,8 +1,4 @@
-import React, {
-  // useCallback,
-  // useRef,
-  useMemo,
-} from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 // styles
@@ -14,19 +10,7 @@ import { Spinner } from "_/components/icons";
 // components
 import Comment from "./Comment";
 import CommentInput from "./CommentInput";
-import {
-  // CommentCommandProvider,
-  useCommentCommand,
-} from "_/contexts";
-
-// hooks
-// import { usePagesFetch } from "_/hooks";
-
-// services
-// import { getComments } from "_/services/comment";
-
-// types
-// import { Comment as CommentInterface } from "_/types";
+import { useCommentCommand } from "_/contexts";
 
 // config
 import routes from "_/config/routes";
@@ -34,8 +18,6 @@ import routes from "_/config/routes";
 // Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 import { useRedirectURL } from "_/hooks/useRedirect";
-// import { updateVideo } from "_/features/videos/videosSlice";
-// import { useAppDispatch } from "_/features/hooks";
 
 interface Props {
   video_uuid: string;
@@ -69,17 +51,6 @@ const AllowedCommentSection = ({
         return <Comment key={comment.id} comment={comment} />;
       });
   }, [isLoggedIn, loading, comments]);
-
-  // useEffect(() => {
-  //   dispatch(
-  //     updateVideo({
-  //       id: videoId,
-  //       changes: {
-  //         comments_count: comments.length,
-  //       },
-  //     })
-  //   );
-  // }, [comments.length, dispatch, videoId]);
 
   return (
     <React.Fragment>

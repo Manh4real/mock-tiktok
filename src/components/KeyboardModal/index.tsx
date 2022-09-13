@@ -6,13 +6,12 @@ import { KeyboardUp } from "_/components/icons";
 // components
 import Modal from "_/components/Modal";
 
-// hooks
-
 // styles
 import styles from "./KeyboardModal.module.scss";
 
 // types
 import { ModalProps } from "_/types";
+
 interface Props extends ModalProps {}
 
 const KeyboardModal = ({ handleClose }: Props) => {

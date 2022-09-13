@@ -125,6 +125,7 @@ export const usePagesFetch__videos =
         const dispatch = useAppDispatch();
 
         const [loading, setLoading] = useState<boolean>(false);
+        const [error, setError] = useState<boolean>(false);
         const [page, setPage] = useState<number>(-1);
         const [totalPage, setTotalPage] = useState<number>(1);
 
@@ -149,9 +150,11 @@ export const usePagesFetch__videos =
                     const currentPage = data.meta.pagination.current_page;
 
                     setPage(currentPage);
+                    setError(false);
                 })
                 .catch(() => {
                     console.log("Error: ", options.errorMessage);
+                    setError(true);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -176,9 +179,11 @@ export const usePagesFetch__videos =
 
                     setPage(currentPage);
                     setTotalPage(total);
+                    setError(false);
                 })
                 .catch(() => {
                     console.log("Error: ", options.errorMessage);
+                    setError(true);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -189,6 +194,7 @@ export const usePagesFetch__videos =
         return {
             results: videos,
             loading,
+            error,
             hasMore: page < totalPage,
             end: page >= totalPage,
             setPage,

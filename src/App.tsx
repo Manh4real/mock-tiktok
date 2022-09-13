@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import clsx from "clsx";
 import axios from "axios";
 
 // pages
@@ -36,7 +37,7 @@ import ToTopButton from "_/components/ToTopButton";
 import { Spinner } from "./components/icons";
 
 // context
-import { LoginContextProvider, CurrentVideoProvider } from "_/contexts";
+import { CurrentVideoProvider } from "_/contexts";
 
 // hooks
 import { useBackgroundLocation } from "./hooks";
@@ -48,7 +49,6 @@ import routes from "_/config/routes";
 import { useAppDispatch } from "_/features/hooks";
 import { initCurrentUser } from "_/features/currentUser/currentUserSlice";
 import { toggleMute } from "./features/currentVideo/currentVideoSlice";
-import clsx from "clsx";
 
 const App = () => {
   const [status, setStatus] = useState<"loading" | "connected" | "no-internet">(
@@ -106,56 +106,54 @@ const Main = () => {
   }, [dispatch]);
 
   return (
-    <LoginContextProvider>
-      <CurrentVideoProvider>
-        <React.Fragment>
-          <Routes location={backgroundLocation || location}>
-            <Route element={<DefaultLayout />}>
-              <Route path={routes.root} element={<Home />} />
-              <Route path={routes.following} element={<Following />} />
-              <Route path={routes.search} element={<Search />} />
-              <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
-              <Route path="*" element={<NotFound />} />
+    <CurrentVideoProvider>
+      <React.Fragment>
+        <Routes location={backgroundLocation || location}>
+          <Route element={<DefaultLayout />}>
+            <Route path={routes.root} element={<Home />} />
+            <Route path={routes.following} element={<Following />} />
+            <Route path={routes.search} element={<Search />} />
+            <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+          <Route element={<FullWidthLayout />}>
+            <Route path={routes.live} element={<h1>Live</h1>} />
+            <Route path="/video/:videoId" element={<VideoDetails />} />
+            <Route path="/test" element={<h1>FYTB</h1>} />
+          </Route>
+          <Route
+            path={routes.profile}
+            element={
+              <FullWidthLayout>
+                <Profile />
+              </FullWidthLayout>
+            }
+          />
+          <Route element={<PrivateLayout />}>
+            <Route element={<HeaderLayout />}>
+              <Route path={routes.upload} element={<Upload />} />
             </Route>
-            <Route element={<FullWidthLayout />}>
-              <Route path={routes.live} element={<h1>Live</h1>} />
-              <Route path="/video/:videoId" element={<VideoDetails />} />
-              <Route path="/test" element={<h1>FYTB</h1>} />
-            </Route>
-            <Route
-              path={routes.profile}
-              element={
-                <FullWidthLayout>
-                  <Profile />
-                </FullWidthLayout>
-              }
-            />
-            <Route element={<PrivateLayout />}>
-              <Route element={<HeaderLayout />}>
-                <Route path={routes.upload} element={<Upload />} />
-              </Route>
-            </Route>
-            <Route path={routes.login}>
-              <Route index element={<Login />} />
-              <Route path="phone" element={<LoginWithPhone />} />
-              <Route path="email" element={<LoginWithEmail />} />
-            </Route>
-            <Route path={routes.signup}>
-              <Route index element={<Signup />} />
-              <Route path={"phone-email"} element={<PhoneEmailSignupPage />} />
-            </Route>
-            <Route path={routes.logout} element={<Logout />} />
-            <Route path={routes.reset} element={<ResetPasswordPage />}></Route>
+          </Route>
+          <Route path={routes.login}>
+            <Route index element={<Login />} />
+            <Route path="phone" element={<LoginWithPhone />} />
+            <Route path="email" element={<LoginWithEmail />} />
+          </Route>
+          <Route path={routes.signup}>
+            <Route index element={<Signup />} />
+            <Route path={"phone-email"} element={<PhoneEmailSignupPage />} />
+          </Route>
+          <Route path={routes.logout} element={<Logout />} />
+          <Route path={routes.reset} element={<ResetPasswordPage />}></Route>
+        </Routes>
+        {backgroundLocation && (
+          <Routes>
+            <Route path="/video/:videoId" element={<VideoDetails />} />
           </Routes>
-          {backgroundLocation && (
-            <Routes>
-              <Route path="/video/:videoId" element={<VideoDetails />} />
-            </Routes>
-          )}
-          <ToTopButton />
-        </React.Fragment>
-      </CurrentVideoProvider>
-    </LoginContextProvider>
+        )}
+        <ToTopButton />
+      </React.Fragment>
+    </CurrentVideoProvider>
   );
 };
 
