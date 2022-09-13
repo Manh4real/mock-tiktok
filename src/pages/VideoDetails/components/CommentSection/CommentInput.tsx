@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 
 // styles
-import styles from "./CommentSection.module.scss";
+import defaultStyles from "./CommentSection.module.scss";
 
 // components
 import { Spinner } from "_/components/icons";
@@ -24,11 +24,18 @@ import { WithLoginModal } from "_/hoc/withLoginModal";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
+  styles?: {
+    readonly [key: string]: string;
+  };
   videoId: number;
   video_uuid: string;
 }
 
-const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
+const CommentInput = ({
+  styles = defaultStyles,
+  video_uuid,
+  showLoginModal,
+}: Props) => {
   const isLoggedIn = useIsLoggedIn();
   const { addComment: UI_addNewComment } = useCommentCommand();
 
@@ -61,7 +68,7 @@ const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
   };
 
   return (
-    <div className={clsx("flex-center", styles["add-comments"])}>
+    <div className={clsx("flex-center", styles["add-comment"])}>
       <div className={clsx("flex-center", styles["comment-input-container"])}>
         <input
           type="text"

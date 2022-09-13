@@ -31,9 +31,12 @@ import { WithLoginModal } from "_/hoc/withLoginModal";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props {
+  authorId: number;
   comment: CommentInterface;
 }
-const Comment = ({ comment }: Props) => {
+const Comment = ({ authorId, comment }: Props) => {
+  const isCreator = authorId === comment.user.id;
+
   return (
     <div className={clsx("flex-align-center", styles["comment"])}>
       <div className={styles["commenter-avatar"]}>
@@ -46,12 +49,22 @@ const Comment = ({ comment }: Props) => {
       </div>
       <div className={styles["right-container"]}>
         <AccountPopup account={comment.user} offset={[-60, 30]}>
-          <Link
-            className={clsx("hover-underlined", styles["commenter-link"])}
-            to={`/@${comment.user.nickname}`}
-          >
-            {comment.user.nickname}
-          </Link>
+          <>
+            <Link
+              className={clsx(styles["commenter-link"])}
+              to={`/@${comment.user.nickname}`}
+            >
+              <span className="hover-underlined">{comment.user.nickname}</span>
+              {isCreator && (
+                <span>
+                  <span style={{ marginInline: 5 }}>&middot;</span>
+                  <span className="pink-font" style={{ fontSize: 16 }}>
+                    Creator
+                  </span>
+                </span>
+              )}
+            </Link>
+          </>
         </AccountPopup>
         <p className={styles["comment__content"]}>{comment.comment}</p>
         <div className={clsx("grey-font", styles["subtitle"])}>

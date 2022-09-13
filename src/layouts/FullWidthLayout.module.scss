@@ -1,0 +1,17 @@
+@import "./common.module.scss";
+
+.container {
+  width: 100%;
+}
+
+.sidebar {
+  width: 232px;
+  flex-basis: 232px;
+}
+
+@media screen and (max-width: 1071px) {
+  .sidebar {
+    width: 72px;
+    flex: 0 0 72px;
+  }
+}

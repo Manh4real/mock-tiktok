@@ -6,7 +6,7 @@ import Header from "_/components/Header";
 import CompactSideBar from "_/components/Sidebar/compact";
 
 // styles
-import styles from "./common.module.scss";
+import styles from "./FullWidthLayout.module.scss";
 
 // types
 interface Props {
@@ -18,8 +18,10 @@ function FullWidthLayout({ children }: Props) {
     <React.Fragment>
       <Header isFullWidth={true} />
       <div className={styles["container"]}>
-        <CompactSideBar />
-        <main style={{ marginLeft: 232 }}>
+        <div className={styles["sidebar"]}>
+          <CompactSideBar />
+        </div>
+        <main className={styles["main"]}>
           {children}
           <Outlet />
         </main>

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
-import ReactDOM from "react-dom";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
+// styles
+import styles from "./VideoDetailsPage.module.scss";
 
 // components
 import Video from "_/components/Video";
@@ -11,7 +13,8 @@ import Image from "_/components/Image";
 
 import FollowButton from "_/components/Post/FollowButton";
 import LikeButton from "_/components/Post/LikeButton";
-import CommentButton from "_/components/Post/CommentButton";
+// import CommentButton from "_/components/Post/CommentButton";
+import { CommentButtonWithContext } from "./VideoDetailsModal";
 
 import CommentSection from "./components/CommentSection";
 import VideoMoreButton from "./components/VideoMoreButton";
@@ -23,9 +26,6 @@ import { MusicNote, Spinner } from "_/components/icons";
 // pages
 import { UnavailableVideoPage } from "_/pages";
 
-// styles
-import styles from "./VideoDetails.module.scss";
-
 // services
 import { getVideo } from "_/services/video";
 
@@ -34,6 +34,9 @@ import routes from "_/config/routes";
 
 // types
 import { Video as VideoInterface } from "_/types";
+
+// context
+import { CommentCommandProvider } from "_/contexts";
 
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
@@ -89,120 +92,154 @@ function VideoDetailsPage() {
   const author = video.user;
   const authorName =
     author.full_name || `${author.first_name} ${author.last_name}`;
+  const isAllowedToComment = video.allows.some((a) => a === "comment");
 
-  return ReactDOM.createPortal(
+  return (
     <div className={styles["container"]}>
-      <div className={styles["left"]}>
-        <div className={styles["video-container"]}>
-          <Video
-            postId={video.id}
-            src={video.file_url}
-            placeholder={video.thumb_url}
-            hasWindowHeight={true}
-          />
-        </div>
+      <header>
         <div
-          className={styles["background"]}
-          style={{
-            backgroundImage: `url(${video.thumb_url})`,
+          className={clsx(
+            "button",
+            "flex-align-center",
+            styles["goBack-button"]
+          )}
+          onClick={() => {
+            navigate(routes.root);
+
+            document.body.style.overflow = "overlay";
           }}
-        ></div>
-      </div>
-      <div className={styles["right"]}>
-        <header className={styles["header"]}>
-          <AccountPopup account={author}>
-            <Link
-              to={"/@" + author.nickname}
-              className={clsx(styles["header-link"], "flex-align-center")}
-            >
-              <div className={styles["avatar"]}>
-                <Image src={author.avatar} className={clsx("circle")} />
+        >
+          <BsChevronLeft fill="currentColor" size={24} />
+          <span>Back to For You</span>
+        </div>
+      </header>
+      <div className={styles["main"]}>
+        <div className={clsx(styles["left"])}>
+          <div className={styles["left__upper"]}>
+            <div className={styles["video-container"]}>
+              <div style={{ height: "100%", zIndex: 3, position: "relative" }}>
+                <Video
+                  postId={video.id}
+                  src={video.file_url}
+                  placeholder={video.thumb_url}
+                  hasWindowHeight={true}
+                />
               </div>
-              <div>
-                <h3
-                  className={clsx(
-                    styles["author-username"],
-                    "hover-underlined"
-                  )}
-                >
-                  {author.nickname}
-                </h3>
-                <div className={styles["subtitle"]}>
-                  <span className={styles["author-name"]}>{authorName}</span>
-                  <span style={{ marginInline: 5 }}>&middot;</span>
-                  <TimeAgo time={video.created_at} />
+              <div
+                className={styles["background"]}
+                style={{
+                  backgroundImage: `url(${video.thumb_url})`,
+                }}
+              ></div>
+            </div>
+          </div>
+          <CommentCommandProvider
+            key={video.uuid}
+            initialCommentsCount={video.comments_count}
+            videoId={video.id}
+            video_uuid={video.uuid}
+          >
+            <div className={styles["left__lower"]}>
+              <div className={styles["content"]}>
+                <div className={styles["desc"]}>{video.description}</div>
+                <div className={styles["audio"]}>
+                  <h4>
+                    <Link
+                      to={video.music || "/"}
+                      className="hover-underlined flex-align-center"
+                      style={{ width: "max-content" }}
+                    >
+                      <MusicNote />
+                      <span style={{ marginLeft: "5px" }}>
+                        original sound - {authorName}
+                      </span>
+                    </Link>
+                  </h4>
                 </div>
               </div>
-            </Link>
-          </AccountPopup>
-          {currentUserInfo?.id === video.user_id && (
-            <VideoMoreButton videoId={video.id} />
-          )}
-          {currentUserInfo?.id !== video.user_id && (
-            <div className={styles["follow-button"]}>
-              <FollowButton
-                styles={styles}
-                accountId={author.id}
-                isFollowed={author.is_followed}
-              />
+              <div className={styles["author"]}>
+                <AccountPopup account={author}>
+                  <Link
+                    to={"/@" + author.nickname}
+                    className={clsx(styles["author-link"], "flex-align-center")}
+                  >
+                    <div className={styles["avatar"]}>
+                      <Image src={author.avatar} className={clsx("circle")} />
+                    </div>
+                    <div>
+                      <h3
+                        className={clsx(
+                          styles["author-username"],
+                          "hover-underlined"
+                        )}
+                      >
+                        {author.nickname}
+                      </h3>
+                      <div className={styles["subtitle"]}>
+                        <span className={styles["author-name"]}>
+                          {authorName}
+                        </span>
+                        <span style={{ marginInline: 5 }}>&middot;</span>
+                        <TimeAgo time={video.created_at} />
+                      </div>
+                    </div>
+                  </Link>
+                </AccountPopup>
+                {currentUserInfo?.id === video.user_id && (
+                  <VideoMoreButton videoId={video.id} />
+                )}
+                {currentUserInfo?.id !== video.user_id && (
+                  <div className={styles["follow-button"]}>
+                    <FollowButton
+                      styles={styles}
+                      accountId={author.id}
+                      isFollowed={author.is_followed}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className={styles["interaction"]}>
+                <div className={clsx("flex-align-center", styles["buttons"])}>
+                  <LikeButton
+                    isLiked={video.is_liked}
+                    styles={styles}
+                    postId={video.id}
+                    likesCount={video.likes_count}
+                  />
+                  <CommentButtonWithContext
+                    disabled
+                    styles={styles}
+                    postId={video.id}
+                    commentsCount={video.comments_count}
+                  />
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-start" }}>
+                {isAllowedToComment && (
+                  <div style={{ marginTop: 21, marginRight: -12 }}>
+                    <Image
+                      src={currentUserInfo?.avatar}
+                      className={clsx("circle")}
+                    />
+                  </div>
+                )}
+                <div style={{ flex: 1 }}>
+                  <CommentSection
+                    reversedColumn
+                    styles={styles}
+                    authorId={video.user_id}
+                    videoId={video.id}
+                    video_uuid={video.uuid}
+                    isAllowed={isAllowedToComment}
+                  />
+                </div>
+              </div>
             </div>
-          )}
-        </header>
-
-        <div className={styles["content"]}>
-          <div className={styles["desc"]}>{video.description}</div>
-
-          <div className={styles["audio"]}>
-            <h4>
-              <Link
-                to={video.music || "/"}
-                className="hover-underlined flex-align-center"
-                style={{ width: "max-content" }}
-              >
-                <MusicNote />
-                <span style={{ marginLeft: "5px" }}>
-                  original sound - {authorName}
-                </span>
-              </Link>
-            </h4>
-          </div>
-
-          <div className={styles["interaction"]}>
-            <div className={clsx("flex-align-center", styles["buttons"])}>
-              <LikeButton
-                isLiked={video.is_liked}
-                styles={styles}
-                postId={video.id}
-                likesCount={video.likes_count}
-              />
-              <CommentButton
-                disabled
-                styles={styles}
-                postId={video.id}
-                commentsCount={video.comments_count}
-              />
-            </div>
-          </div>
+          </CommentCommandProvider>
         </div>
-
-        <CommentSection
-          videoId={video.id}
-          video_uuid={video.uuid}
-          isAllowed={video.allows.some((a) => a === "comment")}
-        />
+        <div className={styles["right"]}></div>
       </div>
-      <button
-        className={clsx(styles["basic-button"], styles["closeBtn"])}
-        onClick={() => {
-          navigate(routes.root);
-
-          document.body.style.overflow = "overlay";
-        }}
-      >
-        <BsChevronLeft style={{ marginLeft: -4 }} />
-      </button>
-    </div>,
-    document.getElementById("modal-root") as HTMLElement
+    </div>
   );
 }
 

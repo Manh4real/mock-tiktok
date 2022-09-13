@@ -1,7 +1,7 @@
 import React from "react";
-import clsx from "clsx";
 import ReactDOM from "react-dom";
-import { Link, To, useNavigate, useParams } from "react-router-dom";
+import clsx from "clsx";
+import { Link, Navigate, To, useNavigate, useParams } from "react-router-dom";
 
 // components
 import Video from "_/components/Video";
@@ -21,9 +21,6 @@ import CopyLinkSection from "./CopyLinkSection";
 // icons
 import { BsChevronLeft } from "react-icons/bs";
 import { Close, MusicNote } from "_/components/icons";
-
-// pages
-import { UnavailableVideoPage } from "_/pages";
 
 // styles
 import styles from "./VideoDetails.module.scss";
@@ -53,7 +50,9 @@ function VideoDetailsModal() {
   // Redux
   const video = useVideoById(videoId === undefined ? -1 : videoId);
 
-  if (!video) return <UnavailableVideoPage />;
+  if (!video) {
+    return <Navigate to={"/video/" + videoId} state={null} replace={true} />;
+  }
 
   const author = video.user;
   const authorName =
@@ -69,7 +68,6 @@ function VideoDetailsModal() {
             src={video.file_url}
             autoPlay={true}
             placeholder={video.thumb_url}
-            hasWindowHeight={true}
           />
         </div>
         <div
@@ -162,6 +160,7 @@ function VideoDetailsModal() {
             <CopyLinkSection />
           </div>
           <CommentSection
+            authorId={video.user_id}
             videoId={video.id}
             video_uuid={video.uuid}
             isAllowed={video.allows.some((a) => a === "comment")}
@@ -196,7 +195,7 @@ interface CommentButtonWithContextProps {
   postId: number;
   commentsCount: number;
 }
-const CommentButtonWithContext = ({
+export const CommentButtonWithContext = ({
   disabled,
   styles,
   postId,

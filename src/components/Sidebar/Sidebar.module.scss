@@ -223,10 +223,10 @@
 
 //
 @media screen and (max-width: 1071px) {
-  .sidebar:not(.is--compact) {
+  .sidebar {
     padding-inline: 8px;
     padding-block: 12px 26px;
-    width: 72px;
+    width: 72px !important;
     flex: 0 0 72px;
     border-right: 1px solid rgba(22, 24, 35, 0.12);
     box-shadow: 0px 2px 8px rgb(0 0 0 / 6%);
