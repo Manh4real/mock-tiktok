@@ -41,6 +41,16 @@ const useVideoTimeProgress = (
         }
     }, [hasMouseDown, setProgress, videoRef]);
 
+    const handleClick = (e: React.MouseEvent) => {
+        interactiveUpdateProgress(e, function (newProgress) {
+            if (videoRef.current) {
+                videoRef.current.currentTime =
+                    newProgress * videoRef.current.duration;
+            }
+        });
+        setShownTime(current);
+    }
+
     const resetTime = useCallback(() => {
         console.log("??");
 
@@ -51,6 +61,7 @@ const useVideoTimeProgress = (
         shownTime,
         setShownTime,
         handleMouseDown,
+        handleClick,
         progress,
         interactiveUpdateProgress,
         handleTimeUpdate,

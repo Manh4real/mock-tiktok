@@ -21,13 +21,10 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
   const {
     handleMouseDown,
     handleTimeUpdate,
-    interactiveUpdateProgress,
+    handleClick,
     progress,
     shownTime,
-    currentProgress,
-
     resetTime,
-    setShownTime,
   } = useVideoTimeProgress(progressBarRef, videoRef);
 
   //
@@ -51,15 +48,7 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
         ref={progressBarRef}
         className={styles["progress-bar"]}
         onMouseDown={handleMouseDown}
-        onClick={(e: React.MouseEvent) => {
-          interactiveUpdateProgress(e, function (newProgress) {
-            if (videoRef.current) {
-              videoRef.current.currentTime =
-                newProgress * videoRef.current.duration;
-            }
-          });
-          setShownTime(currentProgress);
-        }}
+        onClick={handleClick}
       >
         <div className={styles["currentTimeTrackContainer"]}>
           <div

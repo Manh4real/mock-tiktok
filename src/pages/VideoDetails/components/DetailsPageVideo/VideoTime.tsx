@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useRef } from "react";
 
 // styles
-import styles from "./UploadVideo.module.scss";
+import styles from "./DetailsPageVideo.module.scss";
 
 // utils
 import { formatTime } from "_/utils";
@@ -21,10 +21,10 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
   const {
     handleMouseDown,
     handleTimeUpdate,
-    handleClick,
     progress,
     resetTime,
     shownTime,
+    handleClick,
   } = useVideoTimeProgress(progressBarRef, videoRef);
 
   //

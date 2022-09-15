@@ -261,13 +261,21 @@ input[type="checkbox"] {
   }
   .form__discard-button {
     background: #fff;
+
+    // &.posting {
+    //   pointer-events: none;
+    // }
   }
   .form__post-button {
     background: var(--pink);
     color: #fff;
 
+    &.posting,
     &:hover {
       background: linear-gradient(0deg, #0000000f, #0000000f), #fe2c55;
+    }
+    &.posting {
+      pointer-events: none;
     }
   }
 }

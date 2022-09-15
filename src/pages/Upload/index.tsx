@@ -57,6 +57,11 @@ const Form = () => {
   const handleDiscard = (e: React.MouseEvent) => {
     e.preventDefault();
 
+    if (loading) {
+      alert("You cannot return this action.");
+      return;
+    }
+
     discardEvent.fired();
   };
 
@@ -64,6 +69,7 @@ const Form = () => {
     e.preventDefault();
 
     if (!isAllGood) return;
+    if (loading) return;
 
     console.log("Posting...", isAllowed);
 
@@ -209,15 +215,20 @@ const Form = () => {
                 className={clsx("flex-align-center", styles["form__buttons"])}
               >
                 <button
+                  disabled={loading}
                   type="button"
-                  className={styles["form__discard-button"]}
+                  className={clsx(styles["form__discard-button"], {
+                    [styles["posting"]]: loading,
+                  })}
                   onClick={handleDiscard}
                 >
                   Discard
                 </button>
                 <button
                   disabled={!isAllGood}
-                  className={styles["form__post-button"]}
+                  className={clsx(styles["form__post-button"], {
+                    [styles["posting"]]: loading,
+                  })}
                   onClick={handlePost}
                 >
                   {loading ? <Spinner /> : "Post"}

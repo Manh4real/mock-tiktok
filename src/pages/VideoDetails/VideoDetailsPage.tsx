@@ -6,7 +6,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./VideoDetailsPage.module.scss";
 
 // components
-import Video from "_/components/Video";
 import AccountPopup from "_/components/AccountPopup";
 import TimeAgo from "_/components/TimeAgo";
 import Image from "_/components/Image";
@@ -16,6 +15,7 @@ import LikeButton from "_/components/Post/LikeButton";
 // import CommentButton from "_/components/Post/CommentButton";
 import { CommentButtonWithContext } from "./VideoDetailsModal";
 
+import Video from "./components/DetailsPageVideo";
 import CommentSection from "./components/CommentSection";
 import VideoMoreButton from "./components/VideoMoreButton";
 
@@ -119,6 +119,7 @@ function VideoDetailsPage() {
             <div className={styles["video-container"]}>
               <div style={{ height: "100%", zIndex: 3, position: "relative" }}>
                 <Video
+                  autoPlay
                   postId={video.id}
                   src={video.file_url}
                   placeholder={video.thumb_url}

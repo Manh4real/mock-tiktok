@@ -4,10 +4,10 @@ import clsx from "clsx";
 import { Link, Navigate, To, useNavigate, useParams } from "react-router-dom";
 
 // components
-import Video from "_/components/Video";
 import AccountPopup from "_/components/AccountPopup";
 import TimeAgo from "_/components/TimeAgo";
 import Image from "_/components/Image";
+import Video from "_/components/Video";
 
 import FollowButton from "_/components/Post/FollowButton";
 import LikeButton from "_/components/Post/LikeButton";

@@ -59,7 +59,7 @@
   z-index: 3;
 
   border-radius: 4px;
-  overflow: hidden;
+  // overflow: hidden;
 
   background: #000;
   position: relative;
@@ -70,6 +70,7 @@
     inset: 0;
     background: #000;
     z-index: 1;
+    border-radius: 4px;
   }
   .background {
     position: absolute;
