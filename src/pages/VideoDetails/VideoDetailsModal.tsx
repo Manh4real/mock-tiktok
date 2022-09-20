@@ -113,15 +113,14 @@ function VideoDetailsModal() {
               </Link>
             </AccountPopup>
             {currentUserInfo?.id === video.user_id && (
-              <VideoMoreButton videoId={video.id} />
+              <VideoMoreButton
+                videoId={video.id}
+                byCurrentUser={currentUserInfo?.id === video.user_id}
+              />
             )}
             {currentUserInfo?.id !== video.user_id && (
               <div className={styles["follow-button"]}>
-                <FollowButton
-                  styles={styles}
-                  accountId={author.id}
-                  isFollowed={author.is_followed}
-                />
+                <FollowButton styles={styles} accountId={author.id} />
               </div>
             )}
           </header>

@@ -3,7 +3,6 @@ import { Comment, ResponseWithPagination } from "_/types";
 import { getToken } from "./account";
 
 export const createNewComment = async (video_uuid: string, comment: string) => {
-
     const token = getToken();
 
     const response = await api.post(`videos/${video_uuid}/comments`, {

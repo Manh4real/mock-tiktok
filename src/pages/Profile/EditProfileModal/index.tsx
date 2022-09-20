@@ -84,7 +84,7 @@ const Form = ({ account, handleClose }: Props) => {
         if (!result) return;
 
         alert("Updated profile.");
-
+        handleClose(e); // close modal
         //
         navigate(
           result.nickname === account.nickname

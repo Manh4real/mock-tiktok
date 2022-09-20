@@ -5,6 +5,7 @@ import { ResponseWithPagination, Video } from "_/types";
 import { useAppDispatch } from "_/features/hooks";
 import { selectAllVideos, setVideos } from "_/features/videos/videosSlice";
 import { useSelector } from "react-redux";
+import { setAccounts } from "_/features/accounts/accountsSlice";
 
 // type Data<T> = ResponseWithPagination<T>;
 type FetchApiFunc<T> = (page?: number) => Promise<ResponseWithPagination<T> | undefined>;
@@ -19,7 +20,6 @@ const usePagesFetch =
         options: Partial<{
             errorMessage: string,
             reachEndFunc: () => void,
-
         }>
     ) => {
         const { reachEndFunc = () => { } } = options;
@@ -120,7 +120,6 @@ export const usePagesFetch__videos =
     ) => {
         const { reachEndFunc = () => { } } = options;
 
-        // const [results, setResults] = useState<T[]>([]);
         const videos = useSelector(selectAllVideos);
         const dispatch = useAppDispatch();
 
@@ -144,8 +143,8 @@ export const usePagesFetch__videos =
                 .then((data) => {
                     if (!data) return;
 
-                    // setResults((prev) => [...prev, ...data.data]);
                     dispatch(setVideos(data.data));
+                    dispatch(setAccounts(data.data.map(vids => vids.user)))
 
                     const currentPage = data.meta.pagination.current_page;
 
@@ -170,8 +169,8 @@ export const usePagesFetch__videos =
                 .then((data) => {
                     if (!data) return;
 
-                    // setResults(data.data);
                     dispatch(setVideos(data.data));
+                    dispatch(setAccounts(data.data.map(vids => vids.user)))
 
                     //
                     const currentPage = data.meta.pagination.current_page;

@@ -7,16 +7,18 @@ import styles from "../VideoDetails.module.scss";
 
 // icons
 import { RiMoreLine } from "react-icons/ri";
+import { FiFlag } from "react-icons/fi";
 
 // components
 import DeleteVideoButton from "./DeleteVideoButton";
 
 // types
 interface Props {
+  byCurrentUser: boolean;
   videoId: number;
 }
 
-const VideoMoreButton = ({ videoId }: Props) => {
+const VideoMoreButton = ({ byCurrentUser, videoId }: Props) => {
   return (
     <div
       style={{
@@ -29,7 +31,11 @@ const VideoMoreButton = ({ videoId }: Props) => {
         render={(attrs) => {
           return (
             <div {...attrs} className={styles["popup"]}>
-              <DeleteVideoButton videoId={videoId} />
+              {byCurrentUser ? (
+                <DeleteVideoButton videoId={videoId} />
+              ) : (
+                <Report />
+              )}
             </div>
           );
         }}
@@ -38,6 +44,18 @@ const VideoMoreButton = ({ videoId }: Props) => {
           <RiMoreLine />
         </div>
       </Tippy>
+    </div>
+  );
+};
+
+const Report = () => {
+  return (
+    <div
+      role={"button"}
+      className={clsx("button", "flex-align-center", styles["row"])}
+    >
+      <FiFlag size={24} />
+      <span>Report</span>
     </div>
   );
 };

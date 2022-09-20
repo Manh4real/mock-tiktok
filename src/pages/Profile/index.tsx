@@ -23,9 +23,6 @@ import styles from "./Profile.module.scss";
 // utils
 import { numberCompact } from "_/utils";
 
-// services
-import { getAccountByNickname } from "_/services/account";
-
 // types
 import { Account, Video } from "_/types";
 import { getLikedVideos } from "_/services/video";
@@ -42,6 +39,7 @@ import {
   setVideos,
 } from "_/features/videos/videosSlice";
 import { useSelector } from "react-redux";
+import { getAccount } from "_/features/accounts/accountsSlice";
 
 type PageTitleFunc = (name: string, username: string) => string;
 
@@ -52,6 +50,7 @@ function Profile() {
 
   const currentUserInfo = useCurrentUserInfo();
   const isLoggedIn = useIsLoggedIn();
+  const dispatch = useAppDispatch();
 
   const isCurrentUser = currentUserInfo
     ? isLoggedIn &&
@@ -62,21 +61,17 @@ function Profile() {
   //
   useEffect(() => {
     setLoading(true);
-    getAccountByNickname(params.usernameParam as string)
+
+    dispatch(getAccount(params.usernameParam as string))
+      .unwrap()
       .then((acc) => {
         setAccount(acc);
-      })
-      .catch(() => {
-        console.log("Can't get profile.");
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [params.usernameParam]);
+  }, [params.usernameParam, dispatch]);
 
-  //
-
-  const dispatch = useAppDispatch();
   //
   useEffect(() => {
     dispatch(resetVideos());
@@ -129,10 +124,7 @@ function Profile() {
               {isCurrentUser ? (
                 <EditButton account={account} />
               ) : (
-                <FollowSection
-                  accountId={account.id}
-                  isFollowing={account.is_followed}
-                />
+                <FollowSection accountId={account.id} />
               )}
             </div>
             <FeedShare placement="bottom-end">
@@ -185,7 +177,6 @@ const VideoList = ({ account }: { account: Account }) => {
     if (active === "videos") {
       dispatch(setVideos(account.videos));
 
-      // setVideos(account.videos);
       catchedVideos.set("videos", account.videos);
       setLoading(false);
     } else if (active === "liked") {
@@ -198,14 +189,12 @@ const VideoList = ({ account }: { account: Account }) => {
       if (catchedLikedVideos) {
         dispatch(setVideos(catchedLikedVideos));
 
-        // setVideos(catchedLikedVideos);
         setLoading(false);
       } else {
         getLikedVideos(account.id)
           .then((result) => {
             dispatch(setVideos(result.data));
 
-            // setVideos(result.data);
             catchedVideos.set("liked", result.data);
           })
           .finally(() => {

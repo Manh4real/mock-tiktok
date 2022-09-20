@@ -126,7 +126,7 @@ export const followAccount = async (id: number) => {
 export const unfollowAccount = async (id: number) => {
     const token = getToken();
 
-    if (!token) return;
+    if (!token) return null;
 
     const result = await api.post(`/users/${id}/unfollow`, null, {
         headers: {
@@ -134,7 +134,9 @@ export const unfollowAccount = async (id: number) => {
         }
     })
 
-    return result.data;
+    const data = result.data;
+
+    return data.data;
 }
 
 

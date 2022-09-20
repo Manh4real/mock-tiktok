@@ -19,16 +19,10 @@ interface Props extends WithLoginModal {
     readonly [key: string]: string;
   };
   accountId: number;
-  isFollowed: boolean;
 }
 
-function FollowButton({
-  styles,
-  accountId,
-  isFollowed,
-  showLoginModal,
-}: Props) {
-  const [followed, toggleFollow] = useFollow(isFollowed, accountId);
+function FollowButton({ styles, accountId, showLoginModal }: Props) {
+  const [followed, toggleFollow] = useFollow(accountId);
 
   const isLoggedIn = useIsLoggedIn();
 

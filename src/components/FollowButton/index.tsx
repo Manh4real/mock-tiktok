@@ -18,15 +18,14 @@ import { WithLoginModal } from "_/hoc/withLoginModal";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
-  isFollowed: boolean;
   accountId: number;
   style?: React.CSSProperties;
 }
 
-function FollowButton({ isFollowed, accountId, showLoginModal, style }: Props) {
+function FollowButton({ accountId, showLoginModal, style }: Props) {
   const isLoggedIn = useIsLoggedIn();
 
-  const [followed, toggleFollow] = useFollow(isFollowed, accountId);
+  const [followed, toggleFollow] = useFollow(accountId);
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isLoggedIn) {

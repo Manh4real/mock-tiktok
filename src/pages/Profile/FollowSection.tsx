@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
 
 // icons
@@ -9,29 +9,29 @@ import CustomButton from "_/components/CustomButton";
 import Tooltip from "_/components/Tooltip";
 import FollowingButton from "./FollowingButton";
 
-// services
-import { unfollowAccount } from "_/services/account";
-
 // styles
 import styles from "./Profile.module.scss";
+
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import {
+  unfollowAccountThunk,
+  useIsFollowed,
+} from "_/features/accounts/accountsSlice";
 
 // types
 interface Props {
   accountId: number;
-  isFollowing: boolean;
 }
 
-const FollowSection = ({ accountId, isFollowing }: Props) => {
-  const [following, setFollowing] = useState<boolean>(isFollowing);
+const FollowSection = ({ accountId }: Props) => {
+  const following = useIsFollowed(accountId);
+
+  // Redux
+  const dispatch = useAppDispatch();
 
   const handleUnfollow = () => {
-    unfollowAccount(accountId).then((result: any) => {
-      if (result.error) {
-        alert("Something went wrong.");
-        return;
-      }
-      setFollowing(false);
-    });
+    dispatch(unfollowAccountThunk(accountId));
   };
 
   if (following)
@@ -55,11 +55,7 @@ const FollowSection = ({ accountId, isFollowing }: Props) => {
 
   return (
     <div className={styles["follow-section"]}>
-      <FollowingButton
-        accountId={accountId}
-        following={following}
-        setFollowing_profile={setFollowing}
-      />
+      <FollowingButton accountId={accountId} />
     </div>
   );
 };

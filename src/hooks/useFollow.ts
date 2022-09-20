@@ -1,16 +1,17 @@
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { updateAccount, useIsFollowed } from "_/features/accounts/accountsSlice";
 
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 import { followAccount, unfollowAccount } from "_/services/account";
 
-const useFollow = (initialState: boolean, accountId: number) => {
-    const [followed, setFollowed] = useState<boolean>(initialState);
+const useFollow = (accountId: number) => {
+    const followed = useIsFollowed(accountId);
 
+    const dispatch = useAppDispatch();
     const currentUserInfo = useCurrentUserInfo();
-
 
     const toggle = () => {
         const currentUserId = currentUserInfo?.id;
@@ -23,7 +24,12 @@ const useFollow = (initialState: boolean, accountId: number) => {
         if (!followed) {
             followAccount(accountId)
                 .then(() => {
-                    setFollowed(true);
+                    dispatch(updateAccount({
+                        id: accountId,
+                        changes: {
+                            is_followed: true
+                        }
+                    }));
                 })
                 .catch((e: AxiosError) => {
                     const response = e.response?.data as any;
@@ -35,7 +41,12 @@ const useFollow = (initialState: boolean, accountId: number) => {
         } else {
             unfollowAccount(accountId)
                 .then(() => {
-                    setFollowed(false);
+                    dispatch(updateAccount({
+                        id: accountId,
+                        changes: {
+                            is_followed: false
+                        }
+                    }));
                 })
                 .catch((e: AxiosError) => {
                     const response = e.response?.data as any;

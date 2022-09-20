@@ -29,6 +29,9 @@ import {
   AutoplayScrollObserverProps,
 } from "_/features/autoplayScroll";
 
+// Redux
+import { useAccountById } from "_/features/accounts/accountsSlice";
+
 interface Props {
   item: VideoInterface;
   createAutoplayScrollObserver: (
@@ -38,7 +41,7 @@ interface Props {
 }
 
 function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
-  const author = item.user;
+  const author = useAccountById(item.user_id) || item.user;
   const authorName =
     author.full_name || `${author.first_name} ${author.last_name}`;
 
@@ -70,11 +73,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
       className={clsx(styles["container"], "scroll-snap-alignCenter")}
     >
       <div className={styles["post__follow-button"]}>
-        <FollowButton
-          styles={styles}
-          accountId={author.id}
-          isFollowed={author.is_followed}
-        />
+        <FollowButton styles={styles} accountId={author.id} />
       </div>
       <div className={styles["left"]}>
         {author ? (

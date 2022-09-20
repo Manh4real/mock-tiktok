@@ -22,7 +22,6 @@ import {
 import styles from "./Home.module.scss";
 
 // hooks
-// import { usePagesFetch } from "_/hooks";
 import { usePagesFetch__videos } from "_/hooks/usePagesFetch";
 
 // types
@@ -39,13 +38,6 @@ const Posts = ({ type = "for-you" }: Props) => {
     [type]
   );
 
-  // const {
-  //   results: posts,
-  //   hasMore,
-  //   handleFetchNext: handleLoadMore,
-  // } = usePagesFetch<VideoInterface>(fetchVideoList, false, {
-  //   errorMessage: "Can't get video list of " + type,
-  // });
   const {
     results: posts,
     hasMore,

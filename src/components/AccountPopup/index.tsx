@@ -56,10 +56,7 @@ function AccountPopup({ offset, account, children }: Props) {
               <Link to={"/@" + account.nickname} className={styles["avatar"]}>
                 <Image src={account.avatar} width={44} height={44} />
               </Link>
-              <FollowButton
-                accountId={account.id}
-                isFollowed={account.is_followed}
-              />
+              <FollowButton accountId={account.id} />
             </div>
             <Link to={"/@" + account.nickname}>
               <div className={styles["text"]}>

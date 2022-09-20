@@ -17,7 +17,6 @@ import { CommentButtonWithContext } from "./VideoDetailsModal";
 
 import Video from "./components/DetailsPageVideo";
 import CommentSection from "./components/CommentSection";
-import VideoMoreButton from "./components/VideoMoreButton";
 
 // icons
 import { BsChevronLeft } from "react-icons/bs";
@@ -120,6 +119,7 @@ function VideoDetailsPage() {
               <div style={{ height: "100%", zIndex: 3, position: "relative" }}>
                 <Video
                   autoPlay
+                  authorId={video.user_id}
                   postId={video.id}
                   src={video.file_url}
                   placeholder={video.thumb_url}
@@ -186,16 +186,9 @@ function VideoDetailsPage() {
                     </div>
                   </Link>
                 </AccountPopup>
-                {currentUserInfo?.id === video.user_id && (
-                  <VideoMoreButton videoId={video.id} />
-                )}
                 {currentUserInfo?.id !== video.user_id && (
                   <div className={styles["follow-button"]}>
-                    <FollowButton
-                      styles={styles}
-                      accountId={author.id}
-                      isFollowed={author.is_followed}
-                    />
+                    <FollowButton styles={styles} accountId={author.id} />
                   </div>
                 )}
               </div>

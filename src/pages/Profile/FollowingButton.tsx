@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 // hooks
 import { useFollow } from "_/hooks";
@@ -20,31 +20,21 @@ import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 interface Props extends WithLoginModal {
   accountId: number;
-  following: boolean;
-  setFollowing_profile: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FollowingButton = ({
-  accountId,
-  following,
-  setFollowing_profile,
-  showLoginModal,
-}: Props) => {
+const FollowingButton = ({ accountId, showLoginModal }: Props) => {
   const isLoggedIn = useIsLoggedIn();
 
-  const [followed, toggleFollow] = useFollow(following, accountId);
+  const [followed, toggleFollow] = useFollow(accountId);
 
   const handleClick = () => {
     if (!isLoggedIn) {
       showLoginModal();
       return;
     }
+
     toggleFollow();
   };
-
-  useEffect(() => {
-    setFollowing_profile(followed);
-  }, [followed, setFollowing_profile]);
 
   return (
     <CustomButton

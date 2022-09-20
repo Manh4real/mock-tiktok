@@ -49,22 +49,20 @@ const Comment = ({ authorId, comment }: Props) => {
       </div>
       <div className={styles["right-container"]}>
         <AccountPopup account={comment.user} offset={[-60, 30]}>
-          <>
-            <Link
-              className={clsx(styles["commenter-link"])}
-              to={`/@${comment.user.nickname}`}
-            >
-              <span className="hover-underlined">{comment.user.nickname}</span>
-              {isCreator && (
-                <span>
-                  <span style={{ marginInline: 5 }}>&middot;</span>
-                  <span className="pink-font" style={{ fontSize: 16 }}>
-                    Creator
-                  </span>
+          <Link
+            className={clsx(styles["commenter-link"])}
+            to={`/@${comment.user.nickname}`}
+          >
+            <span className="hover-underlined">{comment.user.nickname}</span>
+            {isCreator && (
+              <span>
+                <span style={{ marginInline: 5 }}>&middot;</span>
+                <span className="pink-font" style={{ fontSize: 16 }}>
+                  Creator
                 </span>
-              )}
-            </Link>
-          </>
+              </span>
+            )}
+          </Link>
         </AccountPopup>
         <p className={styles["comment__content"]}>{comment.comment}</p>
         <div className={clsx("grey-font", styles["subtitle"])}>

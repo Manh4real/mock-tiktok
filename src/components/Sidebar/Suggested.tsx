@@ -12,34 +12,41 @@ import { Spinner } from "_/components/icons";
 // styles
 import styles from "./Sidebar.module.scss";
 
-// services
-import { getSuggestedAccounts } from "_/services/account";
-
 // types
 import { Account as AccountInterface } from "_/types";
+
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import { fetchSuggestedAccounts } from "_/features/accounts/accountsSlice";
 
 function Suggested() {
   const [loading, setLoading] = useState<boolean>(true);
   const [showAll, setShowAll] = useState<boolean>(false);
-  const [suggested, setSuggested] = useState<AccountInterface[]>([]);
+  const [suggestedAccounts, setSuggestedAccounts] = useState<
+    AccountInterface[]
+  >([]);
+
+  // Redux
+  const dispatch = useAppDispatch();
 
   const handleShowAll = () => {
     setShowAll((prev) => !prev);
   };
 
   const shownAccounts = useMemo(() => {
-    return showAll ? suggested : suggested.slice(0, 5);
-  }, [showAll, suggested]);
+    return showAll ? suggestedAccounts : suggestedAccounts.slice(0, 5);
+  }, [showAll, suggestedAccounts]);
 
   useEffect(() => {
-    getSuggestedAccounts()
-      .then((accounts) => {
-        setSuggested(accounts);
+    dispatch(fetchSuggestedAccounts())
+      .unwrap()
+      .then((accounts: AccountInterface[]) => {
+        setSuggestedAccounts(accounts);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [dispatch]);
 
   if (shownAccounts.length <= 0) return null;
 

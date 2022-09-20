@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import routes, { pagesTitle } from "_/config/routes";
 
 // components
+import ToggleSwitch from "_/components/ToggleSwitch";
+
 import CaptionInput from "./CaptionInput";
 import VideoUploader from "./VideoUploader";
 import ViewerAllowance from "./ViewerAllowance";
@@ -190,11 +192,7 @@ const Form = () => {
                   className={clsx("flex-align-center", styles["form__title"])}
                 >
                   <span style={{ marginRight: 14 }}>Run a copyright check</span>
-                  <input
-                    type="checkbox"
-                    name="copyright-check"
-                    id="copyright-check"
-                  />
+                  <ToggleSwitch name="copyright-check" id="copyright-check" />
                 </div>
                 <p
                   className={clsx("small-font")}

@@ -19,8 +19,10 @@ import { VideoRefObject } from "_/types";
 
 // Redux
 import { useCurrentVideo } from "_/features/currentVideo/currentVideoSlice";
+import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
 interface AdditionalVideoProps {
+  authorId: number;
   postId?: number;
   hasWindowHeight?: boolean;
   placeholder?: string;
@@ -32,6 +34,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     className,
     hasWindowHeight,
     postId,
+    authorId,
     placeholder,
     autoPlay: _autoplay = false,
     ...otherProps
@@ -39,6 +42,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   // Redux
   const currentVideo = useCurrentVideo();
+  const currentUserInfo = useCurrentUserInfo();
   // ======================================================
 
   const [isReady, setIsReady] = useState<boolean>(false);
@@ -192,7 +196,10 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
           {isReady && <VideoTime ref={timeRef} videoRef={videoRef} />}
           {postId && isReady && (
             <div className={styles["more"]}>
-              <VideoMoreButton videoId={postId} />
+              <VideoMoreButton
+                videoId={postId}
+                byCurrentUser={currentUserInfo?.id === authorId}
+              />
             </div>
           )}
         </div>

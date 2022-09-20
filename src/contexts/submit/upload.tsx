@@ -17,6 +17,13 @@ class DiscardSubject {
   subscribe(observer: DiscardObserver) {
     this.observers.push(observer);
   }
+  unsubscribe(o: DiscardObserver) {
+    const index = this.observers.findIndex((observer) => observer === o);
+
+    if (index === -1) return;
+
+    this.observers.splice(index, 1);
+  }
 }
 
 export class DiscardObserver {
@@ -37,6 +44,7 @@ export const Submit = React.createContext<
   SubmitContextValue<Upload> & {
     discardEvent: DiscardSubject;
     createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
+    unsubscribeDiscard: (o: DiscardObserver) => void;
   }
 >({
   isAllowed: formSet.upload,
@@ -44,6 +52,7 @@ export const Submit = React.createContext<
   isAllGood: false,
   discardEvent: new DiscardSubject(),
   createNewDiscardObserver: () => {},
+  unsubscribeDiscard: () => {},
 });
 
 export const useSubmit = () => {
@@ -66,6 +75,12 @@ export const SubmitProvider = ({ children }: Props) => {
     },
     [discardEvent]
   );
+  const unsubscribeDiscard = useCallback(
+    (o: DiscardObserver) => {
+      discardEvent.unsubscribe(o);
+    },
+    [discardEvent]
+  );
 
   const isAllGood = isAllowed.caption.isValid && isAllowed.video.isValid;
 
@@ -77,6 +92,7 @@ export const SubmitProvider = ({ children }: Props) => {
         isAllGood,
         discardEvent,
         createNewDiscardObserver,
+        unsubscribeDiscard,
       }}
     >
       {children}

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 // icons
 import { VerifyBadge } from "_/components/icons";
 
+// components
+import Image from "_/components/Image";
+
 // styles
 import styles from "./Results.module.scss";
 
@@ -28,7 +31,7 @@ function Results({ results, search, handleSearch }: Props) {
             className={styles["results__item"]}
           >
             <span className={styles["results__item-image"]}>
-              <img src={r.avatar} alt={r.full_name} />
+              <Image src={r.avatar} alt={r.full_name} />
             </span>
             <div className={styles["results__item-accNames"]}>
               <div className={styles["results__item-accDisplayName"]}>
