@@ -10,18 +10,21 @@ import { FiFlag } from "react-icons/fi";
 import DeleteCommentButton from "./DeleteCommentButton";
 
 // styles
-import styles from "./CommentSection.module.scss";
+import defaultStyles from "./CommentSection.module.scss";
 
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
 // types
 interface Props {
+  styles?: {
+    readonly [index: string]: string;
+  };
   authorId: number;
   commentId: number;
 }
 
-function More({ authorId, commentId }: Props) {
+function More({ styles = defaultStyles, authorId, commentId }: Props) {
   const currentUserInfo = useCurrentUserInfo();
 
   const byCurrentUser = authorId === currentUserInfo?.id;
@@ -56,7 +59,7 @@ const Report = () => {
   return (
     <div
       role={"button"}
-      className={clsx("button", "flex-align-center", styles["row"])}
+      className={clsx("button", "flex-align-center", defaultStyles["row"])}
     >
       <FiFlag size={24} />
       <span>Report</span>

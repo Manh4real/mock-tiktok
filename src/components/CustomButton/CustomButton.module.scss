@@ -45,8 +45,8 @@
   }
   &.disabled {
     border: none;
-    color: #16182357;
-    background-color: #1618230f;
+    color: var(--grey-accent-100);
+    background-color: var(--grey-accent-500);
     pointer-events: none;
 
     &:hover {

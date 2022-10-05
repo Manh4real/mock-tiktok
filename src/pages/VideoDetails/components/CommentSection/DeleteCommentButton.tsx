@@ -9,7 +9,7 @@ import styles from "./CommentSection.module.scss";
 
 // services
 import { deleteComment as api_deleteComment } from "_/services/comment";
-import { useCommentCommand } from "_/contexts";
+import { useCommentCommandContext } from "_/contexts";
 
 // types
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const DeleteCommentButton = ({ commentId }: Props) => {
-  const { deleteComment } = useCommentCommand();
+  const { deleteComment } = useCommentCommandContext();
 
   const handleClick = () => {
     const answer = window.confirm(

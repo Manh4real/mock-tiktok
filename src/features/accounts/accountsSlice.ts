@@ -96,7 +96,7 @@ export const unfollowAccountThunk = createAsyncThunk(
     }
 );
 
-export const { setAccounts, updateAccount } = accountsSlice.actions;
+export const { addAccount, setAccounts, updateAccount } = accountsSlice.actions;
 export const {
     selectAll: selectAllAccounts,
     selectById: selectAccountById,
@@ -112,9 +112,7 @@ export const useAccountById = (id: EntityId) => {
     );
 }
 export const useIsFollowed = (accountId: EntityId) => {
-    return !!useSelector(
-        (state: RootState) => selectAccountById(state, accountId)
-    )?.is_followed;
+    return !!useAccountById(accountId)?.is_followed;
 }
 
 const selectFollowingAccounts = createSelector(

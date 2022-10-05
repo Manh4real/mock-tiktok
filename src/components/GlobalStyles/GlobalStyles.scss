@@ -9,6 +9,12 @@
   --grey-100: #16182308;
   --grey-200: #16182380;
 
+  --grey-accent-100: #16182357;
+  --grey-accent-200: #16182333;
+  --grey-accent-300: #16182329;
+  --grey-accent-400: #1618231f;
+  --grey-accent-500: #1618230f;
+
   --primary-layout-main-width: 1150px;
   --header-height: 60px;
 }
@@ -74,6 +80,9 @@ html *::-webkit-scrollbar-track {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.bold-font {
+  font-weight: bold;
+}
 .grey-font {
   color: var(--grey-200);
 }
@@ -119,7 +128,7 @@ html *::-webkit-scrollbar-track {
 .grey-outlined {
   background: #fff;
   color: var(--black);
-  border: 1px solid #1618231f;
+  border: 1px solid var(--grey-accent-400);
   border-radius: 4px;
 
   &:hover {

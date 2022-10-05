@@ -49,7 +49,7 @@
 
 .follow-button {
   .is--following {
-    border-color: #1618231f;
+    border-color: var(--grey-accent-400);
     color: var(--black);
 
     &:hover {
@@ -121,10 +121,10 @@
     height: 100%;
     padding: 7px 0 5px 12px;
 
-    background: #1618230f;
+    background: var(--grey-accent-500);
     color: var(--grey);
 
-    border: 1px solid #1618231f;
+    border: 1px solid var(--grey-accent-400);
     border-right: 0;
   }
   .copy-link-button {

@@ -90,7 +90,9 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
 
         alert("Logged in.");
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log("Failed to login.", e);
+
         alert("Invalid Email or Password.");
       })
       .finally(() => {

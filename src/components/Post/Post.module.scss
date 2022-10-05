@@ -22,7 +22,7 @@
   }
   .post__follow-button {
     .is--following {
-      border-color: #1618231f;
+      border-color: var(--grey-accent-400);
       color: var(--black);
 
       &:hover {

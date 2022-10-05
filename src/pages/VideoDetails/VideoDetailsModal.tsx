@@ -32,7 +32,7 @@ import { useBackgroundLocation } from "_/hooks";
 import routes from "_/config/routes";
 
 // context
-import { CommentCommandProvider, useCommentCommand } from "_/contexts";
+import { CommentCommandProvider, useCommentCommandContext } from "_/contexts";
 
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
@@ -199,7 +199,7 @@ export const CommentButtonWithContext = ({
   styles,
   postId,
 }: CommentButtonWithContextProps) => {
-  const { commentsCount } = useCommentCommand();
+  const { commentsCount } = useCommentCommandContext();
 
   return (
     <CommentButton

@@ -1,15 +1,12 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-// styles
-import styles from "./CommentSection.module.scss";
-
 // icons
 import { Spinner } from "_/components/icons";
 
 // components
 import Comment from "./Comment";
-import CommentInput from "./CommentInput";
+import CommentInput from "../CommentSection/CommentInput";
 import { useCommentCommandContext } from "_/contexts";
 
 // config
@@ -19,6 +16,9 @@ import routes from "_/config/routes";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 import { useRedirectURL } from "_/hooks/useRedirect";
 
+// styles
+import styles from "./PageCommentSection.module.scss";
+
 interface Props {
   authorId: number;
   video_uuid: string;
@@ -26,23 +26,12 @@ interface Props {
   isAllowed: boolean;
 }
 
-const CommentSection = (props: Props) => {
-  const { isAllowed } = props;
-
-  if (isAllowed) return <AllowedCommentSection {...props} />;
-
-  return (
-    <div className={styles["comments"]} style={{ textAlign: "center" }}>
-      Comments are turned off.
-    </div>
-  );
-};
-
-const AllowedCommentSection = ({
+function PageCommentSection({
+  isAllowed,
   video_uuid,
   videoId,
   authorId,
-}: Omit<Props, "isAllowed">) => {
+}: Props) {
   const { comments, loading } = useCommentCommandContext();
 
   const isLoggedIn = useIsLoggedIn();
@@ -63,13 +52,18 @@ const AllowedCommentSection = ({
 
   return (
     <React.Fragment>
+      {isAllowed && <CommentInput videoId={videoId} video_uuid={video_uuid} />}
+      {!isAllowed && (
+        <div className={styles["comments"]} style={{ textAlign: "center" }}>
+          Comments are turned off.
+        </div>
+      )}
       <div className={styles["comments"]}>
         <div className={styles["container"]}>{content}</div>
       </div>
-      <CommentInput videoId={videoId} video_uuid={video_uuid} />
     </React.Fragment>
   );
-};
+}
 
 //=============================================================================
 const Message = () => {
@@ -85,4 +79,4 @@ const Message = () => {
   );
 };
 
-export default CommentSection;
+export default PageCommentSection;

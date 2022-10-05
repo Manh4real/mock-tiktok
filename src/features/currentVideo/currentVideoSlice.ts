@@ -42,10 +42,19 @@ const currentVideoSlice = createSlice({
         setVolume: (state, action: PayloadAction<number>) => {
             state.currentVideo.volume = action.payload;
             state.currentVideo.muted = action.payload === 0;
+        },
+        clearVideoId: (state) => {
+            state.currentVideo.postId = -999;
         }
     }
 })
-export const { changeVideo, setMute, setVolume, toggleMute } = currentVideoSlice.actions;
+export const {
+    changeVideo,
+    setMute,
+    setVolume,
+    toggleMute,
+    clearVideoId
+} = currentVideoSlice.actions;
 
 export const useCurrentVideo = () => {
     return useSelector((state: RootState) => state.currentVideo.currentVideo);

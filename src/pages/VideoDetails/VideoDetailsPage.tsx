@@ -12,11 +12,10 @@ import Image from "_/components/Image";
 
 import FollowButton from "_/components/Post/FollowButton";
 import LikeButton from "_/components/Post/LikeButton";
-// import CommentButton from "_/components/Post/CommentButton";
 import { CommentButtonWithContext } from "./VideoDetailsModal";
 
 import Video from "./components/DetailsPageVideo";
-import CommentSection from "./components/CommentSection";
+import PageCommentSection from "./components/PageCommentSection";
 
 // icons
 import { BsChevronLeft } from "react-icons/bs";
@@ -39,6 +38,8 @@ import { CommentCommandProvider } from "_/contexts";
 
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
+import { useAppDispatch } from "_/features/hooks";
+import { addAccount } from "_/features/accounts/accountsSlice";
 
 type ProgressState = "start" | "loading" | "fulfilled";
 
@@ -47,9 +48,10 @@ function VideoDetailsPage() {
   const params = useParams();
   const videoId = params.videoId;
 
-  const currentUserInfo = useCurrentUserInfo();
-
   // Redux
+  const currentUserInfo = useCurrentUserInfo();
+  const dispatch = useAppDispatch();
+
   const [video, setVideo] = useState<VideoInterface>();
   const [state, setState] = useState<ProgressState>("start");
 
@@ -58,8 +60,10 @@ function VideoDetailsPage() {
 
     setState("loading");
     getVideo(videoId)
-      .then((data) => {
+      .then((data: VideoInterface) => {
         setVideo(data);
+
+        dispatch(addAccount(data.user));
       })
       .catch(() => {
         console.log("Can't get the video");
@@ -68,7 +72,7 @@ function VideoDetailsPage() {
       .finally(() => {
         setState("fulfilled");
       });
-  }, [videoId]);
+  }, [dispatch, videoId]);
 
   if (state === "loading")
     return (
@@ -218,9 +222,7 @@ function VideoDetailsPage() {
                   </div>
                 )}
                 <div style={{ flex: 1 }}>
-                  <CommentSection
-                    reversedColumn
-                    styles={styles}
+                  <PageCommentSection
                     authorId={video.user_id}
                     videoId={video.id}
                     video_uuid={video.uuid}

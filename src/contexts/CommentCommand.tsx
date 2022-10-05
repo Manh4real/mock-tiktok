@@ -9,6 +9,7 @@ import { useAppDispatch } from "_/features/hooks";
 
 // types
 import { Comment } from "_/types";
+import { setAccounts } from "_/features/accounts/accountsSlice";
 
 interface ContextValue {
   comments: Comment[];
@@ -40,6 +41,8 @@ const CommentCommandProvider = ({
   video_uuid,
   children,
 }: Props) => {
+  const dispatch = useAppDispatch();
+
   const fetchComments = useCallback(
     (page?: number) => {
       return getComments(video_uuid);
@@ -51,9 +54,14 @@ const CommentCommandProvider = ({
     loading,
     results: comments,
     setResults: setComments,
-  } = usePagesFetch<Comment>(fetchComments, false, {});
-
-  const dispatch = useAppDispatch();
+  } = usePagesFetch<Comment>(fetchComments, false, {
+    onSuccess: useCallback(
+      (result: Comment[]) => {
+        dispatch(setAccounts(result.map((comment) => comment.user)));
+      },
+      [dispatch]
+    ),
+  });
 
   const sortedComments = useMemo(() => {
     return comments
@@ -107,8 +115,8 @@ const CommentCommandProvider = ({
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
-const useCommentCommand = () => {
+const useCommentCommandContext = () => {
   return useContext(Context);
 };
 
-export { useCommentCommand, CommentCommandProvider };
+export { useCommentCommandContext, CommentCommandProvider };

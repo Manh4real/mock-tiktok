@@ -17,7 +17,7 @@
   font-weight: 500;
   padding: 24px 24px 12px;
 
-  border-bottom: 1px solid #16182333;
+  border-bottom: 1px solid var(--grey-accent-200);
 }
 
 .table {
@@ -28,7 +28,7 @@
 .row {
   display: flex;
   padding: 16px 0px;
-  border-bottom: 1px solid #1618231f;
+  border-bottom: 1px solid var(--grey-accent-400);
 }
 .col {
   position: relative;
@@ -49,14 +49,14 @@
   padding: 7px 12px;
   border-radius: 4px;
 
-  background-color: #1618230f;
+  background-color: var(--grey-accent-500);
   caret-color: var(--pink);
 
   outline: none;
   border: none;
 
   &:focus {
-    outline: 1px solid #16182333;
+    outline: 1px solid var(--grey-accent-200);
   }
   &.on--error {
     outline: 1px solid red;
@@ -71,7 +71,7 @@
   padding: 12px;
   border-radius: 4px;
 
-  background: #1618230f;
+  background: var(--grey-accent-500);
   caret-color: var(--pink);
 
   border: none;
@@ -79,7 +79,7 @@
   resize: none;
 
   &:focus {
-    outline: 1px solid #16182333;
+    outline: 1px solid var(--grey-accent-200);
   }
   &.on--error {
     outline: 1px solid red;

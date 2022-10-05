@@ -142,14 +142,15 @@ const VideoName = ({
 }) => {
   return (
     <div className={clsx("flex-space-between", styles["video__title"])}>
-      <span
-        className={clsx("flex-center")}
-        style={{ marginRight: 3, fontSize: 16, fill: "currentcolor" }}
-      >
-        <BiCheckCircle />
-      </span>
-      <span className={clsx("text-overflow-elipse")}>{content}</span>
-
+      <div className={clsx("flex-align-center", "text-overflow-elipse")}>
+        <span
+          className={clsx("flex-center")}
+          style={{ marginRight: 3, fontSize: 16, fill: "currentcolor" }}
+        >
+          <BiCheckCircle />
+        </span>
+        <span className={clsx("text-overflow-elipse")}>{content}</span>
+      </div>
       <span
         className="hover-underlined"
         style={{

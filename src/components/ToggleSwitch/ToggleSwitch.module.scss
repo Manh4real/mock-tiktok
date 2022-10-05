@@ -22,10 +22,10 @@
   -webkit-transition: 0.3s;
   transition: 0.3s;
 
-  background: #1618231f;
+  background: var(--grey-accent-400);
 
   &:hover {
-    background-color: #16182329;
+    background-color: var(--grey-accent-300);
   }
 }
 

@@ -9,12 +9,14 @@ import Posts from "./Posts";
 // Redux
 import { useAppDispatch } from "_/features/hooks";
 import { resetVideos } from "_/features/videos/videosSlice";
+import { clearVideoId } from "_/features/currentVideo/currentVideoSlice";
 
 function Home() {
   const dispatch = useAppDispatch();
   //
   useEffect(() => {
     dispatch(resetVideos());
+    dispatch(clearVideoId());
   }, [dispatch]);
 
   //

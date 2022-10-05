@@ -5,7 +5,3 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 # This is a mock Tiktok web app
 
 Note: Login/Signup with Email, Password
-
-# Current Work (16 Sep, 2022)
-
-- Add ToggleSwitch ✅

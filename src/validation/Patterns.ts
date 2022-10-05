@@ -16,8 +16,8 @@ const Patterns: PatternObject = {
     phone: /^\d{10,15}$/,
     username: /^[A-Za-z0-9_,]{2,}$/,
     name: /./,
-    bio: /^[^]{0,80}$/u,
-    caption: /^[^]{1,150}$/u,
+    bio: /^[^]{0,80}$/,
+    caption: /^[^]{1,150}$/,
 }
 
 export default Patterns;

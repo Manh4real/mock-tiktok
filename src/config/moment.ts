@@ -6,7 +6,7 @@ moment.updateLocale('vn', {
     relativeTime: {
         future: "in %s",
         past: "%s ago",
-        s: 'just now',
+        s: '1s',
         ss: '%ds',
         m: "1m",
         mm: "%dm",

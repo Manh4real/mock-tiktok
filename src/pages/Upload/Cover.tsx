@@ -19,6 +19,8 @@ interface Props {
 }
 
 const IMAGES_NUM = 8;
+const IMAGE_WIDTH = 84.2 * 10; // 1920
+const IMAGE_HEIGHT = 150 * 10; // 1080
 const timeIDs: NodeJS.Timeout[] = [];
 
 const Cover = ({
@@ -59,11 +61,19 @@ const Cover = ({
   useEffect(() => {
     if (!videoFile || !isVideo) return;
 
+    let videoWidth = IMAGE_WIDTH;
+    let videoHeight = IMAGE_HEIGHT;
     let canvas = document.createElement("canvas");
-    video.src = URL.createObjectURL(videoFile);
 
-    canvas.width = 1920;
-    canvas.height = 1080;
+    video.src = URL.createObjectURL(videoFile);
+    video.onloadedmetadata = () => {
+      // console.log({ w: video.videoWidth, h: video.videoHeight });
+      videoWidth = video.videoWidth;
+      videoHeight = video.videoHeight;
+
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+    };
 
     let ctx = canvas.getContext("2d");
     let i = 0;
@@ -89,21 +99,29 @@ const Cover = ({
       seekNext();
     };
     const handleSeeked = function (this: HTMLVideoElement, ev: Event) {
-      if (ctx) ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+      }
 
-      const snapShot = canvas.toDataURL("image/jpeg");
+      // const snapShot = canvas.toDataURL("image/jpeg");
 
-      seekNext();
-      setImages((prev) => {
-        if (prev.length >= IMAGES_NUM) return prev;
+      canvas.toBlob((blob) => {
+        if (!blob) return;
 
-        return prev.concat(snapShot);
-      });
+        const snapShot = URL.createObjectURL(blob);
 
-      setCover((prev) => {
-        if (!prev) return prev;
+        setCover((prev) => {
+          if (!prev) return prev;
 
-        return snapShot;
+          return snapShot;
+        });
+
+        seekNext();
+        setImages((prev) => {
+          if (prev.length >= IMAGES_NUM) return prev;
+
+          return prev.concat(snapShot);
+        });
       });
     };
 
@@ -115,6 +133,7 @@ const Cover = ({
       timeIDs.forEach((timeID) => {
         clearTimeout(timeID);
       });
+
       video.removeEventListener("loadstart", handleLoadStart);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("seeked", handleSeeked);
@@ -152,11 +171,14 @@ const Cover = ({
         }}
         className={clsx(
           styles["form__cover-images"],
-          styles["form__input-container"]
+          styles["form__input-container"],
+          {
+            [styles["prepare"]]: loadingImages || images.length < IMAGES_NUM,
+          }
         )}
       >
         {loadingImages ? (
-          <Spinner />
+          <Spinner style={{ marginLeft: 15 }} />
         ) : images.length < IMAGES_NUM ? (
           <div className={styles["form__cover-image"]}></div>
         ) : (
@@ -167,12 +189,7 @@ const Cover = ({
               style={{ left: `${progress * 100}%` }}
             >
               <div className={styles["form__cover-image--active"]}>
-                <img
-                  src={cover}
-                  alt="uploaded-video-cover"
-                  width="100%"
-                  height="100%"
-                />
+                <img src={cover} alt="uploaded-video-cover" />
               </div>
             </div>
           </>
@@ -186,6 +203,7 @@ const Cover = ({
 interface ImagesProps {
   images: string[];
 }
+
 const Images = ({ images }: ImagesProps) => {
   return (
     <>
@@ -196,12 +214,7 @@ const Images = ({ images }: ImagesProps) => {
             className={clsx("flex-center", styles["form__cover-image"])}
             aria-selected={false}
           >
-            <img
-              src={image}
-              alt="uploaded-video-cover"
-              width="100%"
-              height="100%"
-            />
+            <img src={image} alt="uploaded-video-cover" />
           </div>
         );
       })}

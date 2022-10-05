@@ -44,7 +44,7 @@
 
 .follow-button {
   .is--following {
-    border-color: #1618231f;
+    border-color: var(--grey-accent-400);
     color: var(--black);
 
     &:hover {
@@ -234,7 +234,7 @@
   // overflow: hidden;
 
   padding-right: 9px;
-  background: #1618230f;
+  background: var(--grey-accent-500);
 
   &:focus-within {
     border-color: rgba(22, 24, 35, 0.2);
@@ -285,7 +285,7 @@
   color: var(--pink);
 
   &.disabled {
-    color: #16182357;
+    color: var(--grey-accent-100);
     pointer-events: none;
   }
 }

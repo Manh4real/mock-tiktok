@@ -11,7 +11,7 @@ import { setAccounts } from "_/features/accounts/accountsSlice";
 type FetchApiFunc<T> = (page?: number) => Promise<ResponseWithPagination<T> | undefined>;
 
 /**
- * fetchApi function must be memoized, otherwise component re-renders infinitely
+ * fetchApi, onSuccess function must be memoized, otherwise component will re-render infinitely
 */
 const usePagesFetch =
     <T extends { id: number }>(
@@ -20,9 +20,16 @@ const usePagesFetch =
         options: Partial<{
             errorMessage: string,
             reachEndFunc: () => void,
+            /**
+             * This function must be memoized, otherwise the component will re-render infinitely
+             */
+            onSuccess: (result: T[]) => void
         }>
     ) => {
-        const { reachEndFunc = () => { } } = options;
+        const {
+            reachEndFunc = () => { },
+            onSuccess
+        } = options;
 
         const [results, setResults] = useState<T[]>([]);
         const [loading, setLoading] = useState<boolean>(false);
@@ -58,6 +65,7 @@ const usePagesFetch =
                     const currentPage = data.meta.pagination.current_page;
 
                     setPage(currentPage);
+                    if (onSuccess) onSuccess(data.data);
                 })
                 .catch(() => {
                     console.log("Error: ", options.errorMessage);
@@ -84,6 +92,8 @@ const usePagesFetch =
 
                     setPage(currentPage);
                     setTotalPage(total);
+
+                    if (onSuccess) onSuccess(data.data);
                 })
                 .catch(() => {
                     console.log("Error: ", options.errorMessage);
@@ -91,7 +101,7 @@ const usePagesFetch =
                 .finally(() => {
                     setLoading(false);
                 });
-        }, [pauseCallCheck, fetchApi, options.errorMessage]);
+        }, [pauseCallCheck, fetchApi, options.errorMessage, onSuccess]);
 
 
         return {

@@ -21,7 +21,7 @@
 }
 
 .content {
-  border-top: 1px solid #1618231f;
+  border-top: 1px solid var(--grey-accent-400);
 }
 .content-item {
   display: flex;
@@ -29,7 +29,7 @@
   align-items: center;
 
   height: 40px;
-  border-bottom: 1px solid #1618231f;
+  border-bottom: 1px solid var(--grey-accent-400);
 
   font-size: 14px;
   font-weight: 400;

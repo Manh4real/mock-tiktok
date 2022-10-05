@@ -94,6 +94,9 @@ const Form = () => {
             replace: true,
           });
         })
+        .catch(() => {
+          alert("Failed to upload: Something went wrong.");
+        })
         .finally(() => {
           setLoading(false);
         });

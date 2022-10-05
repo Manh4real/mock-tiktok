@@ -17,6 +17,9 @@ import FollowSection from "./FollowSection";
 import FeedShare from "_/components/FeedShare";
 import EditButton from "./EditButton";
 
+// hoc
+// import { withResetVideos } from "_/hoc";
+
 // styles
 import styles from "./Profile.module.scss";
 
@@ -40,6 +43,7 @@ import {
 } from "_/features/videos/videosSlice";
 import { useSelector } from "react-redux";
 import { getAccount } from "_/features/accounts/accountsSlice";
+import { clearVideoId } from "_/features/currentVideo/currentVideoSlice";
 
 type PageTitleFunc = (name: string, username: string) => string;
 
@@ -73,9 +77,10 @@ function Profile() {
   }, [params.usernameParam, dispatch]);
 
   //
-  useEffect(() => {
-    dispatch(resetVideos());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(resetVideos());
+  //   dispatch(clearVideoId());
+  // }, [dispatch]);
 
   // page title
   useEffect(() => {
@@ -174,6 +179,8 @@ const VideoList = ({ account }: { account: Account }) => {
   useEffect(() => {
     setLoading(true);
     dispatch(resetVideos());
+    dispatch(clearVideoId());
+
     if (active === "videos") {
       dispatch(setVideos(account.videos));
 
