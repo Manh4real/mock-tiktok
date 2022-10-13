@@ -20,7 +20,7 @@ import CommentButton from "./CommentButton";
 import VideoContainer from "./VideoContainer";
 
 // utils
-import { numberCompact } from "_/utils";
+import { numberCompact, toTag } from "_/utils";
 
 // types
 import { Video as VideoInterface, VideoRefObject } from "_/types";
@@ -44,6 +44,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
   const author = useAccountById(item.user_id) || item.user;
   const authorName =
     author.full_name || `${author.first_name} ${author.last_name}`;
+  const postContent = toTag(item.description);
 
   //===============================================================
   // ⚠️ Autoplay scroll
@@ -117,7 +118,7 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
               </AccountPopup>
             )}
           </header>
-          <div className={styles["post__content"]}>{item.description}</div>
+          <div className={styles["post__content"]}>{postContent}</div>
         </div>
         <div className={styles["post__audio"]}>
           <h4>
@@ -169,55 +170,3 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
 }
 
 export default React.memo(Post);
-
-/*
-<span>Lifting is for ALL AGES!</span>
-            <Link
-              to="/tag/lifting"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#lifting</strong>
-            </Link>
-            <Link
-              to="/tag/grandma"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#grandma</strong>
-            </Link>
-            <Link
-              to="/tag/grandmasoftiktok"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#grandmasoftiktok</strong>
-            </Link>
-            <Link
-              to="/tag/gym"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#gym</strong>
-            </Link>
-            <Link
-              to="/tag/fitness"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#fitness</strong>
-            </Link>
-            <Link
-              to="/tag/fit"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#fit</strong>
-            </Link>
-            <Link
-              to="/tag/strong"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#strong</strong>
-            </Link>
-            <Link
-              to="/tag/powerlifting"
-              className={clsx(styles["post__tag"], "hover-underlined")}
-            >
-              <strong>#powerlifting</strong>
-            </Link>
-*/

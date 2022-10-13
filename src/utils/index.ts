@@ -35,3 +35,5 @@ export function formatTime(sec: number, compact: boolean = false) {
     if (hours === 0) return minutes + ":" + seconds;
     return hours + ':' + minutes + ':' + seconds;
 }
+
+export { default as toTag } from './toTag';

@@ -162,3 +162,13 @@ html *::-webkit-scrollbar-track {
 .scroll-snap-alignCenter {
   scroll-snap-align: center;
 }
+
+// ===========================
+.post__tag {
+  display: inline-block;
+
+  strong {
+    margin-inline: 3px;
+    font-weight: 500;
+  }
+}
