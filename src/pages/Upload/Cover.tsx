@@ -23,6 +23,8 @@ const IMAGE_WIDTH = 84.2 * 10; // 1920
 const IMAGE_HEIGHT = 150 * 10; // 1080
 const timeIDs: NodeJS.Timeout[] = [];
 
+const savedCovers = new Map<string, string>();
+
 const Cover = ({
   isVideo,
   videoFile,
@@ -43,20 +45,26 @@ const Cover = ({
       target: 1,
       onChange: (progress) => {
         const duration = video.duration || 0;
-        video.currentTime = Math.floor(progress * duration);
-        setIsAllowed(Math.floor(progress * duration));
+        video.currentTime = Number.parseFloat((progress * duration).toFixed(3));
+        setIsAllowed(Number.parseFloat((progress * duration).toFixed(3)));
       },
     });
 
-  // ====================================================
+  // ==========================================================================
+  const coverRef = useRef<HTMLImageElement>(null);
+  const img = useRef(new Image()).current;
   useEffect(() => {
-    if (!videoFile && (loadingImages || images.length > 0)) {
-      setImages([]);
-      setCover("");
-      setProgress(0);
-      setLoadingImages(false);
-    }
-  }, [images.length, loadingImages, setProgress, videoFile]);
+    img.src = cover;
+    const handleLoad = () => {
+      if (coverRef.current) {
+        coverRef.current.src = img.src;
+      }
+    };
+    img.addEventListener("load", handleLoad);
+
+    return () => img.removeEventListener("load", handleLoad);
+  }, [cover, img]);
+  // ==========================================================================
 
   useEffect(() => {
     if (!videoFile || !isVideo) return;
@@ -67,7 +75,6 @@ const Cover = ({
 
     video.src = URL.createObjectURL(videoFile);
     video.onloadedmetadata = () => {
-      // console.log({ w: video.videoWidth, h: video.videoHeight });
       videoWidth = video.videoWidth;
       videoHeight = video.videoHeight;
 
@@ -104,17 +111,26 @@ const Cover = ({
       }
 
       // const snapShot = canvas.toDataURL("image/jpeg");
+      const savedCover = savedCovers.get(this.currentTime.toString());
+      console.log({ t: this.currentTime, savedCover });
+
+      if (savedCover) {
+        setCover(savedCover);
+      }
 
       canvas.toBlob((blob) => {
         if (!blob) return;
 
         const snapShot = URL.createObjectURL(blob);
 
-        setCover((prev) => {
-          if (!prev) return prev;
+        if (savedCover === undefined) {
+          setCover((prev) => {
+            if (!prev) return prev;
 
-          return snapShot;
-        });
+            savedCovers.set(this.currentTime.toString(), snapShot);
+            return snapShot;
+          });
+        }
 
         seekNext();
         setImages((prev) => {
@@ -143,6 +159,7 @@ const Cover = ({
   useEffect(() => {
     if (!cover && images.length >= IMAGES_NUM) {
       setCover(images[0]);
+      savedCovers.set("0", images[0]);
     }
   }, [images, cover]);
 
@@ -152,7 +169,17 @@ const Cover = ({
     setCover("");
     setProgress(0);
     setLoadingImages(false);
+    savedCovers.clear();
+
+    console.log({ savedCovers });
   }, [setProgress]);
+
+  // ====================================================
+  useEffect(() => {
+    if (!videoFile && (loadingImages || images.length > 0)) {
+      reset();
+    }
+  }, [images.length, loadingImages, reset, videoFile]);
 
   //=====================================================
   useEffect(() => {
@@ -189,7 +216,7 @@ const Cover = ({
               style={{ left: `${progress * 100}%` }}
             >
               <div className={styles["form__cover-image--active"]}>
-                <img src={cover} alt="uploaded-video-cover" />
+                <img ref={coverRef} alt="uploaded-video-cover" />
               </div>
             </div>
           </>

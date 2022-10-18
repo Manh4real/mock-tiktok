@@ -24,7 +24,7 @@ import { VoiceRefObject, VideoTimeRefObject } from "./types";
 import { VideoRefObject } from "_/types";
 
 // context
-import { useCurrentVideo as context_useCurrentVideo } from "_/contexts";
+import { useCurrentVideo as useCurrentVideo_context } from "_/contexts";
 
 // Redux
 import {
@@ -55,7 +55,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const dispatch = useAppDispatch();
   // ======================================================
 
-  const { changeVideoRef } = context_useCurrentVideo();
+  const { changeVideoRef } = useCurrentVideo_context();
 
   const [isReady, setIsReady] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(false);
@@ -167,6 +167,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   // autoplay
   useEffect(() => {
+    if (!_autoplay) return;
+
     const timeID = setTimeout(() => {
       setAutoplay(_autoplay);
     }, 600);
