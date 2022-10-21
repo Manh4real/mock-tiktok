@@ -214,6 +214,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
           muted={currentVideo.muted}
           loop={true}
           autoPlay={autoplay}
+          playsInline={autoplay}
           onPause={handlePause}
           onPlay={handlePlay}
           onEnded={handleEnded}

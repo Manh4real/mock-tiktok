@@ -6,9 +6,9 @@ interface Options {
     target: number,
     initialValue: number,
     direction: Direction,
-    onMouseUp?: (hadMouseDown: boolean) => void,
-    onMouseMove?: () => void,
-    onChange?: (newValue: number) => void
+    onMouseUp?: (hadMouseDown: boolean) => void, /** Should be memoized */
+    onMouseMove?: () => void, /** Should be memoized */
+    onChange?: (newValue: number) => void /** Should be memoized */
 }
 
 const useProgress = (

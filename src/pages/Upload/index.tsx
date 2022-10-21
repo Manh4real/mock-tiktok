@@ -12,7 +12,8 @@ import CaptionInput from "./CaptionInput";
 import VideoUploader from "./VideoUploader";
 import ViewerAllowance from "./ViewerAllowance";
 import ViewerPermission from "./ViewerPermission";
-import Cover from "./Cover";
+// import Cover from "./Cover";
+import CoverNew from "./CoverNew";
 
 // services
 import { uploadVideo } from "_/services/video";
@@ -176,7 +177,13 @@ const Form = () => {
                 setIsAllowed={setIsAllowed_caption}
                 createNewDiscardObserver={createNewDiscardObserver}
               />
-              <Cover
+              {/* <Cover
+                isVideo={isAllowed.video.isValid}
+                videoFile={isAllowed.video.value}
+                setIsAllowed={setIsAllowed_thumbnailTime}
+                createNewDiscardObserver={createNewDiscardObserver}
+              /> */}
+              <CoverNew
                 isVideo={isAllowed.video.isValid}
                 videoFile={isAllowed.video.value}
                 setIsAllowed={setIsAllowed_thumbnailTime}

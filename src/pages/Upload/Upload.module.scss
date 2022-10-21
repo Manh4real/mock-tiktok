@@ -227,11 +227,14 @@ input[type="checkbox"] {
 .form__cover-image--active {
   margin: 6px;
 
-  img {
+  img,
+  video {
     min-width: 84.2px;
     width: 84.2px;
     height: 165px;
     object-fit: cover;
+
+    display: block;
   }
 }
 .form__cover-image {

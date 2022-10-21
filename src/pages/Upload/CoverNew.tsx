@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import clsx from "clsx";
 
 // styles
@@ -23,19 +29,25 @@ const IMAGE_WIDTH = 84.2 * 10; // 1920
 const IMAGE_HEIGHT = 150 * 10; // 1080
 const timeIDs: NodeJS.Timeout[] = [];
 
-const savedCovers = new Map<string, string>();
-
-const Cover = ({
+const CoverNew = ({
   isVideo,
   videoFile,
   setIsAllowed,
   createNewDiscardObserver,
 }: Props) => {
   const [images, setImages] = useState<string[]>([]);
-  const [cover, setCover] = useState<string>("");
   const [loadingImages, setLoadingImages] = useState<boolean>(false);
 
   let video = useRef(document.createElement("video")).current;
+  const DOMVideo = useRef<HTMLVideoElement>(null);
+  const DOMVideoSrc = useMemo(() => {
+    if (!videoFile) return "";
+    return URL.createObjectURL(videoFile);
+  }, [videoFile]);
+  const setDOMVideoCurrentTime = (value: number) => {
+    if (!DOMVideo.current) return;
+    DOMVideo.current.currentTime = value;
+  };
 
   const dragProgressRef = useRef<HTMLDivElement>(null);
   const { handleMouseDown, progress, setProgress, interactiveUpdateProgress } =
@@ -46,26 +58,10 @@ const Cover = ({
       onChange: (progress) => {
         const duration = video.duration || 0;
         // Number.parseFloat((progress * duration).toFixed(3))
-        video.currentTime = Math.floor(progress * duration);
-        setIsAllowed(Math.floor(progress * duration)); // thumbnail must be an integer of seconds
+        setDOMVideoCurrentTime(Math.floor(progress * duration));
+        setIsAllowed(Math.floor(progress * duration)); // API: thumbnail must be an integer of seconds
       },
     });
-
-  // ==========================================================================
-  const coverRef = useRef<HTMLImageElement>(null);
-  const img = useRef(new Image()).current;
-  useEffect(() => {
-    img.src = cover;
-    const handleLoad = () => {
-      if (coverRef.current) {
-        coverRef.current.src = img.src;
-      }
-    };
-    img.addEventListener("load", handleLoad);
-
-    return () => img.removeEventListener("load", handleLoad);
-  }, [cover, img]);
-  // ==========================================================================
 
   useEffect(() => {
     if (!videoFile || !isVideo) return;
@@ -112,39 +108,18 @@ const Cover = ({
       }
 
       // const snapShot = canvas.toDataURL("image/jpeg");
-      const savedCover = savedCovers.get(this.currentTime.toFixed(3));
-      const thisCurrentTime = this.currentTime.toFixed(3);
-      console.log({ t: this.currentTime, savedCover });
+      canvas.toBlob((blob) => {
+        if (!blob) return;
 
-      if (savedCover) {
-        setCover(savedCover);
-      }
+        const snapShot = URL.createObjectURL(blob);
 
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) return;
+        seekNext();
+        setImages((prev) => {
+          if (prev.length >= IMAGES_NUM) return prev;
 
-          const snapShot = URL.createObjectURL(blob);
-
-          if (savedCover === undefined) {
-            setCover((prev) => {
-              if (!prev) return prev;
-
-              savedCovers.set(thisCurrentTime, snapShot);
-              return snapShot;
-            });
-          }
-
-          seekNext();
-          setImages((prev) => {
-            if (prev.length >= IMAGES_NUM) return prev;
-
-            return prev.concat(snapShot);
-          });
-        },
-        "image/jpeg",
-        0.15
-      );
+          return prev.concat(snapShot);
+        });
+      }, "image/jpeg");
     };
 
     video.addEventListener("loadstart", handleLoadStart);
@@ -162,22 +137,11 @@ const Cover = ({
     };
   }, [isVideo, video, videoFile]);
 
-  useEffect(() => {
-    if (!cover && images.length >= IMAGES_NUM) {
-      setCover(images[0]);
-      savedCovers.set("0", images[0]);
-    }
-  }, [images, cover]);
-
   //=====================================================
   const reset = useCallback(() => {
     setImages([]);
-    setCover("");
     setProgress(0);
     setLoadingImages(false);
-    savedCovers.clear();
-
-    console.log({ savedCovers });
   }, [setProgress]);
 
   // ====================================================
@@ -215,18 +179,24 @@ const Cover = ({
         ) : images.length < IMAGES_NUM ? (
           <div className={styles["form__cover-image"]}></div>
         ) : (
-          <>
+          <React.Fragment>
             <ImagesWithMemo images={images} />
             <div
               className={styles["form__cover--active"]}
               style={{ left: `${progress * 100}%` }}
             >
               <div className={styles["form__cover-image--active"]}>
-                {/* ref={coverRef} src={cover} */}
-                <img ref={coverRef} alt="uploaded-video-cover" />
+                {videoFile && (
+                  <video
+                    ref={DOMVideo}
+                    src={DOMVideoSrc}
+                    preload="auto"
+                    muted
+                  />
+                )}
               </div>
             </div>
-          </>
+          </React.Fragment>
         )}
       </div>
     </div>
@@ -257,4 +227,4 @@ const Images = ({ images }: ImagesProps) => {
 };
 const ImagesWithMemo = React.memo(Images);
 
-export default Cover;
+export default CoverNew;
