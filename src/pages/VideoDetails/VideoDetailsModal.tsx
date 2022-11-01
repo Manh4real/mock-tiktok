@@ -37,6 +37,7 @@ import { CommentCommandProvider, useCommentCommandContext } from "_/contexts";
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useVideoById } from "_/features/videos/videosSlice";
+import { toTag } from "_/utils";
 
 function VideoDetailsModal() {
   const navigate = useNavigate();
@@ -125,7 +126,7 @@ function VideoDetailsModal() {
             )}
           </header>
           <div className={styles["content"]}>
-            <div className={styles["desc"]}>{video.description}</div>
+            <div className={styles["desc"]}>{toTag(video.description)}</div>
             <div className={styles["audio"]}>
               <h4>
                 <Link

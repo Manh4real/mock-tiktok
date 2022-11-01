@@ -10,6 +10,7 @@ import Skeletons from "./Skeletons";
 
 // types
 import { Video } from "_/types";
+import { toTag } from "_/utils";
 
 interface Props {
   loading: boolean;
@@ -44,7 +45,7 @@ const ProfileVideos = ({ loading, videos }: Props) => {
           />
         </div>
         <div className={clsx(styles["content"], "text-overflow-elipse")}>
-          <h3 className="text-overflow-elipse">{video.description}</h3>
+          <h3 className="text-overflow-elipse">{toTag(video.description)}</h3>
         </div>
       </div>
     ));

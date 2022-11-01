@@ -91,7 +91,7 @@ const CoverNew = ({
       const timeID = setTimeout(function () {
         video.currentTime = Math.floor((i * video.duration) / IMAGES_NUM);
         i++;
-      }, 200);
+      }, 100);
 
       timeIDs.push(timeID);
     };

@@ -40,6 +40,7 @@ import { CommentCommandProvider } from "_/contexts";
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
 import { addAccount } from "_/features/accounts/accountsSlice";
+import { toTag } from "_/utils";
 
 type ProgressState = "start" | "loading" | "fulfilled";
 
@@ -146,7 +147,7 @@ function VideoDetailsPage() {
           >
             <div className={styles["left__lower"]}>
               <div className={styles["content"]}>
-                <div className={styles["desc"]}>{video.description}</div>
+                <div className={styles["desc"]}>{toTag(video.description)}</div>
                 <div className={styles["audio"]}>
                   <h4>
                     <Link
