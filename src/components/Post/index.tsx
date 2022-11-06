@@ -33,6 +33,7 @@ import {
 import { useAccountById } from "_/features/accounts/accountsSlice";
 
 interface Props {
+  index: number;
   item: VideoInterface;
   createAutoplayScrollObserver: (
     props: AutoplayScrollObserverProps
@@ -40,7 +41,12 @@ interface Props {
   unsubscribe: (observer: AutoplayScrollObserver) => void;
 }
 
-function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
+function Post({
+  index,
+  item,
+  createAutoplayScrollObserver,
+  unsubscribe,
+}: Props) {
   const author = useAccountById(item.user_id) || item.user;
   const authorName =
     author.full_name || `${author.first_name} ${author.last_name}`;
@@ -64,8 +70,11 @@ function Post({ item, createAutoplayScrollObserver, unsubscribe }: Props) {
       },
     });
 
+    // Initially, first video plays
+    if (index === 0) videoRef.current.play();
+
     return () => unsubscribe(observer);
-  }, [createAutoplayScrollObserver, unsubscribe]);
+  }, [createAutoplayScrollObserver, unsubscribe, index]);
   //===============================================================
 
   return (

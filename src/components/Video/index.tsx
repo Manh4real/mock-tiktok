@@ -142,6 +142,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     try {
       await videoRef.current?.play();
     } catch (e: any) {
+      setPlaying(false);
+      videoRef.current?.pause();
       console.log({ postId }, e.message);
     }
   }, [isReady, error, postId]);

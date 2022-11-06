@@ -105,10 +105,11 @@ const Posts = ({ type = "for-you" }: Props) => {
       }
     >
       <div className={styles["posts"]}>
-        {posts.map((post) => {
+        {posts.map((post, index) => {
           return (
             <Post
               key={post.id}
+              index={index}
               item={post}
               createAutoplayScrollObserver={createAutoplayScrollObserver}
               unsubscribe={unsubscribe}
