@@ -72,9 +72,19 @@ const Message = () => {
   return (
     <p className={styles["message"]}>
       Want to comment? Please
-      <Link to={routes.login + redirectUrlSearchParam}>Login</Link>
+      <Link
+        to={routes.login + redirectUrlSearchParam}
+        className="pink-font hover-underlined margin-inline-3"
+      >
+        Login
+      </Link>
       or
-      <Link to={routes.signup + redirectUrlSearchParam}>Signup</Link>
+      <Link
+        to={routes.signup + redirectUrlSearchParam}
+        className="pink-font hover-underlined margin-inline-3"
+      >
+        Signup
+      </Link>
     </p>
   );
 };

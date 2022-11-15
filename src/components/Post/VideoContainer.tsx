@@ -22,6 +22,7 @@ const VideoContainer = ({ video }: Props, ref: React.Ref<VideoRefObject>) => {
   const videoRef = useRef<VideoRefObject>({
     pause: () => {},
     play: () => {},
+    muted: () => {},
   });
   useImperativeHandle(ref, () => videoRef.current);
 

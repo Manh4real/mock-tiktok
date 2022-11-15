@@ -117,6 +117,7 @@ export type ViewerPermission = ("comment" | "duet" | "stitch")[];
 export interface VideoRefObject {
   pause: () => void;
   play: () => void;
+  muted: (value: boolean) => void;
 }
 
 export type VideoListType = "for-you" | "following" | "profile";

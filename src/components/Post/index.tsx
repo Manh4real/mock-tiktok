@@ -57,6 +57,7 @@ function Post({
   const videoRef = useRef<VideoRefObject>({
     pause: () => {},
     play: () => {},
+    muted: (value: boolean) => value,
   });
   const ref = useRef<HTMLDivElement>(null);
 
@@ -71,7 +72,11 @@ function Post({
     });
 
     // Initially, first video plays
-    if (index === 0) videoRef.current.play();
+    if (index === 0) {
+      videoRef.current.muted(true);
+      videoRef.current.play();
+      videoRef.current.muted(false);
+    }
 
     return () => unsubscribe(observer);
   }, [createAutoplayScrollObserver, unsubscribe, index]);

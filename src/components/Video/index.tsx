@@ -85,6 +85,11 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
         setIsReady(true);
         setPlaying(true);
       },
+      muted: (value: boolean) => {
+        if (videoRef.current) {
+          videoRef.current.muted = value;
+        }
+      },
     }),
     [changeVideoRef, currentVideo.postId, dispatch, postId]
   );
