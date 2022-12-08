@@ -18,7 +18,7 @@ enum State {
 }
 
 function PhoneEmailSignup({ at = FormLocation.MODAL }: FormProps) {
-  const [state, setState] = useState<State>(State.WITH_PHONE);
+  const [state, setState] = useState<State>(State.WITH_EMAIL);
 
   return (
     <React.Fragment>
@@ -34,7 +34,7 @@ function PhoneEmailSignup({ at = FormLocation.MODAL }: FormProps) {
           {state === State.WITH_EMAIL && (
             <WithEmailSignup
               at={at}
-              toggleToEmail={() => setState(State.WITH_EMAIL)}
+              toggleToPhone={() => setState(State.WITH_PHONE)}
             />
           )}
         </div>

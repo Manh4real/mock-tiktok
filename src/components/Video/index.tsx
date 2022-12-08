@@ -212,7 +212,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
         [styles["has--windowHeight"]]: hasWindowHeight,
       })}
     >
-      {isReady && !error ? (
+      {isReady && !error && (
         <video
           {...otherProps}
           className={clsx(styles["video"], className)}
@@ -231,10 +231,16 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
           onError={handleError}
           onVolumeChange={handleVolumeChange}
         />
-      ) : (
-        placeholder && (
-          <img className={styles["placeholder"]} src={placeholder} alt="" />
-        )
+      )}
+
+      {placeholder && (
+        <img
+          className={clsx(styles["placeholder"], {
+            [styles["placeholder--show"]]: !(isReady && !error),
+          })}
+          src={placeholder}
+          alt=""
+        />
       )}
 
       {loading && <Loading />}

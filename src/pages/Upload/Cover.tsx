@@ -219,7 +219,10 @@ const Cover = ({
             <ImagesWithMemo images={images} />
             <div
               className={styles["form__cover--active"]}
-              style={{ left: `${progress * 100}%` }}
+              style={{
+                left: `clamp(7%, ${progress * 100}%, 93%)`,
+                background: "black",
+              }}
             >
               <div className={styles["form__cover-image--active"]}>
                 {/* ref={coverRef} src={cover} */}

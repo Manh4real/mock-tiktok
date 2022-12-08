@@ -109,7 +109,10 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
         <div className={styles["title"]}>Log in</div>
         <div className={styles["form__content"]}>
           <div className={clsx(styles["row"], styles["form__desc"])}>
-            Phone
+            <span>
+              Phone
+              <small style={{ marginLeft: 10 }}>(Just for illustration!)</small>
+            </span>
             <Link
               to={routes.login + "/email" + redirectSearchParams}
               replace={replace}

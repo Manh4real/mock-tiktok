@@ -35,7 +35,7 @@ import { signup } from "_/features/currentUser/currentUserSlice";
 
 interface Props {
   at: FormLocation;
-  toggleToEmail: () => void;
+  toggleToPhone: () => void;
 }
 
 function WithEmailSignup(props: Props) {
@@ -46,7 +46,7 @@ function WithEmailSignup(props: Props) {
   );
 }
 
-const Form = ({ at, toggleToEmail }: Props) => {
+const Form = ({ at, toggleToPhone }: Props) => {
   const dispatch = useAppDispatch();
   const { handleClose: clearModal } = useLoginModalToggle();
 
@@ -130,7 +130,7 @@ const Form = ({ at, toggleToEmail }: Props) => {
     <>
       <BirthdayInput setIsAllowed={setIsAllowed_birthday} />
       <div className={clsx(styles["row"], styles["form__desc"])}>
-        <EmailSignupDesc onClick={toggleToEmail} />
+        <EmailSignupDesc onClick={toggleToPhone} />
       </div>
       <EmailInput setIsAllowed={setIsAllowed_email} />
       <PasswordInput setIsAllowed={setIsAllowed_password} />

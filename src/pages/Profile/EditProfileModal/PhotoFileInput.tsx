@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import clsx from "clsx";
 
 // icons
@@ -6,6 +7,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 
 // components
 import Image from "_/components/Image";
+import EditPhotoSection from "./EditPhotoSection";
 
 // styles
 import styles from "./EditProfileModal.module.scss";
@@ -28,29 +30,55 @@ const PhotoFileInput = ({
   isValid,
   initialValue: _initialValue,
   inputProps,
+  isEmpty,
+  reset: _reset,
 }: Props) => {
   const [initialValue, setInitialValue] = useState<string>(_initialValue);
 
   const { file, url } = inputProps;
 
+  // ⚠️====================================================================
+  const [editing, setEditing] = useState<boolean>(false);
+  const [editedUrl, setEditedUrl] = useState<string>("");
+
+  const cancelEditing = useCallback(() => {
+    setEditing(false);
+  }, []);
+
+  const reset = () => {
+    _reset();
+  };
+  // ======================================================================
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (initialValue !== "") setInitialValue("");
-
     inputProps.onChange(e);
+    setEditing(true);
+    e.target.value = "";
   };
 
   //
   useEffect(() => {
-    if (!file) return;
+    if (!file || !editedUrl) return;
 
     setIsAllowed({
       value: file,
       isValid: !(initialValue === "" && !isValid),
     });
-  }, [setIsAllowed, file, initialValue, isValid]);
+  }, [setIsAllowed, file, initialValue, isValid, editedUrl]);
 
   return (
-    <>
+    <React.Fragment>
+      {editing &&
+        ReactDOM.createPortal(
+          <EditPhotoSection
+            imageUrl={url}
+            reset={reset}
+            setEditedUrl={setEditedUrl}
+            cancelEditing={cancelEditing}
+          />,
+          document.getElementById(styles["edit-photo"]) as HTMLElement
+        )}
       <label
         htmlFor="profile-photo"
         className={clsx("flex-center", styles["photo-file-label"])}
@@ -58,9 +86,13 @@ const PhotoFileInput = ({
         <div style={{ width: 96, position: "relative" }}>
           <Image
             className={clsx("circle")}
-            src={initialValue || url}
+            src={initialValue || editedUrl}
             width="100%"
             height="100%"
+            onLoad={() => {
+              // no longer need to read the blob so it's revoked
+              URL.revokeObjectURL(editedUrl);
+            }}
           />
           <div
             className={clsx(
@@ -68,14 +100,6 @@ const PhotoFileInput = ({
               "flex-center",
               styles["edit-icon"]
             )}
-            style={{
-              position: "absolute",
-              width: 32,
-              bottom: 0,
-              right: 0,
-              aspectRatio: "1",
-              borderRadius: "50%",
-            }}
           >
             <AiOutlineEdit />
           </div>
@@ -87,14 +111,13 @@ const PhotoFileInput = ({
         id="profile-photo"
         accept="image/*"
         onChange={handleChange}
-
         // ⚠️ CAN'T SET VALUE FOR INPUT TYPE FILE (USER DECIDES)
         // value={initialValue !== "" ? initialValue : inputProps.value}
       />
-      {initialValue === "" && !isValid && errorMessage !== "" && (
+      {initialValue === "" && !isEmpty && !isValid && errorMessage !== "" && (
         <p className={clsx("error-message", "small-font")}>{errorMessage}</p>
       )}
-    </>
+    </React.Fragment>
   );
 };
 

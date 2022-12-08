@@ -6,6 +6,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 
 // components
 import CustomButton from "_/components/CustomButton";
+import Tooltip from "_/components/Tooltip";
 
 // hoc
 import withInputValidation from "_/hoc/withInputValidation";
@@ -51,7 +52,18 @@ function CodeInput({
         )}
       >
         <div className={styles["input-container"]}>
-          <input type="text" placeholder="Enter 6-digit code" {...inputProps} />
+          <Tooltip
+            title="Just for illustration"
+            placement="bottom-start"
+            zIndex={99999}
+          >
+            <input
+              type="text"
+              placeholder="Enter 6-digit code"
+              {...inputProps}
+            />
+          </Tooltip>
+
           {hasError && (
             <div className={styles["input-alert-icon"]}>
               <FiAlertTriangle stroke="red" />

@@ -36,13 +36,16 @@ const useModal = () => {
             if (e.key === "Escape") {
                 setVisible(false);
                 document.body.style.overflow = "overlay";
+
+                //
+                dispatch(setModalStateClosed());
             }
         };
 
         window.addEventListener("keydown", handleCloseByKey);
 
         return () => window.removeEventListener("keydown", handleCloseByKey);
-    }, []);
+    }, [dispatch]);
 
     return {
         isOpened: visible,

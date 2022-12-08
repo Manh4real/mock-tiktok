@@ -58,4 +58,4 @@ const EmojiInput = ({ setValue }: EmojiInputProps) => {
   );
 };
 
-export default EmojiInput;
+export default React.memo(EmojiInput);

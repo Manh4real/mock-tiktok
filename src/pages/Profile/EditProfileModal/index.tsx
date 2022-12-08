@@ -85,7 +85,8 @@ const Form = ({ account, handleClose }: Props) => {
 
         alert("Updated profile.");
         handleClose(e); // close modal
-        //
+
+        // reload page if updated nickname
         navigate(
           result.nickname === account.nickname
             ? (0 as To)
@@ -250,6 +251,7 @@ const Form = ({ account, handleClose }: Props) => {
             </CustomButton>
           </div>
         </form>
+        <div id={styles["edit-photo"]}></div>
       </div>
     </Modal>
   );

@@ -10,13 +10,14 @@ import { Placement } from "@popperjs/core";
 interface Props {
   title: string;
   placement?: Placement;
+  zIndex?: number;
   children: JSX.Element;
 }
 
-function Tooltip({ title, placement = "bottom", children }: Props) {
+function Tooltip({ title, placement = "bottom", zIndex, children }: Props) {
   return (
     <Tippy
-      zIndex={10000}
+      zIndex={zIndex || 10000}
       delay={[0, 300]}
       placement={placement}
       content={

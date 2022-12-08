@@ -184,6 +184,12 @@ const CoverNew = ({
             <div
               className={styles["form__cover--active"]}
               style={{ left: `${progress * 100}%` }}
+
+              // style={{
+              //   left: `clamp(calc(82.4px / 2), calc(82.4px / 2 + ${
+              //     progress * 100
+              //   }%), calc(100% - calc(82.4px / 2)))`,
+              // }}
             >
               <div className={styles["form__cover-image--active"]}>
                 {videoFile && (

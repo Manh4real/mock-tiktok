@@ -63,7 +63,11 @@ const VideoUploader = ({
     <div className={styles["video-file-container"]}>
       {videoUrl && isValid ? (
         <div className={clsx("flex-center", styles["video-container"])}>
-          <UploadVideo src={videoUrl} className={styles["video"]} />
+          <UploadVideo
+            src={videoUrl}
+            className={styles["video"]}
+            autoPlay={true}
+          />
           <VideoName
             content={videoFile.name}
             onClick={() => {
