@@ -32,6 +32,7 @@ import {
 
 // components
 import ToTopButton from "_/components/ToTopButton";
+import Alert from "_/components/__Alert__/Alert";
 
 // icons
 import { Spinner } from "./components/icons";
@@ -55,6 +56,7 @@ const App = () => {
     "loading"
   );
 
+  // check network connection
   useEffect(() => {
     axios
       .get("https://picsum.photos/200/300")
@@ -108,13 +110,16 @@ const Main = () => {
   return (
     <CurrentVideoProvider>
       <React.Fragment>
+        <Alert />
+
+        {/* ROUTES */}
         <Routes location={backgroundLocation || location}>
           <Route element={<DefaultLayout />}>
             <Route path={routes.root} element={<Home />} />
             <Route path={routes.following} element={<Following />} />
             <Route path={routes.search} element={<Search />} />
             <Route path="/tag/:tagParam" element={<h1>Tag</h1>} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<NotFound title="Page not found." />} />
           </Route>
           <Route element={<FullWidthLayout />}>
             <Route path={routes.live} element={<h1>Live</h1>} />
@@ -151,6 +156,7 @@ const Main = () => {
             <Route path="/video/:videoId" element={<VideoDetails />} />
           </Routes>
         )}
+
         <ToTopButton />
       </React.Fragment>
     </CurrentVideoProvider>

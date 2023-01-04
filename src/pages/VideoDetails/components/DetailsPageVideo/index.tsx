@@ -18,6 +18,9 @@ import { VoiceRefObject, VideoTimeRefObject } from "./types";
 import { VideoRefObject } from "_/types";
 
 // Redux
+import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
+
 import { useCurrentVideo } from "_/features/currentVideo/currentVideoSlice";
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 
@@ -41,6 +44,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   } = props;
 
   // Redux
+  const dispatch = useAppDispatch();
   const currentVideo = useCurrentVideo();
   const currentUserInfo = useCurrentUserInfo();
   // ======================================================
@@ -75,7 +79,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const handleError = () => {
     setLoading(false);
     setError(true);
-    alert("Can't load the video.");
+    // alert("Can't load the video.");
+    dispatch(show({ message: "Can't load the video." }));
   };
   const handlePause = () => {
     setPlaying(false);

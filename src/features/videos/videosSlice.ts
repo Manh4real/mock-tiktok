@@ -16,6 +16,11 @@ const videosSlice = createSlice({
     name: "videos",
     initialState,
     reducers: {
+        addVideo: (state, action: PayloadAction<Video>) => {
+            console.log(action.payload);
+
+            videosAdapter.addOne(state, action.payload);
+        },
         setVideos: (state, action: PayloadAction<Video[]>) => {
             videosAdapter.upsertMany(state, action.payload)
         },
@@ -31,7 +36,7 @@ const videosSlice = createSlice({
     }
 });
 
-export const { setVideos, deleteVideo, updateVideo, resetVideos } = videosSlice.actions;
+export const { setVideos, addVideo, deleteVideo, updateVideo, resetVideos } = videosSlice.actions;
 export const {
     selectAll: selectAllVideos,
     selectById: selectVideoById,
@@ -46,6 +51,7 @@ export const useVideoById = (id: EntityId) => {
         (state: RootState) => selectVideoById(state, id)
     );
 }
+export const useVideoLike = (videoId: EntityId) => !!useVideoById(videoId)?.is_liked;
 
 export const useVideosEntities = () => useSelector(selectVideosEntities);
 

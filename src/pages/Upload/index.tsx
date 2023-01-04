@@ -32,6 +32,10 @@ import { ValidationType } from "_/validation/Validation";
 import { AllowedInputProperty } from "_/contexts/submit";
 import { Viewer, ViewerPermission as ViewerPermissionType } from "_/types";
 
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
+
 function Upload() {
   // page title
   useEffect(() => {
@@ -46,6 +50,8 @@ function Upload() {
 }
 
 const Form = () => {
+  const dispatch = useAppDispatch();
+
   const {
     discardEvent,
     setIsAllowed,
@@ -61,7 +67,8 @@ const Form = () => {
     e.preventDefault();
 
     if (loading) {
-      alert("You cannot return this action.");
+      // alert("You cannot return this action.");
+      dispatch(show({ message: "You cannot return this action." }));
       return;
     }
 
@@ -89,14 +96,18 @@ const Form = () => {
 
       uploadVideo(body)
         .then((data) => {
-          alert("Video uploaded.");
+          // alert("Video uploaded.");
+          dispatch(show({ message: "Video uploaded." }));
 
           navigate("/@" + data.user.nickname, {
             replace: true,
           });
         })
         .catch(() => {
-          alert("Failed to upload: Something went wrong.");
+          // alert("Failed to upload: Something went wrong.");
+          dispatch(
+            show({ message: "Failed to upload: Something went wrong." })
+          );
         })
         .finally(() => {
           setLoading(false);

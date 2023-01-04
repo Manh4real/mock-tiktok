@@ -17,7 +17,8 @@ import withLoginModal, { WithLoginModal } from "_/hoc/withLoginModal";
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 import { useCurrentVideo } from "_/features/currentVideo/currentVideoSlice";
 import { useAppDispatch } from "_/features/hooks";
-import { updateVideo } from "_/features/videos/videosSlice";
+import { updateVideo, useVideoById } from "_/features/videos/videosSlice";
+import { show } from "_/features/alert/alertSlice";
 
 // services
 import { dislikePost, likePost } from "_/services/post";
@@ -25,27 +26,22 @@ import { dislikePost, likePost } from "_/services/post";
 import { Video } from "_/types";
 
 interface Props extends WithLoginModal {
-  isLiked: boolean;
+  isLiked?: boolean;
   styles: {
     readonly [key: string]: string;
   };
   postId: number;
-  likesCount: number;
+  likesCount?: number;
 }
 
-const LikeButton = ({
-  isLiked,
-  styles,
-  postId,
-  likesCount,
-  showLoginModal,
-}: Props) => {
+const LikeButton = ({ styles, postId, showLoginModal }: Props) => {
   const isLoggedIn = useIsLoggedIn();
 
   const { postId: currentPostId } = useCurrentVideo();
 
   // const { active, value, toggle } = useLike({ postId, isLiked, likesCount });
   const dispatch = useAppDispatch();
+  const video = useVideoById(postId);
 
   const handleClick = useCallback(() => {
     if (!isLoggedIn) {
@@ -53,10 +49,14 @@ const LikeButton = ({
       return;
     }
 
+    if (!video) return;
+
     // toggle();
-    if (!isLiked) {
+    if (!video.is_liked) {
       likePost(postId)
         .then((video: Video) => {
+          console.log(video);
+
           dispatch(
             updateVideo({
               id: postId,
@@ -68,7 +68,8 @@ const LikeButton = ({
           );
         })
         .catch(() => {
-          alert("Can't like the video.");
+          // alert("Can't like the video.");
+          dispatch(show({ message: "Can't like the video." }));
         });
     } else {
       dislikePost(postId)
@@ -84,13 +85,16 @@ const LikeButton = ({
           );
         })
         .catch(() => {
-          alert("Can't unlike the video.");
+          // alert("Can't unlike the video.");
+          dispatch(show({ message: "Can't unlike the video." }));
         });
     }
-  }, [dispatch, isLiked, isLoggedIn, postId, showLoginModal]);
+  }, [dispatch, video, isLoggedIn, postId, showLoginModal]);
 
   // dom events
   useEffect(() => {
+    if (!video) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!e) return;
 
@@ -106,18 +110,18 @@ const LikeButton = ({
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showLoginModal, isLoggedIn, currentPostId, postId, handleClick]);
+  }, [video, showLoginModal, isLoggedIn, currentPostId, postId, handleClick]);
 
   return (
     <button onClick={handleClick} className={clsx(styles["like-button"])}>
       <span className={styles["icon"]}>
-        {isLiked && isLoggedIn ? (
+        {video && video.is_liked && isLoggedIn ? (
           <BsFillHeartFill className={styles["icon--active"]} fill="#FE2C55" />
         ) : (
           <BsFillHeartFill />
         )}
       </span>
-      <span>{numberCompact(likesCount)}</span>
+      <span>{numberCompact(video && video.likes_count)}</span>
     </button>
   );
 };

@@ -5,6 +5,7 @@ import modalReducer from "./modal/modalSlice"
 import currentVideoReducer from "./currentVideo/currentVideoSlice"
 import videosReducer from "./videos/videosSlice"
 import accountsReducer from "./accounts/accountsSlice"
+import alertReducer from './alert/alertSlice'
 
 export const store = configureStore({
     reducer: {
@@ -12,7 +13,8 @@ export const store = configureStore({
         modal: modalReducer,
         currentVideo: currentVideoReducer,
         videos: videosReducer,
-        accounts: accountsReducer
+        accounts: accountsReducer,
+        alert: alertReducer
     },
 })
 

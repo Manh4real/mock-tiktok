@@ -30,6 +30,9 @@ import { getVideo } from "_/services/video";
 // config
 import routes from "_/config/routes";
 
+// utils
+import { toTag } from "_/utils";
+
 // types
 import { Video as VideoInterface } from "_/types";
 
@@ -40,7 +43,7 @@ import { CommentCommandProvider } from "_/contexts";
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
 import { addAccount } from "_/features/accounts/accountsSlice";
-import { toTag } from "_/utils";
+import { addVideo as redux_addVideo } from "_/features/videos/videosSlice";
 
 type ProgressState = "start" | "loading" | "fulfilled";
 
@@ -63,6 +66,7 @@ function VideoDetailsPage() {
     getVideo(videoId)
       .then((data: VideoInterface) => {
         setVideo(data);
+        dispatch(redux_addVideo(data));
 
         dispatch(addAccount(data.user));
       })

@@ -69,6 +69,7 @@ const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
           placeholder="Add comment..."
           value={value}
           onChange={handleChange}
+          autoFocus
         />
         <EmojiInput setValue={setValue} />
       </div>

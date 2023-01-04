@@ -22,6 +22,9 @@ interface Position {
   y: number;
 }
 interface MouseDownPosition extends Position {}
+interface PreviousTransform extends Position {
+  scale: number;
+}
 interface InitialRect {
   offsetTop: number;
   offsetLeft: number;
@@ -52,7 +55,7 @@ function EditPhotoSection({
     x: 0,
     y: 0,
   });
-  const previousTransform = useRef<Position>({ x: 0, y: 0 });
+  const previousTransform = useRef<PreviousTransform>({ x: 0, y: 0, scale: 1 });
 
   const imageRef = useRef<HTMLImageElement>(null);
   const imageTransformRef = useRef<HTMLDivElement>(null);
@@ -141,6 +144,7 @@ function EditPhotoSection({
 
       const startOffsetTop = initialRect.current.offsetTop;
       const startOffsetLeft = initialRect.current.offsetLeft;
+
       const pivotX = startOffsetLeft + WIDTH / 3;
       const pivotY = startOffsetTop + HEIGHT / 3;
 
@@ -214,10 +218,20 @@ function EditPhotoSection({
     target: 1,
     onChange: (progress) => {
       // const scaleAmount = Math.max(1 + progress, progress * 4);
-      // const offsetLeft = (initialRect.current.w * (scaleAmount - 1)) / 2;
-      // const offsetTop = (initialRect.current.h * (scaleAmount - 1)) / 2;
-      // initialRect.current.offsetLeft += offsetLeft;
-      // initialRect.current.offsetTop += offsetTop;
+      // if (previousTransform.current) {
+      //   const increasedLeftAmount =
+      //     -(initialRect.current.w * (scaleAmount - 1)) / 2;
+      //   const increasedTopAmount =
+      //     (initialRect.current.h * (scaleAmount - 1)) / 2;
+      //   if (previousTransform.current.scale > scaleAmount) {
+      //     initialRect.current.offsetLeft += increasedLeftAmount;
+      //     initialRect.current.offsetTop -= increasedTopAmount;
+      //   } else {
+      //     initialRect.current.offsetLeft -= increasedLeftAmount;
+      //     initialRect.current.offsetTop += increasedTopAmount;
+      //   }
+      //   previousTransform.current.scale = scaleAmount;
+      // }
     },
   });
 

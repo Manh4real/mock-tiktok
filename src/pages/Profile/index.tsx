@@ -16,6 +16,7 @@ import ProfileVideos from "./ProfileVideos";
 import FollowSection from "./FollowSection";
 import FeedShare from "_/components/FeedShare";
 import EditButton from "./EditButton";
+import NotFoundProfileMessage from "./NotFoundProfileMessage";
 
 // hoc
 // import { withResetVideos } from "_/hoc";
@@ -93,8 +94,13 @@ function Profile() {
     );
   }, [account]);
 
-  if (loading) return <Spinner />;
-  if (!account) return <h1>Profile Not Found.</h1>;
+  if (loading)
+    return (
+      <div className="flex-center" style={{ height: "100%" }}>
+        <Spinner style={{ width: 30, height: 30 }} />
+      </div>
+    );
+  if (!account) return <NotFoundProfileMessage />;
 
   const accountName = `${account.first_name} ${account.last_name}`;
 

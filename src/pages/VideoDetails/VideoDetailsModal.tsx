@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import clsx from "clsx";
 import { Link, Navigate, To, useNavigate, useParams } from "react-router-dom";
@@ -19,7 +19,7 @@ import NavButtons from "./NavButtons";
 import CopyLinkSection from "./CopyLinkSection";
 
 // icons
-import { BsChevronLeft } from "react-icons/bs";
+// import { BsChevronLeft } from "react-icons/bs";
 import { Close, MusicNote } from "_/components/icons";
 
 // styles
@@ -47,6 +47,26 @@ function VideoDetailsModal() {
   const videoId = params.videoId;
 
   const currentUserInfo = useCurrentUserInfo();
+
+  const back = useCallback(() => {
+    navigate(backgroundLocation ? (-1 as To) : routes.root);
+
+    document.body.style.overflow = "overlay";
+  }, [backgroundLocation, navigate]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        back();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [back]);
 
   // Redux
   const video = useVideoById(videoId === undefined ? -1 : videoId);
@@ -170,16 +190,10 @@ function VideoDetailsModal() {
       <button
         className={clsx(styles["basic-button"], styles["closeBtn"])}
         onClick={() => {
-          navigate(backgroundLocation ? (-1 as To) : routes.root);
-
-          document.body.style.overflow = "overlay";
+          back();
         }}
       >
-        {backgroundLocation ? (
-          <Close />
-        ) : (
-          <BsChevronLeft style={{ marginLeft: -4 }} />
-        )}
+        <Close />
       </button>
     </div>,
     document.getElementById("modal-root") as HTMLElement

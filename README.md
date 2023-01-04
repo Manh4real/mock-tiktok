@@ -6,7 +6,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Note: Login/Signup with Email, Password
 
-# Current work: 20-Nov-22
+# Current work
 
+- Alert Component ✅
 - Crop & zoon photo in Edit Profile ⚠️
 - Save as file?

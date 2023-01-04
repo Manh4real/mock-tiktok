@@ -23,8 +23,9 @@ import { AllowedInputProperty } from "_/contexts/submit";
 import { Spinner } from "_/components/icons";
 
 // Redux
-import { updateCurrentUser } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
+import { updateCurrentUser } from "_/features/currentUser/currentUserSlice";
+import { show } from "_/features/alert/alertSlice";
 
 // types
 interface Props extends ModalProps {
@@ -83,7 +84,9 @@ const Form = ({ account, handleClose }: Props) => {
       .then((result) => {
         if (!result) return;
 
-        alert("Updated profile.");
+        // alert("Updated profile.");
+        dispatch(show({ message: "Updated profile." }));
+
         handleClose(e); // close modal
 
         // reload page if updated nickname
@@ -95,10 +98,18 @@ const Form = ({ account, handleClose }: Props) => {
         );
       })
       .catch(() => {
-        alert(
-          `Wrong information. 
-          \nMake sure the last name must be at least 2 characters. 
-          \nIf you had, avatar must be a file of type: jpeg, jpg, png, gif.`
+        // alert(
+        //   `Wrong information.
+        //   \nMake sure the last name must be at least 2 characters.
+        //   \nIf you had, avatar must be a file of type: jpeg, jpg, png, gif.`
+        // );
+
+        dispatch(
+          show({
+            message: `Wrong information. 
+                    \nMake sure the last name must be at least 2 characters. 
+                    \nIf you had, avatar must be a file of type: jpeg, jpg, png, gif.`,
+          })
         );
       })
       .finally(() => {

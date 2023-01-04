@@ -32,6 +32,7 @@ import { FormLocation } from "../types";
 // Redux
 import { useAppDispatch } from "_/features/hooks";
 import { signup } from "_/features/currentUser/currentUserSlice";
+import { show } from "_/features/alert/alertSlice";
 
 interface Props {
   at: FormLocation;
@@ -78,10 +79,12 @@ const Form = ({ at, toggleToPhone }: Props) => {
           clearModal(e);
         }
 
-        alert("Signed up.");
+        // alert("Signed up.");
+        dispatch(show({ message: "Signed up." }));
       })
       .catch(() => {
-        alert("This email has been used.");
+        // alert("This email has been used.");
+        dispatch(show({ message: "This email has been used." }));
       })
       .finally(() => {
         setLoading(false);

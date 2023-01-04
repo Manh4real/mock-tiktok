@@ -11,12 +11,18 @@ import styles from "./CommentSection.module.scss";
 import { deleteComment as api_deleteComment } from "_/services/comment";
 import { useCommentCommandContext } from "_/contexts";
 
+// Redux
+import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
+
 // types
 interface Props {
   commentId: number;
 }
 
 const DeleteCommentButton = ({ commentId }: Props) => {
+  const dispatch = useAppDispatch();
+
   const { deleteComment } = useCommentCommandContext();
 
   const handleClick = () => {
@@ -31,7 +37,8 @@ const DeleteCommentButton = ({ commentId }: Props) => {
         deleteComment(commentId);
       })
       .catch(() => {
-        alert("Cannot delete this comment.");
+        // alert("Cannot delete this comment.");
+        dispatch(show({ message: "Cannot delete this comment." }));
       });
   };
 

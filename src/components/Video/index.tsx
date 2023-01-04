@@ -27,11 +27,12 @@ import { VideoRefObject } from "_/types";
 import { useCurrentVideo as useCurrentVideo_context } from "_/contexts";
 
 // Redux
+import { useAppDispatch } from "_/features/hooks";
 import {
   changeVideo,
   useCurrentVideo,
 } from "_/features/currentVideo/currentVideoSlice";
-import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
 
 interface AdditionalVideoProps {
   postId?: number;
@@ -123,7 +124,9 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const handleError = () => {
     setLoading(false);
     setError(true);
-    alert("Can't load the video.");
+
+    // alert("Can't load the video.");
+    dispatch(show({ message: "Can't load the video." }));
   };
   const handlePause = () => {
     setPlaying(false);

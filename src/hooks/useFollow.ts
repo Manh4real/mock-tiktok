@@ -4,6 +4,7 @@ import { updateAccount, useIsFollowed } from "_/features/accounts/accountsSlice"
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
 
 import { followAccount, unfollowAccount } from "_/services/account";
 
@@ -17,7 +18,8 @@ const useFollow = (accountId: number) => {
         const currentUserId = currentUserInfo?.id;
 
         if (currentUserId === accountId) {
-            alert("You cannot follow yourself.");
+            // alert("You cannot follow yourself.");
+            dispatch(show({ message: "You cannot follow yourself." }))
             return;
         }
 
@@ -36,7 +38,9 @@ const useFollow = (accountId: number) => {
 
                     console.log(response.message);
 
-                    alert(`Follow Account Error: ${response.message || "Something went wrong"}.`);
+                    // alert(`Follow Account Error: ${response.message || "Something went wrong"}.`);
+                    dispatch(show({ message: `Follow Account Error: ${response.message || "Something went wrong"}.` }))
+
                 });
         } else {
             unfollowAccount(accountId)
@@ -53,7 +57,8 @@ const useFollow = (accountId: number) => {
 
                     console.log(response.message);
 
-                    alert(`Unfollow Account Error: ${response.message || "Something went wrong"}.`);
+                    // alert(`Unfollow Account Error: ${response.message || "Something went wrong"}.`);
+                    dispatch(show({ message: `Unfollow Account Error: ${response.message || "Something went wrong"}.` }))
                 });
         }
     };

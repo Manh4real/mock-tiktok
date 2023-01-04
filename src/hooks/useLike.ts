@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 // Redux
 import { useAppDispatch } from "_/features/hooks";
 import { updateVideo } from "_/features/videos/videosSlice";
+import { show } from "_/features/alert/alertSlice";
 
 // services
 import { dislikePost, likePost } from "_/services/post";
@@ -38,7 +39,8 @@ const useLike = ({ postId, isLiked, likesCount }: Props) => {
           );
         })
         .catch(() => {
-          alert("Can't like the video.");
+          // alert("Can't like the video.");
+          dispatch(show({ message: "Can't like the video." }));
         });
     } else {
       dislikePost(postId)
@@ -57,7 +59,8 @@ const useLike = ({ postId, isLiked, likesCount }: Props) => {
           );
         })
         .catch(() => {
-          alert("Can't unlike the video.");
+          // alert("Can't unlike the video.");
+          dispatch(show({ message: "Can't unlike the video." }));
         });
     }
   }, [active, dispatch, postId]);
