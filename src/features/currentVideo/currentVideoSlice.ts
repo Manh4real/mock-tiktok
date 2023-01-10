@@ -20,7 +20,7 @@ interface ChangeVideoPayload {
 const initialState: State = {
     currentVideo: {
         postId: -999,
-        muted: false,
+        muted: true,
         volume: 0.5,
     }
 }

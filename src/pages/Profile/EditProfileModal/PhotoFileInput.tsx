@@ -7,7 +7,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 
 // components
 import Image from "_/components/Image";
-import EditPhotoSection from "./EditPhotoSection";
+import EditPhotoSection from "./EditPhotoSection2";
 
 // styles
 import styles from "./EditProfileModal.module.scss";

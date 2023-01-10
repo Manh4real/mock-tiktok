@@ -21,28 +21,27 @@ interface Position {
   x: number;
   y: number;
 }
-interface PreviousTransform extends Position {
+interface Rect {
+  top: number;
+  left: number;
+}
+interface InitialRect extends Rect {
+  width: number;
+  height: number;
+}
+interface Transform extends Position, Rect {
   scale: number;
 }
-interface InitialRect {
-  top: number;
-  left: number;
-  offsetTop: number;
-  offsetLeft: number;
-  __TOP__: number;
-  __LEFT__: number;
-  __OFFSETTOP__: number;
-  __OFFSETLEFT__: number;
-  w: number;
-  h: number;
-}
-type MaskRect = {
-  top: number;
-  left: number;
-};
 
 const WIDTH = 360;
 const HEIGHT = 360;
+const START_TRANSFORM: Transform = {
+  x: 0,
+  y: 0,
+  top: 0,
+  left: 0,
+  scale: 1,
+};
 
 function EditPhotoSection({
   imageUrl,
@@ -52,98 +51,131 @@ function EditPhotoSection({
 }: Props) {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
+  //#region - TRANSFORM
   // =================================================================
   const [hasMouseDown, setHasMouseDown] = useState(false);
-  const initialRect = useRef<InitialRect>({
-    top: 0,
-    left: 0,
-    offsetTop: 0, // top of the mask to top of the image
-    offsetLeft: 0, // left of the mask to left of the image
-    __TOP__: 0,
-    __LEFT__: 0,
-    __OFFSETTOP__: 0,
-    __OFFSETLEFT__: 0,
-    w: 0,
-    h: 0,
-  });
   const mouseDownPosition = useRef<Position>({
     x: 0,
     y: 0,
   });
-  const transform = useRef<Position>({ x: 0, y: 0 });
-  const previousTransform = useRef<PreviousTransform>({ x: 0, y: 0, scale: 1 });
+  const previousTransform = useRef<Transform>({ ...START_TRANSFORM });
+  const transform = useRef<Transform>({ ...START_TRANSFORM });
 
   const maskRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const imageTransformRef = useRef<HTMLDivElement>(null);
-  const maskRect = useRef<MaskRect>({ top: 0, left: 0 });
 
+  const maskRect = useRef<Rect>({ top: 0, left: 0 });
+  const initialRect = useRef<InitialRect>({
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
+  });
+
+  const setImageSize = (scaleAmount: number = 1) => {
+    if (!imageRef.current) return;
+
+    imageRef.current.style.width =
+      scaleAmount * initialRect.current.width + "px";
+    imageRef.current.style.height =
+      scaleAmount * initialRect.current.height + "px";
+  };
   const transformImage = useCallback((offsetX: number, offsetY: number) => {
     if (!imageTransformRef.current) return;
 
     imageTransformRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
   }, []);
-
-  const transformImageWithContraint = useCallback(
+  const transformImageWithConstraint = useCallback(
     (
-      currentHor: number,
-      currentVer: number,
-      maxHor: number,
-      maxVer: number
+      extraTransformX: number,
+      extraTransformY: number,
+      offsetX: number = 0,
+      offsetY: number = 0
     ) => {
-      transform.current.x = currentHor;
-      transform.current.y = currentVer;
+      // scaled image size
+      const extraWidth =
+        ((transform.current.scale - 1) * initialRect.current.width) / 2;
+      const extraHeight =
+        ((transform.current.scale - 1) * initialRect.current.height) / 2;
 
-      if (transform.current.x <= -maxHor) {
-        transform.current.x = -maxHor;
-      } else if (transform.current.x >= maxHor) {
-        transform.current.x = maxHor;
+      const OFFSETY = offsetY;
+      const OFFSETX = offsetX;
+
+      const constraintY =
+        maskRect.current.top - initialRect.current.top + extraHeight + OFFSETY;
+      const constraintX =
+        maskRect.current.left - initialRect.current.left + OFFSETX + extraWidth;
+
+      transform.current.x = previousTransform.current.x + extraTransformX;
+      transform.current.y = previousTransform.current.y + extraTransformY;
+
+      // Y axis
+      if (transform.current.y >= constraintY) {
+        transform.current.top = maskRect.current.top + OFFSETY - extraHeight;
+
+        transform.current.y = constraintY;
+      } else if (transform.current.y < -constraintY) {
+        transform.current.top =
+          initialRect.current.top -
+          (maskRect.current.top - initialRect.current.top) +
+          extraHeight;
+
+        transform.current.y = -constraintY;
       }
 
-      if (transform.current.y <= -maxVer) {
-        transform.current.y = -maxVer;
-      } else if (transform.current.y >= maxVer) {
-        transform.current.y = maxVer;
+      // X axis
+      if (transform.current.x >= constraintX) {
+        transform.current.left = maskRect.current.left + OFFSETY - extraWidth;
+
+        transform.current.x = constraintX;
+      } else if (transform.current.x < -constraintX) {
+        transform.current.left =
+          initialRect.current.left -
+          (maskRect.current.left - initialRect.current.left) +
+          extraWidth;
+
+        transform.current.x = -constraintX;
       }
 
-      initialRect.current.top =
-        initialRect.current.__TOP__ + transform.current.y;
-      initialRect.current.left =
-        initialRect.current.__LEFT__ + transform.current.x;
+      transform.current.top =
+        initialRect.current.top - extraHeight + transform.current.y;
+      transform.current.left =
+        initialRect.current.left - extraWidth + transform.current.x;
 
+      // console.log(transform.current);
       transformImage(transform.current.x, transform.current.y);
     },
     [transformImage]
   );
 
-  // const scaleImage = (amount: number) => {
-  //   if (!imageTransformRef.current) return;
-
-  //   imageTransformRef.current.style.scale = `${amount}`;
-  // };
-
   const handleLoaded = () => {
-    previousTransform.current.x = 0;
-    previousTransform.current.y = 0;
-    previousTransform.current.scale = 1;
-
     imageTransformRef.current?.classList.remove(styles["removedTransition"]);
     transformImage(0, 0);
 
-    // if (imageRef.current) {
-    //   const w = imageRef.current.offsetWidth;
-    //   const h = imageRef.current.offsetHeight;
-    //   const aspect = w / h;
+    if (imageRef.current) {
+      const w = imageRef.current.offsetWidth;
+      const h = imageRef.current.offsetHeight;
+      const aspect = w / h;
 
-    //   if (aspect > 1) imageRef.current.height = HEIGHT;
-    //   else if (aspect < 1) imageRef.current.width = WIDTH;
-    //   else {
-    //     imageRef.current.width = WIDTH;
-    //     imageRef.current.height = HEIGHT;
-    //   }
-    // }
+      if (aspect > 1) {
+        imageRef.current.height = HEIGHT;
+        imageRef.current.style.height = HEIGHT + "px";
+        imageRef.current.style.width = "auto";
+      } else if (aspect < 1) {
+        imageRef.current.width = WIDTH;
+        imageRef.current.style.width = WIDTH + "px";
+        imageRef.current.style.height = "auto";
+      } else {
+        imageRef.current.width = WIDTH;
+        imageRef.current.height = HEIGHT;
 
-    initSize(imageRef);
+        imageRef.current.style.width = WIDTH + "px";
+        imageRef.current.style.height = HEIGHT + "px";
+      }
+    }
+
+    // initSize(imageRef);
     initSize(maskRef);
     setIsLoaded(true);
 
@@ -153,9 +185,11 @@ function EditPhotoSection({
         const h = ref.current.offsetHeight;
         const aspect = w / h;
 
-        if (aspect > 1) ref.current.style.height = HEIGHT + "px";
-        else if (aspect < 1) ref.current.style.width = WIDTH + "px";
-        else {
+        if (aspect > 1) {
+          ref.current.style.height = HEIGHT + "px";
+        } else if (aspect < 1) {
+          ref.current.style.width = WIDTH + "px";
+        } else {
           ref.current.style.width = WIDTH + "px";
           ref.current.style.height = HEIGHT + "px";
         }
@@ -168,19 +202,24 @@ function EditPhotoSection({
       const coords = imageTransformRef.current.getBoundingClientRect();
       const maskCoords = maskRef.current.getBoundingClientRect();
 
-      initialRect.current.offsetTop = maskCoords.top - coords.top;
-      initialRect.current.offsetLeft = maskCoords.left - coords.left;
-      initialRect.current.w = coords.width;
-      initialRect.current.h = coords.height;
+      // initialize rect
+      initialRect.current.width = coords.width;
+      initialRect.current.height = coords.height;
+      initialRect.current.top = coords.top;
+      initialRect.current.left = coords.left;
 
       maskRect.current.top = maskCoords.top;
       maskRect.current.left = maskCoords.left;
-      initialRect.current.top = coords.top;
-      initialRect.current.left = coords.left;
-      initialRect.current.__TOP__ = initialRect.current.top;
-      initialRect.current.__LEFT__ = initialRect.current.left;
-      initialRect.current.__OFFSETLEFT__ = initialRect.current.offsetLeft;
-      initialRect.current.__OFFSETTOP__ = initialRect.current.offsetTop;
+
+      transform.current.x = 0;
+      transform.current.y = 0;
+      transform.current.top = initialRect.current.top;
+      transform.current.left = initialRect.current.left;
+
+      previousTransform.current.x = 0;
+      previousTransform.current.y = 0;
+      previousTransform.current.top = transform.current.top;
+      previousTransform.current.left = transform.current.left;
     }
   };
 
@@ -200,39 +239,30 @@ function EditPhotoSection({
 
       if (!hasMouseDown) return;
 
-      const startOffsetTop = initialRect.current.offsetTop;
-      const startOffsetLeft = initialRect.current.offsetLeft;
+      const extraTransformX = e.clientX - mouseDownPosition.current.x;
+      const extraTransformY = e.clientY - mouseDownPosition.current.y;
 
-      // const pivotX = startOffsetLeft + WIDTH / 3;
-      // const pivotY = startOffsetTop + HEIGHT / 3;
-      const pivotX = startOffsetLeft;
-      const pivotY = startOffsetTop;
-
-      // starts to move at mousedown position
-      const offsetX =
-        previousTransform.current.x + e.clientX - mouseDownPosition.current.x;
-      const offsetY =
-        previousTransform.current.y + e.clientY - mouseDownPosition.current.y;
-
-      transformImageWithContraint(offsetX, offsetY, pivotX, pivotY);
+      transformImageWithConstraint(
+        extraTransformX,
+        extraTransformY,
+        WIDTH / 3,
+        HEIGHT / 3
+      );
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e: MouseEvent) => {
       if (!hasMouseDown) return;
 
       if (!imageTransformRef.current) return;
       imageTransformRef.current.classList.add(styles["removedTransition"]);
 
-      const startOffsetTop = initialRect.current.offsetTop;
-      const startOffsetLeft = initialRect.current.offsetLeft;
+      // check conditions and transform back
+      const extraTransformX = e.clientX - mouseDownPosition.current.x;
+      const extraTransformY = e.clientY - mouseDownPosition.current.y;
 
-      transformImageWithContraint(
-        transform.current.x,
-        transform.current.y,
-        startOffsetLeft,
-        startOffsetTop
-      );
+      transformImageWithConstraint(extraTransformX, extraTransformY);
 
+      // ends dragging, assigns previous transform
       previousTransform.current.x = transform.current.x;
       previousTransform.current.y = transform.current.y;
 
@@ -246,9 +276,11 @@ function EditPhotoSection({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [hasMouseDown, transformImageWithContraint]);
+  }, [hasMouseDown, transformImage, transformImageWithConstraint]);
+  //#endregion
+
+  //#region - ZOOM
   // =================================================================
-  // ZOOM
   const zoomBarRef = useRef<HTMLDivElement>(null);
   const {
     progress,
@@ -260,27 +292,32 @@ function EditPhotoSection({
     target: 1,
     onChange: (progress) => {
       const scaleAmount = Math.max(1 + progress, progress * 4);
-      const extraWidth = ((scaleAmount - 1) * initialRect.current.w) / 2;
-      const extraHeight = ((scaleAmount - 1) * initialRect.current.h) / 2;
 
-      initialRect.current.offsetLeft =
-        initialRect.current.__OFFSETLEFT__ + extraWidth;
-      initialRect.current.offsetTop =
-        initialRect.current.__OFFSETTOP__ + extraHeight;
+      setImageSize(scaleAmount);
 
-      transformImageWithContraint(
-        transform.current.x,
-        transform.current.y,
-        initialRect.current.offsetLeft,
-        initialRect.current.offsetTop
-      );
+      const prevScale = transform.current.scale;
+      previousTransform.current.scale = prevScale;
+      transform.current.scale = scaleAmount;
 
-      console.log(initialRect.current);
+      const extraWidth =
+        ((scaleAmount - prevScale) * initialRect.current.width) / 2;
+      const extraHeight =
+        ((scaleAmount - prevScale) * initialRect.current.height) / 2;
+
+      transform.current.top -= extraHeight;
+      transform.current.left -= extraWidth;
+
+      transformImageWithConstraint(0, 0);
+
+      previousTransform.current.x = transform.current.x;
+      previousTransform.current.y = transform.current.y;
     },
   });
+  //#endregion
 
-  const scaleAmount = Math.max(1 + progress, progress * 4);
+  // const scaleAmount = Math.max(1 + progress, progress * 4);
 
+  //#region - CROP
   // =================================================================
   const handleCancel = () => {
     cancelEditing();
@@ -292,29 +329,16 @@ function EditPhotoSection({
       return;
     }
     const canvas = document.createElement("canvas");
+
     const ctx = canvas.getContext("2d");
 
     const imageElement = imageRef.current;
-    const maskElement = maskRef.current;
-    const imageCoords = imageElement.getBoundingClientRect();
-    const maskCoords = maskElement.getBoundingClientRect();
-
-    // const w = imageElement.offsetWidth;
-    // const h = imageElement.offsetHeight;
-    // let aspect = w / h;
-
-    // if (aspect < 1) aspect = h / w;
 
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
 
-    const x = maskCoords.left - imageCoords.left;
-    const y = maskCoords.top - imageCoords.top;
-    // const x =
-    //   initialRect.current.offsetLeft - previousTransform.current.x;
-    // const y = initialRect.current.offsetTop - previousTransform.current.y;
-
-    console.log({ x, y });
+    const x = maskRect.current.left - transform.current.left;
+    const y = maskRect.current.top - transform.current.top;
 
     if (ctx) {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clear canvas
@@ -324,25 +348,27 @@ function EditPhotoSection({
         imageElement,
         x,
         y,
-        WIDTH * 2,
-        HEIGHT * 2,
+        ctx.canvas.width,
+        ctx.canvas.height,
         0,
         0,
-        WIDTH,
-        HEIGHT
+        ctx.canvas.width,
+        ctx.canvas.height
       );
+
       canvas.toBlob((blob) => {
         if (!blob) return;
 
         const url = URL.createObjectURL(blob);
 
-        // if (imageRef.current) imageRef.current.src = url;
-        setEditedUrl(url);
+        // setEditedUrl(url);
+        setEditedUrl(imageUrl);
       });
     }
 
     cancelEditing();
   };
+  //#endregion
 
   return (
     <div className={styles["editPhoto-container"]}>
@@ -363,7 +389,7 @@ function EditPhotoSection({
         </small>
       </header>
 
-      <main className={clsx(styles["editPhoto__main"], "flex-center")}>
+      <main className={clsx(styles["editPhoto__main"])}>
         <div
           className={clsx(styles["editPhoto__transformArea"], "flex-center")}
         >
@@ -371,9 +397,6 @@ function EditPhotoSection({
             ref={imageTransformRef}
             className={clsx(styles["editPhoto__transform"], "flex-center")}
             onMouseDown={handleMouseDown}
-            style={{
-              scale: `${scaleAmount}`,
-            }}
           >
             <img
               ref={imageRef}

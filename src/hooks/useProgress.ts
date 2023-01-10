@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 type Direction = "vertical" | "horizontal";
 
@@ -9,6 +9,12 @@ interface Options {
     onMouseUp?: (hadMouseDown: boolean) => void, /** Should be memoized */
     onMouseMove?: () => void, /** Should be memoized */
     onChange?: (newValue: number) => void /** Should be memoized */
+}
+interface Rect {
+    top: number;
+    height: number;
+    left: number;
+    width: number;
 }
 
 const useProgress = (
@@ -31,14 +37,13 @@ const useProgress = (
         setHasMouseDown(true);
     };
 
+    const rect = useRef<Rect>({ top: 0, height: 0, left: 0, width: 0 });
+
     const interactiveUpdateProgress = useCallback((
         e: MouseEvent | React.MouseEvent,
         callback?: (newProgress: number) => void
     ) => {
-        if (!ref.current) return;
-
-        const el = ref.current;
-        const { top, height, left, width } = el.getBoundingClientRect();
+        const { top, height, left, width } = rect.current;
 
         let newProgress: number = 0;
 
@@ -72,14 +77,23 @@ const useProgress = (
         if (onChange) onChange(newProgress);
         if (callback) callback(newProgress);
 
-    }, [direction, ref, min, max, onChange]);
+    }, [direction, min, max, onChange]);
+
+    // get rect
+    useEffect(() => {
+        if (ref.current) {
+            rect.current = ref.current.getBoundingClientRect();
+        }
+    }, [ref]);
 
     // window event
     useEffect(() => {
         const handleMouseUp = () => {
-            setHasMouseDown(false);
+            if (hasMouseDown) {
+                setHasMouseDown(false);
 
-            if (onMouseUp) onMouseUp(hasMouseDown);
+                if (onMouseUp) onMouseUp(hasMouseDown);
+            }
         };
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -89,7 +103,6 @@ const useProgress = (
 
                 if (onMouseMove) onMouseMove();
             }
-
         };
 
         window.addEventListener("mouseup", handleMouseUp);

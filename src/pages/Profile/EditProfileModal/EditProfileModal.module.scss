@@ -99,7 +99,7 @@
     }
 
     position: absolute;
-    width: 32;
+    width: 32px;
     bottom: 0;
     right: 0;
     aspect-ratio: 1;
@@ -188,10 +188,11 @@
     top: 50%;
     translate: -50% -50%;
 
-    width: max-content;
+    min-width: max-content;
+    min-height: max-content;
 
-    &.mouseUp {
-      transition: 0.2s all ease-in;
+    &.removedTransition {
+      transition: all 0.2s ease-out, scale 0ms;
     }
   }
   .editPhoto__photo {

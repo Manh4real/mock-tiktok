@@ -49,7 +49,6 @@ const Form = ({ account, handleClose }: Props) => {
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
   const [loading, setLoading] = useState<boolean>(false);
 
-  //
   const handleSubmit = (e: React.MouseEvent) => {
     // login with phone
     if (!isValidToUpdate) {
@@ -59,7 +58,6 @@ const Form = ({ account, handleClose }: Props) => {
 
     setLoading(true);
 
-    //
     console.log(isAllowed);
 
     const name = isAllowed.name.value.split(" ");
