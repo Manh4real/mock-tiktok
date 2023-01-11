@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 type Direction = "vertical" | "horizontal";
 
@@ -9,12 +9,6 @@ interface Options {
     onMouseUp?: (hadMouseDown: boolean) => void, /** Should be memoized */
     onMouseMove?: () => void, /** Should be memoized */
     onChange?: (newValue: number) => void /** Should be memoized */
-}
-interface Rect {
-    top: number;
-    height: number;
-    left: number;
-    width: number;
 }
 
 const useProgress = (
@@ -37,13 +31,13 @@ const useProgress = (
         setHasMouseDown(true);
     };
 
-    const rect = useRef<Rect>({ top: 0, height: 0, left: 0, width: 0 });
-
     const interactiveUpdateProgress = useCallback((
         e: MouseEvent | React.MouseEvent,
         callback?: (newProgress: number) => void
     ) => {
-        const { top, height, left, width } = rect.current;
+        if(!ref.current) return;
+
+        const { top, height, left, width } = ref.current.getBoundingClientRect();
 
         let newProgress: number = 0;
 
@@ -77,23 +71,14 @@ const useProgress = (
         if (onChange) onChange(newProgress);
         if (callback) callback(newProgress);
 
-    }, [direction, min, max, onChange]);
-
-    // get rect
-    useEffect(() => {
-        if (ref.current) {
-            rect.current = ref.current.getBoundingClientRect();
-        }
-    }, [ref]);
+    }, [direction, min, max, onChange, ref]);
 
     // window event
     useEffect(() => {
         const handleMouseUp = () => {
-            if (hasMouseDown) {
-                setHasMouseDown(false);
+            setHasMouseDown(false);
 
-                if (onMouseUp) onMouseUp(hasMouseDown);
-            }
+            if (onMouseUp) onMouseUp(hasMouseDown);
         };
 
         const handleMouseMove = (e: MouseEvent) => {
