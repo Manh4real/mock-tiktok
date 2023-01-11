@@ -342,8 +342,13 @@ function EditPhotoSection({
     const ctx = canvas.getContext("2d");
     const imageElement = imageRef.current;
 
-    canvas.width = WIDTH * imageAspect.current;
-    canvas.height = HEIGHT * imageAspect.current;
+    const scaleAmount = Math.max(1 + progress, progress * 4);
+
+    const width = WIDTH * imageAspect.current / scaleAmount;
+    const height = HEIGHT * imageAspect.current / scaleAmount;
+
+    canvas.width = width;
+    canvas.height = height;
 
     const x = maskRect.current.left - transform.current.left;
     const y = maskRect.current.top - transform.current.top;
@@ -353,14 +358,14 @@ function EditPhotoSection({
 
       ctx.drawImage(
         imageElement,
-        x * imageAspect.current,
-        y * imageAspect.current,
-        ctx.canvas.width * imageAspect.current,
-        ctx.canvas.height * imageAspect.current,
+        x * imageAspect.current / scaleAmount,
+        y * imageAspect.current / scaleAmount,
+        width,
+        height,
         0,
         0,
-        ctx.canvas.width * imageAspect.current,
-        ctx.canvas.height * imageAspect.current
+        width,
+        height
       );
     
       canvas.toBlob((blob) => {
