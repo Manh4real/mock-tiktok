@@ -389,13 +389,13 @@ function EditPhotoSection({
           <BsChevronLeft />
         </span>
         Edit photo
-        <small
+{/*        <small
           style={{ marginLeft: 20, fontSize: 16 }}
           className="flex-align-center"
         >
           <FiAlertTriangle color="orange" style={{ marginRight: 5 }} />
           Just for illustration
-        </small>
+        </small>*/}
       </header>
 
       <main className={clsx(styles["editPhoto__main"])}>
