@@ -11,12 +11,18 @@ import { useProgress } from "_/hooks";
 import { FiAlertTriangle } from "react-icons/fi";
 
 // types
+interface Edited {
+  url: string,
+  file: File
+}
+
 interface Props {
   imageUrl: string;
   reset: () => void;
   cancelEditing: () => void;
-  setEditedUrl: React.Dispatch<React.SetStateAction<string>>;
+  setEdited: React.Dispatch<React.SetStateAction<Edited>>
 }
+
 interface Position {
   x: number;
   y: number;
@@ -45,7 +51,7 @@ const START_TRANSFORM: Transform = {
 
 function EditPhotoSection({
   imageUrl,
-  setEditedUrl,
+  setEdited,
   cancelEditing,
   reset,
 }: Props) {
@@ -362,7 +368,10 @@ function EditPhotoSection({
 
         const url = URL.createObjectURL(blob);
 
-        setEditedUrl(url);
+        setEdited({
+          url,
+          file: new File([blob], "avatar", { type: "image/jpeg" })
+        });
       });
     }
 

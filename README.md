@@ -8,5 +8,4 @@ Note: Login/Signup with Email, Password
 
 # Current work
 
-- Alert Component ✅
-- Update Edit Photo in Edit Profile ✅
+- Be able to post cropped photo in Edit Photo ✅

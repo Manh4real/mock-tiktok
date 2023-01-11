@@ -24,6 +24,11 @@ interface Props extends WithFileValidation, SubmitContext__InputProps<File> {
   initialValue: string;
 }
 
+interface Edited {
+  url: string,
+  file: File
+}
+
 const PhotoFileInput = ({
   setIsAllowed,
   errorMessage,
@@ -39,7 +44,7 @@ const PhotoFileInput = ({
 
   // ⚠️====================================================================
   const [editing, setEditing] = useState<boolean>(false);
-  const [editedUrl, setEditedUrl] = useState<string>("");
+  const [edited, setEdited] = useState<Edited>({ url, file });
 
   const cancelEditing = useCallback(() => {
     setEditing(false);
@@ -59,13 +64,19 @@ const PhotoFileInput = ({
 
   //
   useEffect(() => {
-    if (!file || !editedUrl) return;
+    if (!file || !edited) return;
+
+    let postFile: File = file;
+
+    if(edited) {
+      postFile = edited.file;
+    }
 
     setIsAllowed({
-      value: file,
+      value: postFile,
       isValid: !(initialValue === "" && !isValid),
     });
-  }, [setIsAllowed, file, initialValue, isValid, editedUrl]);
+  }, [setIsAllowed, file, initialValue, isValid, edited]);
 
   return (
     <React.Fragment>
@@ -74,7 +85,7 @@ const PhotoFileInput = ({
           <EditPhotoSection
             imageUrl={url}
             reset={reset}
-            setEditedUrl={setEditedUrl}
+            setEdited={setEdited}
             cancelEditing={cancelEditing}
           />,
           document.getElementById(styles["edit-photo"]) as HTMLElement
@@ -86,12 +97,12 @@ const PhotoFileInput = ({
         <div style={{ width: 96, position: "relative" }}>
           <Image
             className={clsx("circle")}
-            src={initialValue || editedUrl}
+            src={initialValue || edited.url}
             width="100%"
             height="100%"
             onLoad={() => {
               // no longer need to read the blob so it's revoked
-              URL.revokeObjectURL(editedUrl);
+              URL.revokeObjectURL(edited.url);
             }}
           />
           <div
