@@ -8,7 +8,7 @@ import styles from "./EditProfileModal.module.scss";
 import { BsChevronLeft } from "react-icons/bs";
 import CustomButton from "_/components/CustomButton";
 import { useProgress } from "_/hooks";
-import { FiAlertTriangle } from "react-icons/fi";
+// import { FiAlertTriangle } from "react-icons/fi";
 
 // types
 interface Edited {
