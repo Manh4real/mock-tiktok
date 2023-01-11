@@ -73,6 +73,8 @@ function EditPhotoSection({
     height: 0,
   });
 
+  const imageAspect = useRef<number>(1);
+
   const setImageSize = (scaleAmount: number = 1) => {
     if (!imageRef.current) return;
 
@@ -99,6 +101,7 @@ function EditPhotoSection({
       const extraHeight =
         ((transform.current.scale - 1) * initialRect.current.height) / 2;
 
+      // additional
       const OFFSETY = offsetY;
       const OFFSETX = offsetX;
 
@@ -143,7 +146,6 @@ function EditPhotoSection({
       transform.current.left =
         initialRect.current.left - extraWidth + transform.current.x;
 
-      // console.log(transform.current);
       transformImage(transform.current.x, transform.current.y);
     },
     [transformImage]
@@ -173,6 +175,9 @@ function EditPhotoSection({
         imageRef.current.style.width = WIDTH + "px";
         imageRef.current.style.height = HEIGHT + "px";
       }
+
+      // save how big image after adjust size (for the accuracy of cropping image)
+      imageAspect.current = w / imageRef.current.width;
     }
 
     // initSize(imageRef);
@@ -315,8 +320,6 @@ function EditPhotoSection({
   });
   //#endregion
 
-  // const scaleAmount = Math.max(1 + progress, progress * 4);
-
   //#region - CROP
   // =================================================================
   const handleCancel = () => {
@@ -328,14 +331,13 @@ function EditPhotoSection({
       cancelEditing();
       return;
     }
+    
     const canvas = document.createElement("canvas");
-
     const ctx = canvas.getContext("2d");
-
     const imageElement = imageRef.current;
 
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
+    canvas.width = WIDTH * imageAspect.current;
+    canvas.height = HEIGHT * imageAspect.current;
 
     const x = maskRect.current.left - transform.current.left;
     const y = maskRect.current.top - transform.current.top;
@@ -343,26 +345,24 @@ function EditPhotoSection({
     if (ctx) {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clear canvas
 
-      // ⚠️🆘: Something goes wrong
       ctx.drawImage(
         imageElement,
-        x,
-        y,
-        ctx.canvas.width,
-        ctx.canvas.height,
+        x * imageAspect.current,
+        y * imageAspect.current,
+        ctx.canvas.width * imageAspect.current,
+        ctx.canvas.height * imageAspect.current,
         0,
         0,
-        ctx.canvas.width,
-        ctx.canvas.height
+        ctx.canvas.width * imageAspect.current,
+        ctx.canvas.height * imageAspect.current
       );
-
+    
       canvas.toBlob((blob) => {
         if (!blob) return;
 
         const url = URL.createObjectURL(blob);
 
-        // setEditedUrl(url);
-        setEditedUrl(imageUrl);
+        setEditedUrl(url);
       });
     }
 
@@ -385,7 +385,7 @@ function EditPhotoSection({
           className="flex-align-center"
         >
           <FiAlertTriangle color="orange" style={{ marginRight: 5 }} />
-          On Experiment
+          Just for illustration
         </small>
       </header>
 
@@ -404,6 +404,7 @@ function EditPhotoSection({
               alt="editing avatar"
               className={styles["editPhoto__photo"]}
               onLoad={handleLoaded}
+              id="sourceImage"
             />
           </div>
           <div ref={maskRef} className={styles["editPhoto__mask"]}></div>

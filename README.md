@@ -9,5 +9,4 @@ Note: Login/Signup with Email, Password
 # Current work
 
 - Alert Component ✅
-- Crop & zoon photo in Edit Profile ⚠️
-- Save as file?
+- Update Edit Photo in Edit Profile ✅
