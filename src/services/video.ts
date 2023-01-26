@@ -1,7 +1,48 @@
 import api from "_/api"
-import { ResponseWithPagination, Video, Viewer, ViewerPermission } from "_/types";
+import { 
+    ResponseWithPagination, 
+    Video, 
+    Viewer, 
+    ViewerPermission, 
+    IVideoListType 
+} from "_/types";
 import { getToken } from "./account";
 
+// ========================================================================
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+// Define a service using a base URL and expected endpoints
+export const videoApi = createApi({
+    reducerPath: 'videoApi',
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_URL }),
+    endpoints: (builder) => ({
+        getVideoById: builder.query<Video, string>({
+            query: (id) => `/videos/${id}`,
+        }),
+        getVideoList: builder.query<ResponseWithPagination<Video>, {
+            type: IVideoListType;
+            page: number
+        }>({
+            query: ({type = "for-you", page = 1}) => ({
+                url: `/videos`,
+                params: {
+                    type,
+                    page
+                },
+                headers: getToken()? {
+                    Authorization: `Bearer ${getToken()}`,
+                } : {}
+            })
+        })
+    }),
+})
+
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const { useGetVideoByIdQuery, useGetVideoListQuery } = videoApi;
+
+
+// ========================================================================
 export const getVideo = async (id: number | string) => {
     const token = getToken();
     let headers = {};

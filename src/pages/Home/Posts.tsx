@@ -8,9 +8,6 @@ import { Spinner } from "_/components/icons";
 import Post from "_/components/Post";
 import SomethingWentWrong from "_/components/SomethingWentWrong";
 
-// services
-import { getVideoList } from "_/services/video";
-
 // features
 import {
   AutoplayScroll,
@@ -22,29 +19,36 @@ import {
 import styles from "./Home.module.scss";
 
 // hooks
-import { usePagesFetch__videos } from "_/hooks/usePagesFetch";
+import { useInfiniteScrollVideosQuery } from "_/hooks/usePagesFetch";
 
 // types
-import { Video as VideoInterface } from "_/types";
-
 interface Props {
   type?: "for-you" | "following";
 }
 const Posts = ({ type = "for-you" }: Props) => {
-  const fetchVideoList = useCallback(
-    (page?: number) => {
-      return getVideoList(type, page);
-    },
-    [type]
-  );
+  // const fetchVideoList = useCallback(
+  //   (page?: number) => {
+  //     return getVideoList(type, page);
+  //   },
+  //   [type]
+  // );
+
+  // const {
+  //   results: posts,
+  //   hasMore,
+  //   error,
+  //   handleFetchNext: handleLoadMore
+  // } = usePagesFetch__videos<VideoInterface>(fetchVideoList, false, {
+  //   errorMessage: "Can't get video list of " + type,
+  // });
 
   const {
     results: posts,
     hasMore,
     error,
-    handleFetchNext: handleLoadMore,
-  } = usePagesFetch__videos<VideoInterface>(fetchVideoList, false, {
-    errorMessage: "Can't get video list of " + type,
+    handleFetchNext: handleLoadMore
+  } = useInfiniteScrollVideosQuery("for-you", false, {
+    errorMessage: "Can't get video list of ",
   });
 
   //===============================================================

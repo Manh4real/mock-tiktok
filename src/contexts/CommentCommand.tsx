@@ -15,8 +15,10 @@ interface ContextValue {
   comments: Comment[];
   commentsCount: number;
   loading: boolean;
+  error: boolean;
   addComment: (comment: Comment) => void;
   deleteComment: (commentId: number) => void;
+  reloadComments: () => void
 }
 interface Props {
   initialCommentsCount: number;
@@ -29,8 +31,10 @@ const initialValue: ContextValue = {
   comments: [],
   commentsCount: 0,
   loading: false,
+  error: false,
   addComment: () => {},
   deleteComment: () => {},
+  reloadComments: () => {}
 };
 
 const Context = React.createContext<ContextValue>(initialValue);
@@ -52,8 +56,10 @@ const CommentCommandProvider = ({
 
   const {
     loading,
+    error,
     results: comments,
     setResults: setComments,
+    refetch
   } = usePagesFetch<Comment>(fetchComments, false, {
     onSuccess: useCallback(
       (result: Comment[]) => {
@@ -61,6 +67,7 @@ const CommentCommandProvider = ({
       },
       [dispatch]
     ),
+    errorMessage: "Can't load comments."
   });
 
   const sortedComments = useMemo(() => {
@@ -108,8 +115,10 @@ const CommentCommandProvider = ({
     commentsCount:
       comments.length !== 0 ? comments.length : initialCommentsCount,
     loading,
+    error,
     addComment: addNewComment,
     deleteComment,
+    reloadComments: refetch
   };
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;

@@ -21,6 +21,7 @@ export const INCOMMON_MENU_LIST: PopupMenuItem[] = [
       title: "Language",
       content: [
         {
+          action: "lang",
           title: "Tiếng Việt",
         },
         {
@@ -29,27 +30,34 @@ export const INCOMMON_MENU_LIST: PopupMenuItem[] = [
             title: "English",
             content: [
               {
+                action: "lang",
                 title: "English (US)",
               },
               {
+                action: "lang",
                 title: "English (UK)",
               },
             ],
           },
         },
         {
+          action: "lang",
           title: "Italian",
         },
         {
+          action: "lang",
           title: "French",
         },
         {
+          action: "lang",
           title: "Indonesia",
         },
         {
+          action: "lang",
           title: "German",
         },
         {
+          action: "lang",
           title: "Espanol",
         },
         {
@@ -58,13 +66,18 @@ export const INCOMMON_MENU_LIST: PopupMenuItem[] = [
             title: "Thai",
             content: [
               {
+                action: "lang",
                 title: "Thai 1",
               },
-              { title: "Thai 2" },
+              { 
+                action: "lang",
+                title: "Thai 2" 
+              },
             ],
           },
         },
         {
+          action: "lang",
           title: "Brazilian",
         },
       ],

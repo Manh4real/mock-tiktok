@@ -14,7 +14,7 @@ import styles from "./Popper.module.scss";
 
 // types
 import { PopupMenuItem } from "_/types";
-import { PopperRefObject } from "./";
+import { PopperRefObject } from "./index";
 
 interface PopupMenuChildren {
   title: string;
@@ -60,20 +60,16 @@ const Popup = React.forwardRef(
         {current && (
           <ul className={styles["menuPopupList"]}>
             {current.title && (
-              <CustomButton
-                className={styles["menu-popup__title"]}
-                onClick={onBack}
-              >
-                <BsChevronLeft />
-                {current.title}
-              </CustomButton>
+              <BackButton onBack={onBack} title={current.title} />
             )}
             <div
               className={clsx(styles["menu-popup__items"], {
                 [styles["menu-popup__items--titled"]]: !!current.title,
               })}
             >
-              {current.content.map((item, i) => getItem(item, onNext, i))}
+              {current.content.map((item, i) => {
+                return <Item key={i} current={item} onNext={onNext} />
+              })}
             </div>
           </ul>
         )}
@@ -82,59 +78,80 @@ const Popup = React.forwardRef(
   }
 );
 
-function getItem(
+interface ItemProps {
   current: PopupMenuItem,
-  onNext: (item: PopupMenuItem) => void,
-  i: number
-) {
+  onNext: (item: PopupMenuItem) => void
+}
+
+const Item = ({ current, onNext }: ItemProps) => {
   // outer content
-  let content: JSX.Element = <></>;
-
-  // item props
-  const props = {
-    className: clsx(styles["menu-popup__item"], {
-      [styles["delimited"]]: current.delimited,
-    }),
-  };
-
-  // item inner content
-  const itemContent = (
-    <React.Fragment>
-      {current.icon} {current.title}
-    </React.Fragment>
-  );
-
-  if (current.to) {
-    // is a link
-    content = (
-      <Link to={current.to} {...props}>
-        {itemContent}
-      </Link>
-    );
-  } else if (current.modal) {
-    // has modal
-    content = (
-      <PopupItemModal className={props.className} modal={current.modal}>
-        {itemContent}
-      </PopupItemModal>
-    );
-  } else {
-    // is a button
-
-    // click event handler
-    const handleClick = () => {
-      if (current.children) onNext(current);
+  const content = useMemo(() => {
+    // item props
+    const props = {
+      className: clsx(styles["menu-popup__item"], {
+        [styles["delimited"]]: current.delimited,
+      }),
     };
 
-    // content
-    content = (
-      <div {...props} onClick={handleClick}>
-        {itemContent}
-      </div>
+    // item inner content
+    const itemContent = (
+      <React.Fragment>
+        {current.icon} {current.title}
+      </React.Fragment>
     );
-  }
+
+    if (current.to) {
+      // is a link
+      return (
+        <Link to={current.to} {...props}>
+          {itemContent}
+        </Link>
+      );
+    } else if (current.modal) {
+      // has modal
+      return (
+        <PopupItemModal className={props.className} modal={current.modal}>
+          {itemContent}
+        </PopupItemModal>
+      );
+    } else {
+      // is a button
+
+      // click event handler
+      const handleClick = () => {
+        if (current.children) onNext(current);
+        else if(current.action === "lang") {
+          alert("To set language to " + current.title);
+        }
+      };
+
+      return (
+        <div {...props} onClick={handleClick}>
+          {itemContent}
+        </div>
+      );
+    
+    }
+  }, [current, onNext]);
 
   return <li key={current.title}>{content}</li>;
+}
+
+interface BackButtonProps {
+  onBack: () => void,
+  title: string
+}
+
+const BackButton = ({onBack, title}: BackButtonProps) => {
+  return (
+    <CustomButton
+      className={styles["menu-popup__title"]}
+      onClick={onBack}
+    >
+      <BsChevronLeft />
+      {title}
+    </CustomButton>
+  );
 }
 
 export default Popup;

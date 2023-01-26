@@ -43,28 +43,45 @@ const AllowedCommentSection = ({
   videoId,
   authorId,
 }: Omit<Props, "isAllowed">) => {
-  const { comments, loading } = useCommentCommandContext();
+  const { comments, loading, error, reloadComments } = useCommentCommandContext();
 
   const isLoggedIn = useIsLoggedIn();
 
   const content = useMemo(() => {
-    if (!isLoggedIn) return <Message />;
-    else if (loading) return <Spinner />;
-    else if (!loading && comments.length <= 0) {
+    if (loading) return <Spinner />;
+    else if (!isLoggedIn) return <Message />;
+    else if(error) {
+      return (
+        <div>
+          <strong style={{ fontWeight: 400 }}>Can't load comments.</strong>
+          <span 
+            onClick={() => {
+              reloadComments();
+            }} 
+            className="pink-font hover-underlined button" 
+            style={{fontWeight: 400, marginInline: 5}}
+          >
+            Retry
+          </span>
+        </div>
+      );
+    } else if (comments.length <= 0) {
       return <strong style={{ fontWeight: "400" }}>No comments yet.</strong>;
-    } else if (!loading) {
+    } else {
       return comments.map((comment) => {
         return (
           <Comment key={comment.id} authorId={authorId} comment={comment} />
         );
       });
     }
-  }, [isLoggedIn, loading, comments, authorId]);
+  }, [isLoggedIn, loading, comments, authorId, error, reloadComments]);
 
   return (
     <React.Fragment>
       <div className={styles["comments"]}>
-        <div className={styles["container"]}>{content}</div>
+        <div className={styles["container"]}>
+          {content}
+        </div>
       </div>
       <CommentInput videoId={videoId} video_uuid={video_uuid} />
     </React.Fragment>

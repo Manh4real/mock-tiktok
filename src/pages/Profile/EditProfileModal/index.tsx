@@ -49,12 +49,24 @@ const Form = ({ account, handleClose }: Props) => {
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
   const [loading, setLoading] = useState<boolean>(false);
 
+  // check if user changed old info
+  const isValidToUpdate =
+    isAllGood &&
+    account &&
+    (account.nickname !== isAllowed.username.value ||
+      `${account.first_name} ${account.last_name}`.trim() !==
+        isAllowed.name.value ||
+      account.bio !== isAllowed.bio.value ||
+      !!isAllowed.photo.value);
+
   const handleSubmit = (e: React.MouseEvent) => {
     // login with phone
     if (!isValidToUpdate) {
       e.preventDefault();
       return;
     }
+
+    if(loading) return;
 
     setLoading(true);
 
@@ -165,16 +177,6 @@ const Form = ({ account, handleClose }: Props) => {
   //   });
   // }, []);
 
-  // check if user changed old info
-  const isValidToUpdate =
-    isAllGood &&
-    account &&
-    (account.nickname !== isAllowed.username.value ||
-      `${account.first_name} ${account.last_name}`.trim() !==
-        isAllowed.name.value ||
-      account.bio !== isAllowed.bio.value ||
-      !!isAllowed.photo.value);
-
   if (!account) return null;
 
   return (
@@ -244,7 +246,7 @@ const Form = ({ account, handleClose }: Props) => {
               className={clsx("grey-outlined", styles["cancel-button"])}
               onClick={(e: React.MouseEvent) => {
                 // clearModal();
-                handleClose(e);
+                handleClose(e); // close edit modal
               }}
             >
               Cancel
@@ -253,7 +255,7 @@ const Form = ({ account, handleClose }: Props) => {
               style={{ height: 36, minWidth: 96, width: 96 }}
               type="button"
               primary
-              disabled={!isValidToUpdate}
+              disabled={!isValidToUpdate || loading}
               onClick={handleSubmit}
             >
               {loading ? <Spinner style={{ width: 15, height: 15 }} /> : "Save"}

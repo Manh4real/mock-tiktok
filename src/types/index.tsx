@@ -4,8 +4,10 @@ export interface IconProps {
   solid?: boolean;
 }
 
+export type PopupMenuItemAction = "lang" | "mode??";
+
 export interface PopupMenuItem {
-  action?: string;
+  action?: PopupMenuItemAction;
   icon?: JSX.Element;
   title: string;
   to?: string;
@@ -121,6 +123,7 @@ export interface VideoRefObject {
 }
 
 export type VideoListType = "for-you" | "following" | "profile";
+export type IVideoListType = "for-you" | "following";
 
 //
 export type ResponseWithPagination<T> = {

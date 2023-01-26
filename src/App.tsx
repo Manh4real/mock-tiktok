@@ -51,9 +51,16 @@ import { useAppDispatch } from "_/features/hooks";
 import { initCurrentUser } from "_/features/currentUser/currentUserSlice";
 import { toggleMute } from "./features/currentVideo/currentVideoSlice";
 
+// types
+enum Status {
+  LOADING = "loading",
+  CONNECTED = "connected", 
+  NO_INTERNET = "no internet"
+}
+
 const App = () => {
-  const [status, setStatus] = useState<"loading" | "connected" | "no-internet">(
-    "loading"
+  const [status, setStatus] = useState<Status>(
+    Status.LOADING
   );
 
   // check network connection
@@ -61,15 +68,33 @@ const App = () => {
     axios
       .get("https://picsum.photos/200/300")
       .then(() => {
-        setStatus("connected");
+        setStatus(Status.CONNECTED);
       })
       .catch(() => {
-        setStatus("no-internet");
+        setStatus(Status.NO_INTERNET);
       });
+
+    // const handleOffline = () => {
+    //   setStatus(Status.NO_INTERNET);
+    //   console.log("Offline");
+    // }
+
+    // const handleOnline = () => {
+    //   setStatus(Status.CONNECTED);
+    //   console.log("Online");
+    // }
+
+    // window.addEventListener("offline", handleOffline);
+    // window.addEventListener("online", handleOnline);
+
+    // return () => {
+    //   window.removeEventListener("offline", handleOffline);
+    //   window.removeEventListener("online", handleOnline);
+    // }
   }, []);
 
-  if (status === "loading") return <Loading />;
-  else if (status === "no-internet") return <NoInternet />;
+  if (status === Status.LOADING) return <Loading />;
+  else if (status === Status.NO_INTERNET) return <NoInternet />;
   return <Main />;
 };
 
@@ -80,7 +105,10 @@ const Main = () => {
   useEffect(() => {
     if (backgroundLocation) {
       document.body.style.overflow = "hidden";
-    } else document.body.style.overflow = "overlay";
+    } else {
+      document.body.style.overflow = "auto";
+      document.body.style.overflow = "overlay";
+    }
   }, [backgroundLocation]);
 
   // Redux

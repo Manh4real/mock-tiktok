@@ -15,6 +15,7 @@ const useModal = () => {
         if (!hasModalOpened) return;
 
         setVisible(false);
+        document.body.style.overflow = "auto";
         document.body.style.overflow = "overlay";
 
         //
