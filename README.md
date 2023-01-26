@@ -8,4 +8,4 @@ Note: Login/Signup with Email, Password
 
 # Current work
 
-- Be able to post cropped photo in Edit Photo ✅
+- Update stuff
