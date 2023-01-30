@@ -290,7 +290,15 @@ export const useInfiniteScrollVideosQuery =
             dispatch(setAccounts(data.data.map(vids => vids.user)))
         }
 
-    }, [pauseCallCheck, data, dispatch]);
+        /*
+           dependencies should contain 'videos'.
+           Redux action 'resetVideos' calls makes 'videos' changes.
+           Meanwhile RTK Query memoized API calls' result so that 'data' doesn't change often.
+           => This callback doesn't execute properly
+                makes 'videos' act not right
+                makes UI not show videos correctly
+        */
+    }, [pauseCallCheck, data, videos, dispatch]);
 
     useEffect(() => {
         if(data) {

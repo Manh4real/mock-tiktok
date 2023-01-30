@@ -47,7 +47,7 @@ const Posts = ({ type = "for-you" }: Props) => {
     hasMore,
     error,
     handleFetchNext: handleLoadMore
-  } = useInfiniteScrollVideosQuery("for-you", false, {
+  } = useInfiniteScrollVideosQuery(type, false, {
     errorMessage: "Can't get video list of ",
   });
 
