@@ -43,6 +43,8 @@ const LikeButton = ({ styles, postId, showLoginModal }: Props) => {
   const dispatch = useAppDispatch();
   const video = useVideoById(postId);
 
+  console.log(video?.is_liked);
+
   const handleClick = useCallback(() => {
     if (!isLoggedIn) {
       showLoginModal();

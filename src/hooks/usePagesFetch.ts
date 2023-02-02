@@ -291,14 +291,14 @@ export const useInfiniteScrollVideosQuery =
         }
 
         /*
-           dependencies should contain 'videos'.
-           Redux action 'resetVideos' calls makes 'videos' changes.
+           dependencies should contain 'videos.length'.
+           Redux actions of videoSlice make 'videos' changes.
            Meanwhile RTK Query memoized API calls' result so that 'data' doesn't change often.
            => This callback doesn't execute properly
                 makes 'videos' act not right
                 makes UI not show videos correctly
         */
-    }, [pauseCallCheck, data, videos, dispatch]);
+    }, [pauseCallCheck, data, videos.length, dispatch]);
 
     useEffect(() => {
         if(data) {
