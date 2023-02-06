@@ -116,12 +116,6 @@ function EditPhotoSection({
     [transformImage]
   );
 
-  // const scaleImage = (amount: number) => {
-  //   if (!imageTransformRef.current) return;
-
-  //   imageTransformRef.current.style.scale = `${amount}`;
-  // };
-
   const handleLoaded = () => {
     previousTransform.current.x = 0;
     previousTransform.current.y = 0;
@@ -129,19 +123,6 @@ function EditPhotoSection({
 
     imageTransformRef.current?.classList.remove(styles["removedTransition"]);
     transformImage(0, 0);
-
-    // if (imageRef.current) {
-    //   const w = imageRef.current.offsetWidth;
-    //   const h = imageRef.current.offsetHeight;
-    //   const aspect = w / h;
-
-    //   if (aspect > 1) imageRef.current.height = HEIGHT;
-    //   else if (aspect < 1) imageRef.current.width = WIDTH;
-    //   else {
-    //     imageRef.current.width = WIDTH;
-    //     imageRef.current.height = HEIGHT;
-    //   }
-    // }
 
     initSize(imageRef);
     initSize(maskRef);
@@ -299,27 +280,17 @@ function EditPhotoSection({
     const imageCoords = imageElement.getBoundingClientRect();
     const maskCoords = maskElement.getBoundingClientRect();
 
-    // const w = imageElement.offsetWidth;
-    // const h = imageElement.offsetHeight;
-    // let aspect = w / h;
-
-    // if (aspect < 1) aspect = h / w;
-
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
 
     const x = maskCoords.left - imageCoords.left;
     const y = maskCoords.top - imageCoords.top;
-    // const x =
-    //   initialRect.current.offsetLeft - previousTransform.current.x;
-    // const y = initialRect.current.offsetTop - previousTransform.current.y;
 
     console.log({ x, y });
 
     if (ctx) {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // clear canvas
 
-      // ⚠️🆘: Something goes wrong
       ctx.drawImage(
         imageElement,
         x,
@@ -331,12 +302,12 @@ function EditPhotoSection({
         WIDTH,
         HEIGHT
       );
+      
       canvas.toBlob((blob) => {
         if (!blob) return;
 
         const url = URL.createObjectURL(blob);
 
-        // if (imageRef.current) imageRef.current.src = url;
         setEditedUrl(url);
       });
     }

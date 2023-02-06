@@ -18,10 +18,18 @@ import {
 // styles
 import styles from "./Home.module.scss";
 
+// services
+// import { getVideoList } from "_/services/video";
+
 // hooks
-import { useInfiniteScrollVideosQuery } from "_/hooks/usePagesFetch";
+import { 
+  // usePagesFetch__videos, 
+  useInfiniteScrollVideosQuery 
+} from "_/hooks/usePagesFetch";
 
 // types
+// import { Video as VideoInterface } from "_/types";
+
 interface Props {
   type?: "for-you" | "following";
 }

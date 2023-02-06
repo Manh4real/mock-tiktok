@@ -13,7 +13,7 @@ import { clearVideoId } from "_/features/currentVideo/currentVideoSlice";
 
 function Home() {
   const dispatch = useAppDispatch();
-  //
+  
   useEffect(() => {
     dispatch(resetVideos());
     dispatch(clearVideoId());

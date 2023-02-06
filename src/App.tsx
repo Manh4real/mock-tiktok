@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import axios from "axios";
@@ -59,9 +59,7 @@ enum Status {
 }
 
 const App = () => {
-  const [status, setStatus] = useState<Status>(
-    Status.LOADING
-  );
+  const [status, setStatus] = useState<Status>(Status.LOADING);
 
   // check network connection
   useEffect(() => {
@@ -73,24 +71,6 @@ const App = () => {
       .catch(() => {
         setStatus(Status.NO_INTERNET);
       });
-
-    // const handleOffline = () => {
-    //   setStatus(Status.NO_INTERNET);
-    //   console.log("Offline");
-    // }
-
-    // const handleOnline = () => {
-    //   setStatus(Status.CONNECTED);
-    //   console.log("Online");
-    // }
-
-    // window.addEventListener("offline", handleOffline);
-    // window.addEventListener("online", handleOnline);
-
-    // return () => {
-    //   window.removeEventListener("offline", handleOffline);
-    //   window.removeEventListener("online", handleOnline);
-    // }
   }, []);
 
   if (status === Status.LOADING) return <Loading />;
@@ -135,13 +115,24 @@ const Main = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dispatch]);
 
+  // console.log("Main", location);
+
+  const _backgroundLocation = useMemo(() => {
+
+    if(backgroundLocation) {
+      backgroundLocation.state = location.state;
+    }
+
+    return backgroundLocation;
+  }, [backgroundLocation, location.state]);
+
   return (
     <CurrentVideoProvider>
       <React.Fragment>
         <Alert />
 
         {/* ROUTES */}
-        <Routes location={backgroundLocation || location}>
+        <Routes location={_backgroundLocation || location}>
           <Route element={<DefaultLayout />}>
             <Route path={routes.root} element={<Home />} />
             <Route path={routes.following} element={<Following />} />
@@ -202,4 +193,4 @@ const Loading = () => {
   );
 };
 
-export default App;
+export default React.memo(App);

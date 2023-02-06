@@ -16,6 +16,7 @@ import DeleteVideoButton from "./DeleteVideoButton";
 interface Props {
   byCurrentUser: boolean;
   videoId: number;
+  // at?: "modal" | "page";
 }
 
 const VideoMoreButton = ({ byCurrentUser, videoId }: Props) => {

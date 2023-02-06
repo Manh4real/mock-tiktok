@@ -136,6 +136,7 @@ function VideoDetailsModal() {
             </AccountPopup>
             {currentUserInfo?.id === video.user_id && (
               <VideoMoreButton
+                // at="modal"
                 videoId={video.id}
                 byCurrentUser={currentUserInfo?.id === video.user_id}
               />

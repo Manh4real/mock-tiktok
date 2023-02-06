@@ -2,15 +2,15 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { ResponseWithPagination, Video, IVideoListType } from "_/types";
 
 // Redux
-import { useAppDispatch } from "_/features/hooks";
-import { selectAllVideos, setVideos } from "_/features/videos/videosSlice";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "_/features/hooks";
+
+import { selectAllVideos, setVideos } from "_/features/videos/videosSlice";
 import { setAccounts } from "_/features/accounts/accountsSlice";
 
 // services
 import { useGetVideoListQuery } from "_/services/video";
 
-// type Data<T> = ResponseWithPagination<T>;
 type FetchApiFunc<T> = (page?: number) => Promise<ResponseWithPagination<T> | undefined>;
 
 /**
@@ -155,14 +155,14 @@ export default usePagesFetch
 
 // ==================================================================================
 export const usePagesFetch__videos =
-<T extends Video>(
-    fetchApi: FetchApiFunc<T>,
-    pauseCallCheck: boolean = false,
-    options: Partial<{
-        errorMessage: string,
-        reachEndFunc: () => void,
+    <T extends Video>(
+        fetchApi: FetchApiFunc<T>,
+        pauseCallCheck: boolean = false,
+        options: Partial<{
+            errorMessage: string,
+            reachEndFunc: () => void,
 
-    }>
+        }>
     ) => {
     const { reachEndFunc = () => { } } = options;
 
@@ -174,6 +174,33 @@ export const usePagesFetch__videos =
     const [page, setPage] = useState<number>(-1);
     const [totalPage, setTotalPage] = useState<number>(1);
 
+    const f = useCallback(async (page: number) => {
+        setLoading(true);
+
+        try {
+            const data = await fetchApi(page + 1);
+
+            if(!data) return null;
+
+            dispatch(setVideos(data.data));
+            dispatch(setAccounts(data.data.map(vids => vids.user)))
+
+            const currentPage = data.meta.pagination.current_page;
+
+            setPage(currentPage);
+            setError(false);
+            
+            return data;
+        } catch(e: any) {
+            console.log("Error: ", options.errorMessage);
+            setError(true);
+
+            throw new Error(options.errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    }, [dispatch, fetchApi, options.errorMessage]);
+
     const handleFetchNext = () => {
         if (pauseCallCheck) return;
 
@@ -182,60 +209,21 @@ export const usePagesFetch__videos =
             return;
         }
 
-            // user scrolls too fast, faster than setLoading update
-            // if (loading) return;
-
-        setLoading(true);
-        fetchApi(page + 1)
-        .then((data) => {
-            if (!data) return;
-
-            dispatch(setVideos(data.data));
-            dispatch(setAccounts(data.data.map(vids => vids.user)))
-
-            const currentPage = data.meta.pagination.current_page;
-
-            setPage(currentPage);
-            setError(false);
-        })
-        .catch(() => {
-            console.log("Error: ", options.errorMessage);
-            setError(true);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+        f(page);
     }
 
-        //
     useEffect(() => {
         if (pauseCallCheck) return;
 
-        setLoading(true);
-        fetchApi()
+        f(page)
         .then((data) => {
-            if (!data) return;
+            if(!data) return;
 
-            dispatch(setVideos(data.data));
-            dispatch(setAccounts(data.data.map(vids => vids.user)))
-
-                    //
-            const currentPage = data.meta.pagination.current_page;
             const total = data.meta.pagination.total_pages;
-
-            setPage(currentPage);
             setTotalPage(total);
-            setError(false);
-        })
-        .catch(() => {
-            console.log("Error: ", options.errorMessage);
-            setError(true);
-        })
-        .finally(() => {
-            setLoading(false);
         });
-    }, [pauseCallCheck, fetchApi, options.errorMessage, dispatch]);
 
+    }, [pauseCallCheck, f, page]);
 
     return {
         results: videos,
@@ -271,6 +259,9 @@ export const useInfiniteScrollVideosQuery =
       page: page + 1
     });
 
+    //
+    // const location = useLocation();
+
     const handleFetchNext = () => {
         if (pauseCallCheck) return;
 
@@ -285,20 +276,24 @@ export const useInfiniteScrollVideosQuery =
     useEffect(() => {
         if (pauseCallCheck) return;
 
+        // let lastAction;
+        // if(typeof location.state === "object" && location.state) {
+        //     let locationState = location.state as ILocationState;
+        //     lastAction = locationState.action;
+        //     console.log("lastAction", lastAction);
+        // }
+        // console.log({l: location.state, lastAction});
+        // && lastAction === undefined 
+
         if (data) {
+            // dispatch(resetVideos());
+            // dispatch(clearVideoId());
+
             dispatch(setVideos(data.data));
             dispatch(setAccounts(data.data.map(vids => vids.user)))
         }
 
-        /*
-           dependencies should contain 'videos.length'.
-           Redux actions of videoSlice make 'videos' changes.
-           Meanwhile RTK Query memoized API calls' result so that 'data' doesn't change often.
-           => This callback doesn't execute properly
-                makes 'videos' act not right
-                makes UI not show videos correctly
-        */
-    }, [pauseCallCheck, data, videos.length, dispatch]);
+    }, [pauseCallCheck, data, dispatch]);
 
     useEffect(() => {
         if(data) {
@@ -316,3 +311,13 @@ export const useInfiniteScrollVideosQuery =
         handleFetchNext
     }
 };
+
+
+/*
+   dependencies should contain 'videos.length'.
+   Redux actions of videoSlice make 'videos' changes.
+   Meanwhile RTK Query memoized API calls' result so that 'data' doesn't change often.
+   => This callback doesn't execute properly
+        makes 'videos' act not right
+        makes UI not show videos correctly
+*/

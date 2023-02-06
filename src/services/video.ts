@@ -32,7 +32,8 @@ export const videoApi = createApi({
                 headers: getToken()? {
                     Authorization: `Bearer ${getToken()}`,
                 } : {}
-            })
+            }),
+            keepUnusedDataFor: 0
         })
     }),
 })
