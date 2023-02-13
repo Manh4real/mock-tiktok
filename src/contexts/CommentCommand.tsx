@@ -6,6 +6,7 @@ import { getComments } from "_/services/comment";
 // Redux
 import { updateVideo } from "_/features/videos/videosSlice";
 import { useAppDispatch } from "_/features/hooks";
+import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 
 // types
 import { Comment } from "_/types";
@@ -47,6 +48,8 @@ const CommentCommandProvider = ({
 }: Props) => {
   const dispatch = useAppDispatch();
 
+  const isLoggedIn = useIsLoggedIn();
+
   const fetchComments = useCallback(
     (page?: number) => {
       return getComments(video_uuid);
@@ -60,7 +63,7 @@ const CommentCommandProvider = ({
     results: comments,
     setResults: setComments,
     refetch
-  } = usePagesFetch<Comment>(fetchComments, false, {
+  } = usePagesFetch<Comment>(fetchComments, !isLoggedIn, {
     onSuccess: useCallback(
       (result: Comment[]) => {
         dispatch(setAccounts(result.map((comment) => comment.user)));

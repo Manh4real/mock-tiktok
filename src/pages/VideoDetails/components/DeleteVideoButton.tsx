@@ -12,6 +12,9 @@ import styles from "../VideoDetails.module.scss";
 import { deleteVideo as api_deleteVideo } from "_/services/video";
 import { useNavigate } from "react-router";
 
+// helpers
+import { overflowBodyHidden } from "_/helpers";
+
 // hooks
 // import { useBackgroundLocation } from "_/hooks";
 
@@ -68,7 +71,7 @@ const DeleteVideoButton = ({ videoId }: Props) => {
       //   back();
       // }
       back();
-      document.body.style.overflow = "overlay";
+      overflowBodyHidden(false);
     });
   };
 

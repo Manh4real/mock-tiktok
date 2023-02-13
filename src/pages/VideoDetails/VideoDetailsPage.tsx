@@ -39,6 +39,9 @@ import { Video as VideoInterface } from "_/types";
 // context
 import { CommentCommandProvider } from "_/contexts";
 
+// helpers
+import { overflowBodyHidden } from "_/helpers";
+
 // Redux
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
@@ -114,7 +117,7 @@ function VideoDetailsPage() {
           onClick={() => {
             navigate(routes.root);
 
-            document.body.style.overflow = "overlay";
+            overflowBodyHidden(false);
           }}
         >
           <BsChevronLeft fill="currentColor" size={24} />

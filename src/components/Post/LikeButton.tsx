@@ -55,7 +55,7 @@ const LikeButton = ({ styles, postId, showLoginModal }: Props) => {
     if (!video.is_liked) {
       likePost(postId)
         .then((video: Video) => {
-          console.log(video);
+          // console.log(video);
 
           dispatch(
             updateVideo({

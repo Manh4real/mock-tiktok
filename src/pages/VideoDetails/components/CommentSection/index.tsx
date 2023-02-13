@@ -48,8 +48,8 @@ const AllowedCommentSection = ({
   const isLoggedIn = useIsLoggedIn();
 
   const content = useMemo(() => {
-    if (loading) return <Spinner />;
-    else if (!isLoggedIn) return <Message />;
+    if (!isLoggedIn) return <Message />;
+    else if (loading) return <Spinner />;
     else if(error) {
       return (
         <div>

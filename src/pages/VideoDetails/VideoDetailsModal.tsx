@@ -38,7 +38,11 @@ import { CommentCommandProvider, useCommentCommandContext } from "_/contexts";
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useVideoById } from "_/features/videos/videosSlice";
 
+// utils
 import { toTag } from "_/utils";
+
+// helpers
+import { overflowBodyHidden } from "_/helpers";
 
 function VideoDetailsModal() {
   const navigate = useNavigate();
@@ -52,7 +56,7 @@ function VideoDetailsModal() {
   const back = useCallback(() => {
     navigate(backgroundLocation ? (-1 as To) : routes.root);
 
-    document.body.style.overflow = "overlay";
+    overflowBodyHidden(false);
   }, [backgroundLocation, navigate]);
 
   useEffect(() => {

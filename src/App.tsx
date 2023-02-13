@@ -46,6 +46,9 @@ import { useBackgroundLocation } from "./hooks";
 // variables
 import routes from "_/config/routes";
 
+// helpers
+import { overflowBodyHidden } from "_/helpers";
+
 // Redux
 import { useAppDispatch } from "_/features/hooks";
 import { initCurrentUser } from "_/features/currentUser/currentUserSlice";
@@ -83,12 +86,7 @@ const Main = () => {
   const { backgroundLocation } = useBackgroundLocation();
 
   useEffect(() => {
-    if (backgroundLocation) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-      document.body.style.overflow = "overlay";
-    }
+    overflowBodyHidden(Boolean(backgroundLocation));
   }, [backgroundLocation]);
 
   // Redux
@@ -115,10 +113,7 @@ const Main = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dispatch]);
 
-  // console.log("Main", location);
-
   const _backgroundLocation = useMemo(() => {
-
     if(backgroundLocation) {
       backgroundLocation.state = location.state;
     }

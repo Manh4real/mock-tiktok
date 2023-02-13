@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useAppDispatch } from "_/features/hooks";
 import { setModalStateClosed, setModalStateOpened, useModalOpeningState } from "_/features/modal/modalSlice";
 
+// helpers
+import { overflowBodyHidden } from "_/helpers";
+
 const useModal = () => {
     const [visible, setVisible] = useState<boolean>(false);
 
@@ -15,19 +18,15 @@ const useModal = () => {
         if (!hasModalOpened) return;
 
         setVisible(false);
-        document.body.style.overflow = "auto";
-        document.body.style.overflow = "overlay";
-
-        //
+        overflowBodyHidden(false);
         dispatch(setModalStateClosed());
     };
     const handleOpen = () => {
         if (hasModalOpened) return;
 
         setVisible(true);
-        document.body.style.overflow = "hidden";
+        overflowBodyHidden(true);
 
-        //
         dispatch(setModalStateOpened());
     };
 
@@ -36,9 +35,8 @@ const useModal = () => {
         const handleCloseByKey = function (e: KeyboardEvent) {
             if (e.key === "Escape") {
                 setVisible(false);
-                document.body.style.overflow = "overlay";
+                overflowBodyHidden(false);
 
-                //
                 dispatch(setModalStateClosed());
             }
         };

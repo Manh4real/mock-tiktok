@@ -18,14 +18,19 @@ function BirthdayInput({ setIsAllowed }: Props) {
     year: today.getFullYear(),
   });
 
-  const validate = (value: Birthday) =>
-    new Validation().validate(ValidationType.BIRTHDAY, JSON.stringify(value));
+  const validate = (value: Birthday) => {
+    return new Validation().validate(
+      ValidationType.BIRTHDAY,
+      JSON.stringify(value)
+    );
+  };
 
   const [isValid, setIsValid] = useState<boolean>(validate(value).isValid);
 
   useEffect(() => {
     setIsValid(validate(value).isValid);
   }, [value]);
+
   useEffect(() => {
     setIsAllowed({ value: JSON.stringify(value), isValid });
   }, [isValid, setIsAllowed, value]);

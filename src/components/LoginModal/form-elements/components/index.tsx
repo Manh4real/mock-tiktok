@@ -13,6 +13,9 @@ interface AlertIconProps {
     [index: string]: string | number;
   };
 }
+interface InputErrorMessageProps {
+  message: string | JSX.Element;
+}
 
 export const AlertIcon = ({ style }: AlertIconProps) => {
   return (
@@ -22,11 +25,7 @@ export const AlertIcon = ({ style }: AlertIconProps) => {
   );
 };
 
-export const InputErrorMessage = ({
-  message,
-}: {
-  message: string | JSX.Element;
-}) => {
+export const InputErrorMessage = ({ message }: InputErrorMessageProps) => {
   return (
     <p className={clsx(styles["row"], styles["input-error-message"])}>
       {message}

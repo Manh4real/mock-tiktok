@@ -12,6 +12,14 @@ import { setAccounts } from "_/features/accounts/accountsSlice";
 import { useGetVideoListQuery } from "_/services/video";
 
 type FetchApiFunc<T> = (page?: number) => Promise<ResponseWithPagination<T> | undefined>;
+// type Status = "idle" | "pending" | "resolved" | "error";
+
+enum Status {
+    IDLE = "idle",
+    PENDING = "pending",
+    RESOLVED = "resolved",
+    ERROR = "error"
+}
 
 /**
  * fetchApi, onSuccess function must be memoized, otherwise component will re-render infinitely
@@ -34,8 +42,9 @@ const usePagesFetch = <T extends { id: number }> (
     } = options;
 
     const [results, setResults] = useState<T[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<boolean>(false);
+
+    const [status, setStatus] = useState<Status>(Status.IDLE);
+
     const [page, setPage] = useState<number>(-1);
     const [totalPage, setTotalPage] = useState<number>(1);
 
@@ -56,9 +65,9 @@ const usePagesFetch = <T extends { id: number }> (
             return;
         }
 
-        if (loading) return;
+        if(status === Status.PENDING) return;
+        setStatus(Status.PENDING);
 
-        setLoading(true);
         fetchApi(page + 1)
             .then((data) => {
                 if (!data) return;
@@ -69,19 +78,17 @@ const usePagesFetch = <T extends { id: number }> (
 
                 setPage(currentPage);
                 if (onSuccess) onSuccess(data.data);
-                setError(false);
+                setStatus(Status.RESOLVED);
             })
             .catch(() => {
-                setError(true);
+                setStatus(Status.ERROR);
+
                 console.log("Error: ", options.errorMessage);
             })
-            .finally(() => {
-                setLoading(false);
-            });
     }
 
     const refetch = useCallback(() => {
-        setLoading(true);
+        setStatus(Status.PENDING);
         fetchApi()
             .then((data) => {
                 if (!data) return;
@@ -95,23 +102,21 @@ const usePagesFetch = <T extends { id: number }> (
                 setPage(currentPage);
                 setTotalPage(total);
 
-                setError(false);
+                setStatus(Status.RESOLVED);
                 if (onSuccess) onSuccess(data.data);
             })
             .catch(() => {
-                setError(true);
+                setStatus(Status.ERROR);
                 console.log("Error: ", options.errorMessage);
             })
-            .finally(() => {
-                setLoading(false);
-            });
     }, [fetchApi, onSuccess, options.errorMessage]);
 
-        //
+    //
     useEffect(() => {
         if (pauseCallCheck) return;
 
-        setLoading(true);
+        setStatus(Status.PENDING);
+
         fetchApi()
             .then((data) => {
                 if (!data) return;
@@ -125,23 +130,21 @@ const usePagesFetch = <T extends { id: number }> (
                 setPage(currentPage);
                 setTotalPage(total);
 
-                setError(false);
+                setStatus(Status.RESOLVED);
                 if (onSuccess) onSuccess(data.data);
             })
             .catch(() => {
-                setError(true);
+                setStatus(Status.ERROR);
                 console.log("Error: ", options.errorMessage);
             })
-            .finally(() => {
-                setLoading(false);
-            });
     }, [pauseCallCheck, fetchApi, options.errorMessage, onSuccess]);
 
 
     return {
         results: saveResults,
-        loading,
-        error,
+        idle: status === Status.IDLE,
+        loading: status === Status.PENDING,
+        error: status === Status.ERROR,
         hasMore: page < totalPage,
         end: page >= totalPage,
         setResults,
@@ -160,8 +163,7 @@ export const usePagesFetch__videos =
         pauseCallCheck: boolean = false,
         options: Partial<{
             errorMessage: string,
-            reachEndFunc: () => void,
-
+            reachEndFunc: () => void
         }>
     ) => {
     const { reachEndFunc = () => { } } = options;
@@ -169,13 +171,13 @@ export const usePagesFetch__videos =
     const videos = useSelector(selectAllVideos);
     const dispatch = useAppDispatch();
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<boolean>(false);
+    const [status, setStatus] = useState<Status>(Status.IDLE);
+
     const [page, setPage] = useState<number>(-1);
     const [totalPage, setTotalPage] = useState<number>(1);
 
     const f = useCallback(async (page: number) => {
-        setLoading(true);
+        setStatus(Status.PENDING);
 
         try {
             const data = await fetchApi(page + 1);
@@ -188,16 +190,14 @@ export const usePagesFetch__videos =
             const currentPage = data.meta.pagination.current_page;
 
             setPage(currentPage);
-            setError(false);
+            setStatus(Status.RESOLVED)
             
             return data;
         } catch(e: any) {
             console.log("Error: ", options.errorMessage);
-            setError(true);
+            setStatus(Status.ERROR);
 
             throw new Error(options.errorMessage);
-        } finally {
-            setLoading(false);
         }
     }, [dispatch, fetchApi, options.errorMessage]);
 
@@ -227,8 +227,8 @@ export const usePagesFetch__videos =
 
     return {
         results: videos,
-        loading,
-        error,
+        loading: status === Status.PENDING,
+        error: status === Status.ERROR,
         hasMore: page < totalPage,
         end: page >= totalPage,
         setPage,
@@ -283,7 +283,7 @@ export const useInfiniteScrollVideosQuery =
         //     console.log("lastAction", lastAction);
         // }
         // console.log({l: location.state, lastAction});
-        // && lastAction === undefined 
+        // && lastAction === undefined
 
         if (data) {
             // dispatch(resetVideos());
