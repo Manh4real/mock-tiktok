@@ -16,8 +16,8 @@ import {
   CodeInput,
 } from "_/components/LoginModal/form-elements";
 
-import WithEmailLogin from "./WithEmailLogin";
-import ResetPassword from "./ResetPassword";
+// import WithEmailLogin from "./WithEmailLogin";
+// import ResetPassword from "./ResetPassword";
 import Footer from "./Footer";
 
 // context
@@ -34,6 +34,8 @@ import { useRedirect } from "_/hooks";
 import { ValidationType } from "_/validation/Validation";
 import { AllowedInputProperty } from "_/contexts/submit";
 import { FormLocation, FormProps } from "../types";
+
+import { ILoginModalContentType } from "_/components/LoginModal/types";
 
 const WithPhoneLogin = (props: FormProps) => {
   return (
@@ -119,7 +121,8 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
               onClick={(e) => {
                 atModalFunc(() => {
                   e.preventDefault();
-                  pushHistory(<WithEmailLogin />, replace);
+                  // pushHistory(<WithEmailLogin />, replace);
+                  pushHistory(ILoginModalContentType.LOGIN_W_EMAIL, replace);
                   return;
                 });
               }}
@@ -145,7 +148,8 @@ function Form({ at = FormLocation.MODAL }: FormProps) {
                 onClick={(e) => {
                   atModalFunc(() => {
                     e.preventDefault();
-                    pushHistory(<ResetPassword />);
+                    // pushHistory(<ResetPassword />);
+                    pushHistory(ILoginModalContentType.LOGIN_PHONE_RESET_PW);
                   });
                 }}
               >

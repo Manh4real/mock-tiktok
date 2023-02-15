@@ -20,6 +20,9 @@ import { PhoneEmailSignup } from "./signup";
 // context
 import { History } from ".";
 
+// types
+import { ILoginModalContentType } from "_/components/LoginModal/types";
+
 function SignUpStart() {
   const { pushHistory } = useContext(History);
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -36,7 +39,10 @@ function SignUpStart() {
           <Link
             to="/"
             className={styles["box"]}
-            onClick={() => pushHistory(<PhoneEmailSignup />)}
+            onClick={() => {
+              // pushHistory(<PhoneEmailSignup />)
+              pushHistory(ILoginModalContentType.SIGNUP_W_EMAIL_PHONE);
+            }}
           >
             <div className={styles["icon"]}>
               <Person />

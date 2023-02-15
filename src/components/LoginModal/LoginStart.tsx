@@ -8,7 +8,7 @@ import { Person } from "_/components/icons";
 import { AiFillApple } from "react-icons/ai";
 
 // components
-import { LoginFooter, WithEmailLogin } from "./login";
+import { LoginFooter } from "./login";
 
 // styles
 import styles from "./LoginModal.module.scss";
@@ -18,6 +18,7 @@ import { History } from ".";
 
 // types
 import { FormLocation, FormProps } from "./types";
+import { ILoginModalContentType } from "_/components/LoginModal/types";
 
 function LoginStart({ at = FormLocation.MODAL }: FormProps) {
   const { pushHistory } = useContext(History);
@@ -32,7 +33,8 @@ function LoginStart({ at = FormLocation.MODAL }: FormProps) {
             className={styles["box"]}
             onClick={(e: React.MouseEvent) => {
               e.preventDefault();
-              pushHistory(<WithEmailLogin />);
+              // pushHistory(<WithEmailLogin />);
+              pushHistory(ILoginModalContentType.LOGIN_W_EMAIL);
             }}
           >
             <div className={styles["icon"]}>

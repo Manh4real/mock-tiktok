@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import clsx from "clsx";
 
 // icons
@@ -26,6 +26,10 @@ import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 const FollowingAccountsSection = () => {
   const isLoggedIn = useIsLoggedIn();
 
+  const fetchFollowingAccounts = useCallback((page?: number) => {
+    return getFollowingAccounts(page);
+  }, []);
+
   const {
     results: accounts,
     end,
@@ -33,7 +37,7 @@ const FollowingAccountsSection = () => {
     setResults,
     setPage,
     handleFetchNext,
-  } = usePagesFetch<AccountInterface>(getFollowingAccounts, !isLoggedIn, {
+  } = usePagesFetch<AccountInterface>(fetchFollowingAccounts, !isLoggedIn, {
     errorMessage: "Error: Can't get following accounts.",
   });
 

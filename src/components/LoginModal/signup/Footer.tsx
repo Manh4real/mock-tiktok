@@ -10,11 +10,13 @@ import routes from "_/config/routes";
 import { History } from "..";
 
 // components
-import LoginStart from "../LoginStart";
+// import LoginStart from "../LoginStart";
 import { FormLocation } from "_/components/LoginModal/types";
 import { Link } from "react-router-dom";
 
 // types
+import { ILoginModalContentType } from "_/components/LoginModal/types";
+
 interface Props {
   at?: FormLocation;
 }
@@ -26,7 +28,8 @@ function Footer({ at = FormLocation.MODAL }: Props) {
   const handleClick = (e: React.MouseEvent) => {
     if (at === FormLocation.MODAL) {
       e.preventDefault();
-      pushHistory(<LoginStart />, replace);
+      // pushHistory(<LoginStart />, replace);
+      pushHistory(ILoginModalContentType.LOGIN_START, replace);
     }
   };
 

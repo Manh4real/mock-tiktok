@@ -17,7 +17,7 @@ const videosSlice = createSlice({
     initialState,
     reducers: {
         addVideo: (state, action: PayloadAction<Video>) => {
-            console.log(action.payload);
+            // console.log(action.payload);
 
             videosAdapter.addOne(state, action.payload);
         },
