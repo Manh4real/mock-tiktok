@@ -8,4 +8,5 @@ Note: Login/Signup with Email, Password
 
 # Current work
 
-- Update stuff
+- Update stuff (due to API change and others) ✅
+- Test Firebase (Google/Facebook Auth) ✅

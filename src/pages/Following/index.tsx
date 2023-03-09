@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
@@ -23,7 +23,7 @@ function Following() {
   const dispatch = useAppDispatch();
 
   //
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(resetVideos());
     dispatch(clearVideoId());
   }, [dispatch]);

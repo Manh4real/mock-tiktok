@@ -68,6 +68,13 @@ function VideoDetailsPage() {
     setState("loading");
     getVideo(videoId)
       .then((data: VideoInterface) => {
+        // due to API change ("allows" field may be a string)
+        if(data.allows instanceof String || typeof data.allows === "string") {
+          data.allows = JSON.parse(data.allows.toString());
+        } else if (!Array.isArray(data.allows)) {
+          data.allows = [];
+        }
+
         setVideo(data);
         dispatch(redux_addVideo(data));
 

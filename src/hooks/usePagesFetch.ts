@@ -259,9 +259,6 @@ export const useInfiniteScrollVideosQuery =
       page: page + 1
     });
 
-    //
-    // const location = useLocation();
-
     const handleFetchNext = () => {
         if (pauseCallCheck) return;
 
@@ -276,21 +273,24 @@ export const useInfiniteScrollVideosQuery =
     useEffect(() => {
         if (pauseCallCheck) return;
 
-        // let lastAction;
-        // if(typeof location.state === "object" && location.state) {
-        //     let locationState = location.state as ILocationState;
-        //     lastAction = locationState.action;
-        //     console.log("lastAction", lastAction);
-        // }
-        // console.log({l: location.state, lastAction});
-        // && lastAction === undefined
-
         if (data) {
             // dispatch(resetVideos());
             // dispatch(clearVideoId());
 
-            dispatch(setVideos(data.data));
-            dispatch(setAccounts(data.data.map(vids => vids.user)))
+            // const newData = data.data;
+            // due to API change ("allows" field may be a string)
+            const newData = data.data.map((video: Video) => {
+                const newVideo = {...video};
+
+                if(newVideo.allows instanceof String || typeof newVideo.allows === "string") {
+                  newVideo.allows = JSON.parse(newVideo.allows.toString());
+                }
+                
+                return newVideo;
+            });
+
+            dispatch(setVideos(newData));
+            dispatch(setAccounts(newData.map(vids => vids.user)))
         }
 
     }, [pauseCallCheck, data, dispatch]);

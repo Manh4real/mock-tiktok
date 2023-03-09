@@ -79,6 +79,13 @@
 
   position: relative;
 
+  &[disabled] {
+    opacity: 0.8;
+  }
+  &[disabled] .icon {
+    opacity: 0.8;
+  }
+
   .icon {
     display: inline-flex;
     position: absolute;

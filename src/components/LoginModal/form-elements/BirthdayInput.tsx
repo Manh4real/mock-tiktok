@@ -38,7 +38,7 @@ function BirthdayInput({ setIsAllowed }: Props) {
   return (
     <div>
       <div className={clsx(styles["row"], styles["form__desc"])}>
-        When's your birthday?
+        When's your birthday?<small>⚠️  Just for illustration</small>
       </div>
 
       <div className={clsx(styles["row"], styles["date__selector"])}>

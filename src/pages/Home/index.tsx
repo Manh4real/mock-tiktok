@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 
 // variables
 import routes, { pagesTitle } from "_/config/routes";
@@ -14,7 +14,7 @@ import { clearVideoId } from "_/features/currentVideo/currentVideoSlice";
 function Home() {
   const dispatch = useAppDispatch();
   
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(resetVideos());
     dispatch(clearVideoId());
   }, [dispatch]);

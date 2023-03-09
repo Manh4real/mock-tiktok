@@ -9,6 +9,9 @@ import { AiFillApple } from "react-icons/ai";
 
 import { BsChevronDown } from "react-icons/bs";
 
+// components
+import Tooltip from "_/components/Tooltip";
+
 // config
 import routes from "_/config/routes";
 
@@ -17,6 +20,9 @@ import { useRedirect } from "_/hooks";
 
 // styles
 import styles from "../Login/Login.module.scss";
+
+// firebase
+import { signInWithGoogle, signInWithFacebook } from "_/firebase";
 
 const Signup = () => {
   const { redirectSearchParamString: redirectSearchParams } = useRedirect();
@@ -47,27 +53,41 @@ const Signup = () => {
                 </div>
                 Use phone or email
               </Link>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FaFacebook fill="#1877F2" />
-                </div>
-                Continue with Facebook
-              </button>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FcGoogle />
-                </div>
-                Continue with Google
-              </button>
+
+              <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
+                <button className={styles["box"]} onClick={() => {
+                  console.log("Logging in with Facebook...");
+
+                  signInWithFacebook();
+                }}>
+                  <div className={styles["icon"]}>
+                    <FaFacebook fill="#1877F2" />
+                  </div>
+                  Continue with Facebook
+                </button>
+              </Tooltip>
+
+              <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
+                <button className={styles["box"]} onClick={() => {
+                  console.log("Logging in with Google...");
+                  signInWithGoogle();
+                }}>
+                  <div className={styles["icon"]}>
+                    <FcGoogle />
+                  </div>
+                  Continue with Google
+                </button>
+              </Tooltip>
+
               {expanded && (
                 <>
-                  <button className={styles["box"]}>
+                  <button className={styles["box"]} disabled>
                     <div className={styles["icon"]}>
                       <FaTwitter fill="#1DA1F2" />
                     </div>
                     Continue with Twitter
                   </button>
-                  <button className={styles["box"]}>
+                  <button className={styles["box"]} disabled>
                     <div className={styles["icon"]}>
                       <AiFillApple />
                     </div>

@@ -17,6 +17,7 @@
     "buffer": "^6.0.3",
     "clsx": "^1.1.1",
     "emoji-picker-react": "^3.6.2",
+    "firebase": "^9.17.1",
     "json-server": "^0.17.0",
     "moment": "^2.29.4",
     "react": "^18.1.0",

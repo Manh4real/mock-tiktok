@@ -7,6 +7,9 @@ import { FcGoogle } from "react-icons/fc";
 import { Person } from "_/components/icons";
 import { AiFillApple } from "react-icons/ai";
 
+// components
+import Tooltip from "_/components/Tooltip";
+
 // config
 import routes from "_/config/routes";
 
@@ -15,7 +18,12 @@ import { useRedirect } from "_/hooks";
 
 // styles
 import styles from "./Login.module.scss";
+
+// Redux
 import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+
+// firebase
+import { signInWithGoogle, signInWithFacebook } from "_/firebase";
 
 const Login = () => {
   const { redirectSearchParamString: redirectSearchParams, redirect } =
@@ -47,49 +55,63 @@ const Login = () => {
                 </div>
                 Use phone / email / username
               </Link>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FaFacebook fill="#1877F2" />
-                </div>
-                Continue with Facebook
-              </button>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FcGoogle />
-                </div>
-                Continue with Google
-              </button>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FcGoogle />
-                </div>
-                Continue with Google
-              </button>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FcGoogle />
-                </div>
-                Continue with Google
-              </button>
-              <button className={styles["box"]}>
-                <div className={styles["icon"]}>
-                  <FcGoogle />
-                </div>
-                Continue with Google
-              </button>
-              <button className={styles["box"]}>
+
+              <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
+                <button className={styles["box"]} onClick={() => {
+                  console.log("Logging in with Facebook...");
+
+                  signInWithFacebook();
+                }}>
+                  <div className={styles["icon"]}>
+                    <FaFacebook fill="#1877F2" />
+                  </div>
+                  Continue with Facebook
+                </button>
+              </Tooltip>
+
+              <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
+                <button className={styles["box"]} onClick={() => {
+                  console.log("Logging in with Google...");
+                  signInWithGoogle();
+                }}>
+                  <div className={styles["icon"]}>
+                    <FcGoogle />
+                  </div>
+                  Continue with Google
+                </button>
+              </Tooltip>
+
+              <button className={styles["box"]} disabled>
                 <div className={styles["icon"]}>
                   <FcGoogle />
                 </div>
                 Continue with Google
               </button>
-              <button className={styles["box"]}>
+              <button className={styles["box"]} disabled>
+                <div className={styles["icon"]}>
+                  <FcGoogle />
+                </div>
+                Continue with Google
+              </button>
+              <button className={styles["box"]} disabled>
+                <div className={styles["icon"]}>
+                  <FcGoogle />
+                </div>
+                Continue with Google
+              </button>
+              <button className={styles["box"]} disabled>
+                <div className={styles["icon"]}>
+                  <FcGoogle />
+                </div>
+                Continue with Google
+              </button>
+              <button className={styles["box"]} disabled>
                 <div className={styles["icon"]}>
                   <FaTwitter fill="#1DA1F2" />
                 </div>
                 Continue with Twitter
               </button>
-              <button className={styles["box"]}>
+              <button className={styles["box"]} disabled>
                 <div className={styles["icon"]}>
                   <AiFillApple />
                 </div>
