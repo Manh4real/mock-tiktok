@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo, useState } from "react";
-import { SubmitContextValue, Upload, formSet } from ".";
+import { SubmitContextValue, Upload, createSubmitProvider, formSet } from ".";
 
 // =======================================
 export interface FormFieldRefObject {
@@ -63,9 +63,44 @@ interface Props {
   children: JSX.Element;
 }
 
-export const SubmitProvider = ({ children }: Props) => {
-  const [isAllowed, setIsAllowed] = useState<Upload>(formSet.upload);
+// export const SubmitProvider = ({ children }: Props) => {
+//   const [isAllowed, setIsAllowed] = useState<Upload>(formSet.upload);
 
+//   const discardEvent = useMemo(() => new DiscardSubject(), []);
+
+//   const createNewDiscardObserver = useCallback(
+//     (fieldRef: FormFieldRefObject) => {
+//       const discardObserver = new DiscardObserver(fieldRef);
+//       discardEvent.subscribe(discardObserver);
+//     },
+//     [discardEvent]
+//   );
+//   const unsubscribeDiscard = useCallback(
+//     (o: DiscardObserver) => {
+//       discardEvent.unsubscribe(o);
+//     },
+//     [discardEvent]
+//   );
+
+//   const isAllGood = isAllowed.caption.isValid && isAllowed.video.isValid;
+
+//   return (
+//     <Submit.Provider
+//       value={{
+//         isAllowed,
+//         setIsAllowed,
+//         isAllGood,
+//         discardEvent,
+//         createNewDiscardObserver,
+//         unsubscribeDiscard,
+//       }}
+//     >
+//       {children}
+//     </Submit.Provider>
+//   );
+// };
+
+export const SubmitProvider = (props: Props) => {
   const discardEvent = useMemo(() => new DiscardSubject(), []);
 
   const createNewDiscardObserver = useCallback(
@@ -82,20 +117,13 @@ export const SubmitProvider = ({ children }: Props) => {
     [discardEvent]
   );
 
-  const isAllGood = isAllowed.caption.isValid && isAllowed.video.isValid;
-
-  return (
-    <Submit.Provider
-      value={{
-        isAllowed,
-        setIsAllowed,
-        isAllGood,
-        discardEvent,
-        createNewDiscardObserver,
-        unsubscribeDiscard,
-      }}
-    >
-      {children}
-    </Submit.Provider>
-  );
+  return createSubmitProvider<Upload>(
+    formSet.upload,
+    (isAllowed) => isAllowed.caption.isValid && isAllowed.video.isValid,
+    {
+      discardEvent,
+      createNewDiscardObserver,
+      unsubscribeDiscard,
+    }
+  )(props);
 };

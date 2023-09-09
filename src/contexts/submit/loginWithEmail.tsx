@@ -1,5 +1,10 @@
 import React, { useContext, useState } from "react";
-import { SubmitContextValue, LoginWithEmailFields, formSet } from ".";
+import {
+  SubmitContextValue,
+  LoginWithEmailFields,
+  formSet,
+  createSubmitProvider,
+} from ".";
 
 export const Submit = React.createContext<
   SubmitContextValue<LoginWithEmailFields>
@@ -13,21 +18,28 @@ export const useSubmit = () => {
   return useContext(Submit);
 };
 
-interface Props {
-  children: JSX.Element;
-}
-export const SubmitProvider = ({ children }: Props) => {
-  const [isAllowed, setIsAllowed] = useState<LoginWithEmailFields>(
-    formSet.loginWithEmail
-  );
+// interface Props {
+//   children: JSX.Element;
+// }
+// export const SubmitProvider = ({ children }: Props) => {
+//   const [isAllowed, setIsAllowed] = useState<LoginWithEmailFields>(
+//     formSet.loginWithEmail
+//   );
 
-  const isAllGood =
+//   const isAllGood =
+//     (isAllowed.email.isValid && isAllowed.password.isValid) ||
+//     (isAllowed.username.isValid && isAllowed.password.isValid);
+
+//   return (
+//     <Submit.Provider value={{ isAllowed, setIsAllowed, isAllGood }}>
+//       {children}
+//     </Submit.Provider>
+//   );
+// };
+
+export const SubmitProvider = createSubmitProvider<LoginWithEmailFields>(
+  formSet.loginWithEmail,
+  (isAllowed) =>
     (isAllowed.email.isValid && isAllowed.password.isValid) ||
-    (isAllowed.username.isValid && isAllowed.password.isValid);
-
-  return (
-    <Submit.Provider value={{ isAllowed, setIsAllowed, isAllGood }}>
-      {children}
-    </Submit.Provider>
-  );
-};
+    (isAllowed.username.isValid && isAllowed.password.isValid)
+);
