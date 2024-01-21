@@ -1,0 +1,2 @@
+export const ANONYMOUS_NUMBER = -999;
+export const DEBOUNCE_TIME_AUTOPLAY = 600;

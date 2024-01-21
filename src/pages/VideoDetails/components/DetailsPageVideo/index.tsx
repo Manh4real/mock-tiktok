@@ -23,6 +23,7 @@ import { show } from "_/features/alert/alertSlice";
 
 import { useCurrentVideo } from "_/features/currentVideo/currentVideoSlice";
 import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
+import { ANONYMOUS_NUMBER, DEBOUNCE_TIME_AUTOPLAY } from "_/constants";
 
 interface AdditionalVideoProps {
   authorId: number;
@@ -104,7 +105,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     try {
       await videoRef.current?.play();
     } catch (e: any) {
-      console.log({ postId }, e.message);
+      dispatch(show({ message: "Details Video Page Error:" + e.message }));
+      throw e;
     }
   }, [isReady, error, postId]);
   const pause = useCallback(() => {
@@ -113,7 +115,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     try {
       videoRef.current?.pause();
     } catch (e: any) {
-      console.log({ postId }, e.message);
+      dispatch(show({ message: "Details Video Page Error:" + e.message }));
+      throw e;
     }
   }, [isReady, error, postId]);
 
@@ -131,7 +134,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   useEffect(() => {
     const timeID = setTimeout(() => {
       setAutoplay(_autoplay);
-    }, 600);
+    }, DEBOUNCE_TIME_AUTOPLAY);
 
     return () => clearTimeout(timeID);
   }, [_autoplay]);
@@ -194,7 +197,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
             <Voice
               ref={voiceRef}
               videoRef={videoRef}
-              postId={postId !== undefined ? postId : -999}
+              postId={postId !== undefined ? postId : ANONYMOUS_NUMBER}
               setActualVideoVolume={setActualVideoVolume}
             />
           </div>

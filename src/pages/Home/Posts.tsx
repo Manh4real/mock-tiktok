@@ -18,43 +18,18 @@ import {
 // styles
 import styles from "./Home.module.scss";
 
-// services
-// import { getVideoList } from "_/services/video";
-
 // hooks
-import { 
-  // usePagesFetch__videos, 
-  useInfiniteScrollVideosQuery 
-} from "_/hooks/usePagesFetch";
-
-// types
-// import { Video as VideoInterface } from "_/types";
+import { useInfiniteScrollVideosQuery } from "_/hooks/usePagesFetch";
 
 interface Props {
   type?: "for-you" | "following";
 }
 const Posts = ({ type = "for-you" }: Props) => {
-  // const fetchVideoList = useCallback(
-  //   (page?: number) => {
-  //     return getVideoList(type, page);
-  //   },
-  //   [type]
-  // );
-
-  // const {
-  //   results: posts,
-  //   hasMore,
-  //   error,
-  //   handleFetchNext: handleLoadMore
-  // } = usePagesFetch__videos<VideoInterface>(fetchVideoList, false, {
-  //   errorMessage: "Can't get video list of " + type,
-  // });
-
   const {
     results: posts,
     hasMore,
     error,
-    handleFetchNext: handleLoadMore
+    handleFetchNext: handleLoadMore,
   } = useInfiniteScrollVideosQuery(type, false, {
     errorMessage: "Can't get video list of ",
   });

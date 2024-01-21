@@ -14,6 +14,8 @@ import VideoTime from "./VideoTime";
 
 // types
 import { VoiceRefObject, VideoTimeRefObject } from "./types";
+import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
 
 interface AdditionalVideoProps {
   placeholder?: string;
@@ -29,6 +31,7 @@ function UploadVideo(props: Props) {
   const voiceRef = useRef<VoiceRefObject>(null);
   const timeRef = useRef<VideoTimeRefObject>(null);
 
+  const dispatch = useAppDispatch();
   // handling events
   const handlePlayClick = () => {
     setPlaying((prev) => !prev);
@@ -42,14 +45,16 @@ function UploadVideo(props: Props) {
     try {
       await videoRef.current?.play();
     } catch (e: any) {
-      console.log("Upload Video Error:", e.message);
+      dispatch(show({ message: "Upload Video Error:" + e.message }));
+      throw e;
     }
   }, []);
   const pause = useCallback(() => {
     try {
       videoRef.current?.pause();
     } catch (e: any) {
-      console.log("Upload Video Error:", e.message);
+      dispatch(show({ message: "Upload Video Error:" + e.message }));
+      throw e;
     }
   }, []);
 

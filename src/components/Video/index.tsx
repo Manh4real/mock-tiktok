@@ -33,6 +33,7 @@ import {
   useCurrentVideo,
 } from "_/features/currentVideo/currentVideoSlice";
 import { show } from "_/features/alert/alertSlice";
+import { ANONYMOUS_NUMBER, DEBOUNCE_TIME_AUTOPLAY } from "_/constants";
 
 interface AdditionalVideoProps {
   postId?: number;
@@ -104,7 +105,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     // change current videos info
     if (
       postId !== undefined &&
-      postId !== -999 &&
+      postId !== ANONYMOUS_NUMBER &&
       currentVideo.postId !== postId
     ) {
       dispatch(changeVideo({ postId }));
@@ -151,7 +152,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     } catch (e: any) {
       setPlaying(false);
       videoRef.current?.pause();
-      console.log({ postId }, e.message);
+      dispatch(show({ message: "Can't play the video" }));
+      throw e;
     }
   }, [isReady, error, postId]);
   const pause = useCallback(() => {
@@ -160,7 +162,8 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
     try {
       videoRef.current?.pause();
     } catch (e: any) {
-      console.log({ postId }, e.message);
+      dispatch(show({ message: "Can't pause the video" }));
+      throw e;
     }
   }, [isReady, error, postId]);
 
@@ -180,7 +183,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
     const timeID = setTimeout(() => {
       setAutoplay(_autoplay);
-    }, 600);
+    }, DEBOUNCE_TIME_AUTOPLAY);
 
     return () => clearTimeout(timeID);
   }, [_autoplay]);
@@ -200,7 +203,11 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
 
   // when switching videos
   useEffect(() => {
-    if (!autoplay && postId !== -999 && currentVideo.postId !== postId) {
+    if (
+      !autoplay &&
+      postId !== ANONYMOUS_NUMBER &&
+      currentVideo.postId !== postId
+    ) {
       setIsReady(false);
       setPlaying(false);
     }
@@ -260,7 +267,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
             <Voice
               ref={voiceRef}
               videoRef={videoRef}
-              postId={postId !== undefined ? postId : -999}
+              postId={postId !== undefined ? postId : ANONYMOUS_NUMBER}
               setActualVideoVolume={setActualVideoVolume}
             />
           </div>

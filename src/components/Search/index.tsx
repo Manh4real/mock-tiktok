@@ -20,6 +20,8 @@ import styles from "./Search.module.scss";
 
 // types
 import { Account } from "_/types";
+import { show } from "_/features/alert/alertSlice";
+import { useAppDispatch } from "_/features/hooks";
 
 function Search() {
   const navigate = useNavigate();
@@ -36,6 +38,8 @@ function Search() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const resultsElementRef = useRef<HTMLDivElement | null>(null);
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const dispatch = useAppDispatch()
 
   // handling functions
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +93,7 @@ function Search() {
         const res = await getUsers(inputValue);
         setResults(res.data);
       } catch {
-        console.log("Something went wrong when searching users...");
+        dispatch(show({ message: "Something went wrong when searching users" }));
       } finally {
         setLoading(false);
       }

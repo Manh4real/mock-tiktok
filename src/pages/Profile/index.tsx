@@ -170,7 +170,7 @@ function Profile() {
 
 //============================================================================
 
-const catchedVideos = new Map<"liked" | "videos", Video[]>([]);
+const cachedVideos = new Map<"liked" | "videos", Video[]>([]);
 
 const VideoList = ({ account }: { account: Account }) => {
   const currentUserInfo = useCurrentUserInfo();
@@ -190,17 +190,17 @@ const VideoList = ({ account }: { account: Account }) => {
     if (active === "videos") {
       dispatch(setVideos(account.videos));
 
-      catchedVideos.set("videos", account.videos);
+      cachedVideos.set("videos", account.videos);
       setLoading(false);
     } else if (active === "liked") {
       if (!currentUserInfo) return;
       if (currentUserInfo.id !== account.id) return;
 
       //
-      const catchedLikedVideos = catchedVideos.get("liked");
+      const cachedLikedVideos = cachedVideos.get("liked");
 
-      if (catchedLikedVideos) {
-        dispatch(setVideos(catchedLikedVideos));
+      if (cachedLikedVideos) {
+        dispatch(setVideos(cachedLikedVideos));
 
         setLoading(false);
       } else {
@@ -208,7 +208,7 @@ const VideoList = ({ account }: { account: Account }) => {
           .then((result) => {
             dispatch(setVideos(result.data));
 
-            catchedVideos.set("liked", result.data);
+            cachedVideos.set("liked", result.data);
           })
           .finally(() => {
             setLoading(false);

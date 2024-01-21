@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 // Redux
 import { logout, useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
+import { show } from "_/features/alert/alertSlice";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Logout = () => {
         localStorage.setItem("tiktok_access_token", JSON.stringify(null));
       })
       .catch(() => {
-        console.log("Logout Error: Something went wrong.");
+        dispatch(show({ message: "Logout Error: Something went wrong." }));
       })
       .finally(() => {
         navigate("/", { replace: true });

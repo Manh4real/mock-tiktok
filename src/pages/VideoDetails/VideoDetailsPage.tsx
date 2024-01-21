@@ -47,6 +47,7 @@ import { useCurrentUserInfo } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
 import { addAccount } from "_/features/accounts/accountsSlice";
 import { addVideo as redux_addVideo } from "_/features/videos/videosSlice";
+import { show } from "_/features/alert/alertSlice";
 
 type ProgressState = "start" | "loading" | "fulfilled";
 
@@ -69,7 +70,7 @@ function VideoDetailsPage() {
     getVideo(videoId)
       .then((data: VideoInterface) => {
         // due to API change ("allows" field may be a string)
-        if(data.allows instanceof String || typeof data.allows === "string") {
+        if (data.allows instanceof String || typeof data.allows === "string") {
           data.allows = JSON.parse(data.allows.toString());
         } else if (!Array.isArray(data.allows)) {
           data.allows = [];
@@ -80,9 +81,10 @@ function VideoDetailsPage() {
 
         dispatch(addAccount(data.user));
       })
-      .catch(() => {
-        console.log("Can't get the video");
+      .catch((e) => {
         document.title = "This video is unavailable.";
+        dispatch(show({ message: "Can't get the video" }));
+        throw e;
       })
       .finally(() => {
         setState("fulfilled");
