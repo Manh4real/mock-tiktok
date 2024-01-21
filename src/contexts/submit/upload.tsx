@@ -1,5 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
-import { SubmitContextValue, Upload, createSubmitProvider, formSet } from ".";
+import { createSubmitContext, formSet } from ".";
 
 // =======================================
 export interface FormFieldRefObject {
@@ -40,90 +39,30 @@ export class DiscardObserver {
 
 // =======================================
 
-export const Submit = React.createContext<
-  SubmitContextValue<Upload> & {
-    discardEvent: DiscardSubject;
-    createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
-    unsubscribeDiscard: (o: DiscardObserver) => void;
-  }
->({
-  isAllowed: formSet.upload,
-  setIsAllowed: () => {},
-  isAllGood: false,
+const initialContextValue = {
   discardEvent: new DiscardSubject(),
   createNewDiscardObserver: () => {},
   unsubscribeDiscard: () => {},
-});
-
-export const useSubmit = () => {
-  return useContext(Submit);
 };
 
-interface Props {
-  children: JSX.Element;
-}
+const initDiscardSubject = () => {
+  const discardEvent = new DiscardSubject();
 
-// export const SubmitProvider = ({ children }: Props) => {
-//   const [isAllowed, setIsAllowed] = useState<Upload>(formSet.upload);
-
-//   const discardEvent = useMemo(() => new DiscardSubject(), []);
-
-//   const createNewDiscardObserver = useCallback(
-//     (fieldRef: FormFieldRefObject) => {
-//       const discardObserver = new DiscardObserver(fieldRef);
-//       discardEvent.subscribe(discardObserver);
-//     },
-//     [discardEvent]
-//   );
-//   const unsubscribeDiscard = useCallback(
-//     (o: DiscardObserver) => {
-//       discardEvent.unsubscribe(o);
-//     },
-//     [discardEvent]
-//   );
-
-//   const isAllGood = isAllowed.caption.isValid && isAllowed.video.isValid;
-
-//   return (
-//     <Submit.Provider
-//       value={{
-//         isAllowed,
-//         setIsAllowed,
-//         isAllGood,
-//         discardEvent,
-//         createNewDiscardObserver,
-//         unsubscribeDiscard,
-//       }}
-//     >
-//       {children}
-//     </Submit.Provider>
-//   );
-// };
-
-export const SubmitProvider = (props: Props) => {
-  const discardEvent = useMemo(() => new DiscardSubject(), []);
-
-  const createNewDiscardObserver = useCallback(
-    (fieldRef: FormFieldRefObject) => {
+  return {
+    discardEvent,
+    createNewDiscardObserver: (fieldRef: FormFieldRefObject) => {
       const discardObserver = new DiscardObserver(fieldRef);
       discardEvent.subscribe(discardObserver);
     },
-    [discardEvent]
-  );
-  const unsubscribeDiscard = useCallback(
-    (o: DiscardObserver) => {
+    unsubscribeDiscard: (o: DiscardObserver) => {
       discardEvent.unsubscribe(o);
     },
-    [discardEvent]
-  );
-
-  return createSubmitProvider<Upload>(
-    formSet.upload,
-    (isAllowed) => isAllowed.caption.isValid && isAllowed.video.isValid,
-    {
-      discardEvent,
-      createNewDiscardObserver,
-      unsubscribeDiscard,
-    }
-  )(props);
+  };
 };
+
+export const { provider: SubmitProvider, useSubmit } = createSubmitContext(
+  formSet.upload,
+  (isAllowed) => isAllowed.caption.isValid && isAllowed.video.isValid,
+  initDiscardSubject(),
+  initialContextValue
+);

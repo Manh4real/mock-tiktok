@@ -53,11 +53,10 @@ const Form = () => {
   const dispatch = useAppDispatch();
 
   const {
-    discardEvent,
     setIsAllowed,
     isAllowed,
     isAllGood,
-    createNewDiscardObserver,
+    extra: { discardEvent, createNewDiscardObserver },
   } = useSubmit();
 
   const navigate = useNavigate();
@@ -67,7 +66,6 @@ const Form = () => {
     e.preventDefault();
 
     if (loading) {
-      // alert("You cannot return this action.");
       dispatch(show({ message: "You cannot return this action." }));
       return;
     }
@@ -96,7 +94,6 @@ const Form = () => {
 
       uploadVideo(body)
         .then((data) => {
-          // alert("Video uploaded.");
           dispatch(show({ message: "Video uploaded." }));
 
           navigate("/@" + data.user.nickname, {
@@ -104,7 +101,6 @@ const Form = () => {
           });
         })
         .catch(() => {
-          // alert("Failed to upload: Something went wrong.");
           dispatch(
             show({ message: "Failed to upload: Something went wrong." })
           );

@@ -142,3 +142,5 @@ export type ResponseWithPagination<T> = {
     };
   };
 };
+
+export type ValueOf<T> = T[keyof T];

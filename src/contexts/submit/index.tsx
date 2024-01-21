@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 // types
 import { ValidationType } from "_/validation/Validation";
-import { Viewer, ViewerPermission } from "_/types";
+import { ValueOf, Viewer, ViewerPermission } from "_/types";
 
 export interface AllowedInputProperty<T extends string | File = string> {
   value: T extends File ? T | null : T;
@@ -131,10 +131,14 @@ export const formSet: FormSet = {
 };
 
 // Submit context
-export interface SubmitContextValue<T> {
+export interface SubmitContextValue<
+  T extends ValueOf<FormSet>,
+  K extends Object = Object
+> {
   isAllowed: T;
   setIsAllowed: React.Dispatch<React.SetStateAction<T>>;
   isAllGood: boolean;
+  extra: K;
 }
 export type SetIsAllowedFunc<T extends string | File = string> = ({
   value,
@@ -145,20 +149,46 @@ export interface SubmitContext__InputProps<T extends string | File = string> {
   setIsAllowed: SetIsAllowedFunc<T>;
 }
 
-export function createSubmitProvider<T>(
+interface CreatedSubmitContext<
+  T extends ValueOf<FormSet>,
+  K extends Object = Object
+> {
+  provider: React.FC<{ children: JSX.Element }>;
+  useSubmit: () => SubmitContextValue<T, K>;
+}
+
+export function createSubmitContext<T extends ValueOf<FormSet>>(
+  formSet: T,
+  isAllGoodFn: (isAllowed: T) => boolean
+): CreatedSubmitContext<T>;
+export function createSubmitContext<
+  T extends ValueOf<FormSet>,
+  K extends Object
+>(
   formSet: T,
   isAllGoodFn: (isAllowed: T) => boolean,
-  additionalContextValue: Object = {}
-) {
-  const Submit = React.createContext<SubmitContextValue<T>>({
+  additionalContextValue: K,
+  additionalInitialContextValue: K
+): CreatedSubmitContext<T, K>;
+
+export function createSubmitContext<
+  T extends ValueOf<FormSet>,
+  K extends Object
+>(
+  formSet: T,
+  isAllGoodFn: (isAllowed: T) => boolean,
+  additionalContextValue = {} as K,
+  additionalInitialContextValue = {} as K
+): CreatedSubmitContext<T, K> {
+  const Submit = React.createContext<SubmitContextValue<T, K>>({
     isAllowed: formSet,
     setIsAllowed: () => {},
     isAllGood: false,
+    extra: additionalInitialContextValue,
   });
 
   const SubmitProvider = ({ children }: { children: JSX.Element }) => {
     const [isAllowed, setIsAllowed] = useState<T>(formSet);
-
     const isAllGood = isAllGoodFn(isAllowed);
 
     return (
@@ -167,7 +197,7 @@ export function createSubmitProvider<T>(
           isAllowed,
           setIsAllowed,
           isAllGood,
-          ...additionalContextValue,
+          extra: additionalContextValue,
         }}
       >
         {children}
@@ -175,5 +205,10 @@ export function createSubmitProvider<T>(
     );
   };
 
-  return SubmitProvider;
+  return {
+    provider: SubmitProvider,
+    useSubmit: () => {
+      return useContext(Submit);
+    },
+  };
 }
