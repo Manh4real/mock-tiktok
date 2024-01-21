@@ -31,10 +31,8 @@ const CopyLinkSection = () => {
       var msg = successful ? "successful" : "unsuccessful";
       console.log("Fallback: Copying text command was " + msg);
 
-      // alert("Copied!");
       dispatch(show({ message: "Copied!" }));
     } catch (err) {
-      // alert("Unable to copy!");
       dispatch(show({ message: "Unable to copy!" }));
       console.error("Fallback: Oops, unable to copy", err);
     }
@@ -49,12 +47,12 @@ const CopyLinkSection = () => {
     navigator.clipboard.writeText(text).then(
       () => {
         console.log("Async: Copying to clipboard was successful!");
-        // alert("Copied!");
+
         dispatch(show({ message: "Copied!" }));
       },
       (err) => {
         console.error("Async: Could not copy text: ", err);
-        // alert("Unable to copy!");
+
         dispatch(show({ message: "Unable to copy!" }));
       }
     );

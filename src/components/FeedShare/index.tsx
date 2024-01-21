@@ -16,6 +16,7 @@ import { BsChevronDown, BsFacebook } from "react-icons/bs";
 
 // types
 import { Placement } from "@popperjs/core";
+import routes from "_/config/routes";
 interface Props {
   placement?: Placement;
   children: JSX.Element;
@@ -39,23 +40,23 @@ function FeedShare({ placement = "top-start", children }: Props) {
         }}
         render={(attrs) => (
           <div className={styles["FeedSharePopup"]} tabIndex={-1} {...attrs}>
-            <Link to="/" className="flex-align-center">
+            <Link to={routes.root} className="flex-align-center">
               <FilledCodeIcon />
               <span className={styles["title"]}>Embed</span>
             </Link>
-            <Link to="/" className="flex-align-center">
+            <Link to={routes.root} className="flex-align-center">
               <PaperPlane filled={true} />
               <span className={styles["title"]}>Send to friends</span>
             </Link>
-            <Link to="/" className="flex-align-center">
+            <Link to={routes.root} className="flex-align-center">
               <BsFacebook fill="#0075FA" />
               <span className={styles["title"]}>Share to Facebook</span>
             </Link>
-            <Link to="/" className="flex-align-center">
+            <Link to={routes.root} className="flex-align-center">
               <WhatsApp />
               <span className={styles["title"]}>Share to WhatsApp</span>
             </Link>
-            <Link to="/" className="flex-align-center">
+            <Link to={routes.root} className="flex-align-center">
               <AnchorIcon />
               <span className={styles["title"]}>Copy link</span>
             </Link>
@@ -79,23 +80,23 @@ function FeedShare({ placement = "top-start", children }: Props) {
 const MoreSection = () => {
   return (
     <>
-      <Link to="/" className="flex-align-center">
+      <Link to={routes.root} className="flex-align-center">
         <BsFacebook fill="#0075FA" />
         <span className={styles["title"]}>Share to Facebook</span>
       </Link>
-      <Link to="/" className="flex-align-center">
+      <Link to={routes.root} className="flex-align-center">
         <WhatsApp />
         <span className={styles["title"]}>Share to WhatsApp</span>
       </Link>
-      <Link to="/" className="flex-align-center">
+      <Link to={routes.root} className="flex-align-center">
         <AnchorIcon />
         <span className={styles["title"]}>Copy link</span>
       </Link>
-      <Link to="/" className="flex-align-center">
+      <Link to={routes.root} className="flex-align-center">
         <BsFacebook fill="#0075FA" />
         <span className={styles["title"]}>Share to Facebook</span>
       </Link>
-      <Link to="/" className="flex-align-center">
+      <Link to={routes.root} className="flex-align-center">
         <WhatsApp />
         <span className={styles["title"]}>Share to WhatsApp</span>
       </Link>

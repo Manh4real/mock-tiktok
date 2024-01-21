@@ -79,7 +79,7 @@ function Video(props: Props, ref: React.Ref<VideoRefObject>) {
   const handleError = () => {
     setLoading(false);
     setError(true);
-    // alert("Can't load the video.");
+
     dispatch(show({ message: "Can't load the video." }));
   };
   const handlePause = () => {

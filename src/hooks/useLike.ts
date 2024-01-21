@@ -39,7 +39,6 @@ const useLike = ({ postId, isLiked, likesCount }: Props) => {
           );
         })
         .catch(() => {
-          // alert("Can't like the video.");
           dispatch(show({ message: "Can't like the video." }));
         });
     } else {
@@ -59,7 +58,6 @@ const useLike = ({ postId, isLiked, likesCount }: Props) => {
           );
         })
         .catch(() => {
-          // alert("Can't unlike the video.");
           dispatch(show({ message: "Can't unlike the video." }));
         });
     }

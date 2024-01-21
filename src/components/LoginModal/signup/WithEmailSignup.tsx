@@ -53,6 +53,7 @@ const Form = ({ at, toggleToPhone }: Props) => {
 
   // submit
   const { isAllGood, isAllowed, setIsAllowed } = useSubmit();
+  console.log(isAllowed);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -79,11 +80,9 @@ const Form = ({ at, toggleToPhone }: Props) => {
           clearModal(e);
         }
 
-        // alert("Signed up.");
         dispatch(show({ message: "Signed up." }));
       })
       .catch(() => {
-        // alert("This email has been used.");
         dispatch(show({ message: "This email has been used." }));
       })
       .finally(() => {

@@ -97,13 +97,11 @@ const Form = ({ at = FormLocation.MODAL }: FormProps) => {
           clearModal(e as React.MouseEvent);
         } else if (at === FormLocation.PAGE) redirect();
 
-        // alert("Logged in.");
         dispatch(show({ message: "Logged in." }));
       })
       .catch((e) => {
         console.log("Failed to login.", e);
 
-        // alert("Failed to login.\nCheck your infomation or network connection.");
         dispatch(
           show({
             message: `Failed to login.

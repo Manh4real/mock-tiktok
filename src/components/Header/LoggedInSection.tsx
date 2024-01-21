@@ -11,12 +11,13 @@ import Tooltip from "_/components/Tooltip";
 // styles
 import styles from "./Header.module.scss";
 import "tippy.js/dist/tippy.css";
+import routes from "_/config/routes";
 
 const LoggedInSection = () => {
   return (
     <>
       <Tooltip title="Message">
-        <Link to="/message" className={styles["header__message"]}>
+        <Link to={routes.message} className={styles["header__message"]}>
           <PaperPlane />
         </Link>
       </Tooltip>

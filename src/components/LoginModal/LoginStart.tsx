@@ -23,6 +23,7 @@ import { signInWithGoogle, signInWithFacebook } from "_/firebase";
 // types
 import { FormLocation, FormProps } from "./types";
 import { ILoginModalContentType } from "_/components/LoginModal/types";
+import routes from "_/config/routes";
 
 function LoginStart({ at = FormLocation.MODAL }: FormProps) {
   const { pushHistory } = useContext(History);
@@ -33,7 +34,7 @@ function LoginStart({ at = FormLocation.MODAL }: FormProps) {
         <div className={styles["title"]}>Log in to TikTok</div>
         <div className={styles["boxes"]}>
           <Link
-            to="/"
+            to={routes.root}
             className={styles["box"]}
             onClick={(e: React.MouseEvent) => {
               e.preventDefault();
@@ -47,12 +48,19 @@ function LoginStart({ at = FormLocation.MODAL }: FormProps) {
             Use phone / email / username
           </Link>
 
-          <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
-            <button className={styles["box"]} onClick={() => {
-              console.log("Logging in with Facebook...");
+          <Tooltip
+            title="Just for testing Firebase though"
+            zIndex={100000}
+            placement="top-start"
+          >
+            <button
+              className={styles["box"]}
+              onClick={() => {
+                console.log("Logging in with Facebook...");
 
-              signInWithFacebook();
-            }}>
+                signInWithFacebook();
+              }}
+            >
               <div className={styles["icon"]}>
                 <FaFacebook fill="#1877F2" />
               </div>
@@ -60,11 +68,18 @@ function LoginStart({ at = FormLocation.MODAL }: FormProps) {
             </button>
           </Tooltip>
 
-          <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
-            <button className={styles["box"]} onClick={() => {
-              console.log("Logging in with Google...");
-              signInWithGoogle();
-            }}>
+          <Tooltip
+            title="Just for testing Firebase though"
+            zIndex={100000}
+            placement="top-start"
+          >
+            <button
+              className={styles["box"]}
+              onClick={() => {
+                console.log("Logging in with Google...");
+                signInWithGoogle();
+              }}
+            >
               <div className={styles["icon"]}>
                 <FcGoogle />
               </div>

@@ -37,7 +37,6 @@ const DeleteCommentButton = ({ commentId }: Props) => {
         deleteComment(commentId);
       })
       .catch(() => {
-        // alert("Cannot delete this comment.");
         dispatch(show({ message: "Cannot delete this comment." }));
       });
   };

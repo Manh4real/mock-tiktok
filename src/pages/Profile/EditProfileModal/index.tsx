@@ -66,7 +66,7 @@ const Form = ({ account, handleClose }: Props) => {
       return;
     }
 
-    if(loading) return;
+    if (loading) return;
 
     setLoading(true);
 
@@ -94,7 +94,6 @@ const Form = ({ account, handleClose }: Props) => {
       .then((result) => {
         if (!result) return;
 
-        // alert("Updated profile.");
         dispatch(show({ message: "Updated profile." }));
 
         handleClose(e); // close modal
@@ -108,12 +107,6 @@ const Form = ({ account, handleClose }: Props) => {
         );
       })
       .catch(() => {
-        // alert(
-        //   `Wrong information.
-        //   \nMake sure the last name must be at least 2 characters.
-        //   \nIf you had, avatar must be a file of type: jpeg, jpg, png, gif.`
-        // );
-
         dispatch(
           show({
             message: `Wrong information. 

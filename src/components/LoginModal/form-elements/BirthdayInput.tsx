@@ -38,7 +38,7 @@ function BirthdayInput({ setIsAllowed }: Props) {
   return (
     <div>
       <div className={clsx(styles["row"], styles["form__desc"])}>
-        When's your birthday?<small>⚠️  Just for illustration</small>
+        When's your birthday?<small>⚠️ Just for illustration</small>
       </div>
 
       <div className={clsx(styles["row"], styles["date__selector"])}>
@@ -55,24 +55,13 @@ function BirthdayInput({ setIsAllowed }: Props) {
               setValue((prev) => {
                 return {
                   ...prev,
-                  month: +e.target.value,
+                  month: Number(e.target.value),
                 };
               });
             }}
           >
             <option value="0">Month</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">Jun</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
+            <MonthOptions />
           </select>
         </div>
         <div
@@ -175,6 +164,35 @@ const YearOptions = () => {
         return (
           <option key={index} value={`${thisYear - index}`}>
             {thisYear - index}
+          </option>
+        );
+      })}
+    </>
+  );
+};
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "Jun",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const MonthOptions = () => {
+  return (
+    <>
+      <option value="0">Month</option>
+      {MONTHS.map((month, index) => {
+        return (
+          <option key={index} value={index + 1}>
+            {month}
           </option>
         );
       })}

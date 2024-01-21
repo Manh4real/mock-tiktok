@@ -68,7 +68,6 @@ const LikeButton = ({ styles, postId, showLoginModal }: Props) => {
           );
         })
         .catch(() => {
-          // alert("Can't like the video.");
           dispatch(show({ message: "Can't like the video." }));
         });
     } else {
@@ -85,7 +84,6 @@ const LikeButton = ({ styles, postId, showLoginModal }: Props) => {
           );
         })
         .catch(() => {
-          // alert("Can't unlike the video.");
           dispatch(show({ message: "Can't unlike the video." }));
         });
     }

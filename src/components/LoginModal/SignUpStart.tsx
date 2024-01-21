@@ -26,6 +26,7 @@ import { signInWithGoogle, signInWithFacebook } from "_/firebase";
 
 // types
 import { ILoginModalContentType } from "_/components/LoginModal/types";
+import routes from "_/config/routes";
 
 function SignUpStart() {
   const { pushHistory } = useContext(History);
@@ -41,7 +42,7 @@ function SignUpStart() {
         <div className={styles["title"]}>Sign up for TikTok</div>
         <div className={styles["boxes"]}>
           <Link
-            to="/"
+            to={routes.root}
             className={styles["box"]}
             onClick={() => {
               // pushHistory(<PhoneEmailSignup />)
@@ -54,12 +55,19 @@ function SignUpStart() {
             Use phone or email
           </Link>
 
-          <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
-            <button className={styles["box"]}  onClick={() => {
-              console.log("Logging in with Facebook...");
+          <Tooltip
+            title="Just for testing Firebase though"
+            zIndex={100000}
+            placement="top-start"
+          >
+            <button
+              className={styles["box"]}
+              onClick={() => {
+                console.log("Logging in with Facebook...");
 
-              signInWithFacebook();
-            }}>
+                signInWithFacebook();
+              }}
+            >
               <div className={styles["icon"]}>
                 <FaFacebook fill="#1877F2" />
               </div>
@@ -67,18 +75,25 @@ function SignUpStart() {
             </button>
           </Tooltip>
 
-          <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
-            <button className={styles["box"]} onClick={() => {
-              console.log("Login with Google");
-              signInWithGoogle();
-            }}>
+          <Tooltip
+            title="Just for testing Firebase though"
+            zIndex={100000}
+            placement="top-start"
+          >
+            <button
+              className={styles["box"]}
+              onClick={() => {
+                console.log("Login with Google");
+                signInWithGoogle();
+              }}
+            >
               <div className={styles["icon"]}>
                 <FcGoogle />
               </div>
               Continue with Google
             </button>
           </Tooltip>
-          
+
           {expanded && (
             <>
               <button className={styles["box"]} disabled>

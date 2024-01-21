@@ -54,12 +54,19 @@ const Signup = () => {
                 Use phone or email
               </Link>
 
-              <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
-                <button className={styles["box"]} onClick={() => {
-                  console.log("Logging in with Facebook...");
+              <Tooltip
+                title="Just for testing Firebase though"
+                zIndex={100000}
+                placement="top-start"
+              >
+                <button
+                  className={styles["box"]}
+                  onClick={() => {
+                    console.log("Logging in with Facebook...");
 
-                  signInWithFacebook();
-                }}>
+                    signInWithFacebook();
+                  }}
+                >
                   <div className={styles["icon"]}>
                     <FaFacebook fill="#1877F2" />
                   </div>
@@ -67,11 +74,18 @@ const Signup = () => {
                 </button>
               </Tooltip>
 
-              <Tooltip title="Just for testing Firebase though" zIndex={100000} placement="top-start">
-                <button className={styles["box"]} onClick={() => {
-                  console.log("Logging in with Google...");
-                  signInWithGoogle();
-                }}>
+              <Tooltip
+                title="Just for testing Firebase though"
+                zIndex={100000}
+                placement="top-start"
+              >
+                <button
+                  className={styles["box"]}
+                  onClick={() => {
+                    console.log("Logging in with Google...");
+                    signInWithGoogle();
+                  }}
+                >
                   <div className={styles["icon"]}>
                     <FcGoogle />
                   </div>
@@ -110,8 +124,9 @@ const Signup = () => {
           <div className={styles["footer"]}>
             <p className={styles["para-text"]}>
               By continuing, you agree to TikTok's
-              <Link to="/">Terms of Service</Link> and confirm that you have
-              read TikTok's <Link to="/">Privacy Policy</Link>.
+              <Link to={routes.root}>Terms of Service</Link> and confirm that
+              you have read TikTok's{" "}
+              <Link to={routes.root}>Privacy Policy</Link>.
             </p>
             <div className={styles["footer__text"]}>
               Already have an account?

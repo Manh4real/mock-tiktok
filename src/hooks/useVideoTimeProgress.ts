@@ -59,7 +59,6 @@ const useVideoTimeProgress = (
 
     return {
         shownTime,
-        setShownTime,
         handleMouseDown,
         handleClick,
         progress,
