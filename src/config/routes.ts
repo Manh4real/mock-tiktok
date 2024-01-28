@@ -11,7 +11,8 @@ const routes = {
   reset: "/reset",
   message: "/message",
   feedback: "/feedback",
-};
+  notFound: "/not-found",
+} as const;
 
 export const pagesTitle = {
   [routes.root]: "Tiktok | Make Your Day",
@@ -23,6 +24,6 @@ export const pagesTitle = {
   [routes.profile]: (name: string, username: string) =>
     `${name} (@${username}) Tiktok | Watch ${name}'s Newest Tiktok Videos`,
   [routes.upload]: "Upload | Tiktok",
-};
+} as const;
 
 export default routes;

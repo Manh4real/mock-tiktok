@@ -10,6 +10,12 @@ import { useProgress } from "_/hooks";
 // context
 import { FormFieldRefObject } from "_/contexts/submit/upload";
 import { Spinner } from "_/components/icons";
+import {
+  CANVAS_IMAGE_QUALITY,
+  CANVAS_IMAGE_TYPE,
+  CoverConstants,
+  savedCovers,
+} from "./constants";
 
 interface Props {
   isVideo: boolean;
@@ -18,12 +24,8 @@ interface Props {
   createNewDiscardObserver: (fieldRef: FormFieldRefObject) => void;
 }
 
-const IMAGES_NUM = 8;
-const IMAGE_WIDTH = 84.2 * 10; // 1920
-const IMAGE_HEIGHT = 150 * 10; // 1080
+const { IMAGES_NUM, IMAGE_HEIGHT, IMAGE_WIDTH } = CoverConstants;
 const timeIDs: NodeJS.Timeout[] = [];
-
-const savedCovers = new Map<string, string>();
 
 const Cover = ({
   isVideo,
@@ -45,7 +47,6 @@ const Cover = ({
       target: 1,
       onChange: (progress) => {
         const duration = video.duration || 0;
-        // Number.parseFloat((progress * duration).toFixed(3))
         video.currentTime = Math.floor(progress * duration);
         setIsAllowed(Math.floor(progress * duration)); // thumbnail must be an integer of seconds
       },
@@ -111,10 +112,8 @@ const Cover = ({
         ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
       }
 
-      // const snapShot = canvas.toDataURL("image/jpeg");
       const savedCover = savedCovers.get(this.currentTime.toFixed(3));
       const thisCurrentTime = this.currentTime.toFixed(3);
-      console.log({ t: this.currentTime, savedCover });
 
       if (savedCover) {
         setCover(savedCover);
@@ -142,8 +141,8 @@ const Cover = ({
             return prev.concat(snapShot);
           });
         },
-        "image/jpeg",
-        0.15
+        CANVAS_IMAGE_TYPE,
+        CANVAS_IMAGE_QUALITY
       );
     };
 

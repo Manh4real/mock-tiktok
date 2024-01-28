@@ -7,7 +7,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 
 // components
 import Image from "_/components/Image";
-import EditPhotoSection from "./EditPhotoSection2";
+import EditPhotoSection from "./components/EditPhotoSection";
 
 // styles
 import styles from "./EditProfileModal.module.scss";
@@ -25,8 +25,8 @@ interface Props extends WithFileValidation, SubmitContext__InputProps<File> {
 }
 
 interface Edited {
-  url: string,
-  file: File
+  url: string;
+  file: File;
 }
 
 const PhotoFileInput = ({
@@ -39,7 +39,6 @@ const PhotoFileInput = ({
   reset: _reset,
 }: Props) => {
   const [initialValue, setInitialValue] = useState<string>(_initialValue);
-
   const { file, url } = inputProps;
 
   // ⚠️====================================================================
@@ -68,7 +67,7 @@ const PhotoFileInput = ({
 
     let postFile: File = file;
 
-    if(edited) {
+    if (edited) {
       postFile = edited.file;
     }
 

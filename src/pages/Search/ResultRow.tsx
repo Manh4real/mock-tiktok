@@ -16,14 +16,14 @@ import { numberCompact } from "_/utils";
 
 // types
 import { Account } from "_/types";
+import { getAccountName } from "_/helpers";
 
 interface Props {
   account: Account;
 }
 
 const ResultRow = ({ account }: Props) => {
-  const accountName =
-    account.full_name || `${account.first_name} ${account.last_name}`;
+  const accountName = getAccountName(account);
 
   return (
     <div className={styles["row"]}>

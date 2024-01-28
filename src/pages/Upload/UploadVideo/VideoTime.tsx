@@ -28,14 +28,10 @@ const VideoTime = ({ videoRef }: Props, ref: React.Ref<VideoTimeRefObject>) => {
   } = useVideoTimeProgress(progressBarRef, videoRef);
 
   //
-  useImperativeHandle(
-    ref,
-    () => ({
-      handleTimeUpdate,
-      resetTime,
-    }),
-    [handleTimeUpdate, resetTime]
-  );
+  useImperativeHandle(ref, () => ({ handleTimeUpdate, resetTime }), [
+    handleTimeUpdate,
+    resetTime,
+  ]);
 
   return (
     <div

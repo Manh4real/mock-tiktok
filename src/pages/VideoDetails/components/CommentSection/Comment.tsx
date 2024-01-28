@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
@@ -7,28 +6,16 @@ import styles from "./CommentSection.module.scss";
 
 // utils
 import { fromNow } from "_/config/moment";
-import { numberCompact } from "_/utils";
-
-// icons
-import { OutlinedHeart, FilledHeart } from "_/components/icons";
 
 // components
 import Image from "_/components/Image";
 import AccountPopup from "_/components/AccountPopup";
-import More from "./More";
-
-// hoc
-import { withLoginModal } from "_/hoc";
-
-// hooks
-import { useLikeComment } from "_/hooks";
 
 // types
 import { Comment as CommentInterface } from "_/types";
-import { WithLoginModal } from "_/hoc/withLoginModal";
 
 // Redux
-import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+import ReactionsCount from "./components/ReactionCount";
 
 interface Props {
   authorId: number;
@@ -81,54 +68,5 @@ const Comment = ({ authorId, comment }: Props) => {
     </div>
   );
 };
-
-interface ReactionsCountProps extends WithLoginModal {
-  authorId: number;
-  commentId: number;
-  likes_count: number;
-  isLiked: boolean;
-}
-const ReactionsCount = withLoginModal(
-  ({
-    authorId,
-    commentId,
-    likes_count,
-    isLiked,
-    showLoginModal,
-  }: ReactionsCountProps) => {
-    const isLoggedIn = useIsLoggedIn();
-
-    const [liked, toggle, likesCount] = useLikeComment(
-      isLiked,
-      commentId,
-      likes_count
-    );
-
-    return (
-      <div
-        className={clsx(styles["reactions-count"], {
-          [styles["is--liked"]]: liked,
-        })}
-      >
-        <More commentId={commentId} authorId={authorId} />
-        <div
-          className={clsx("flex-center", styles["like-icon"])}
-          onClick={() => {
-            if (!isLoggedIn) {
-              showLoginModal();
-              return;
-            }
-
-            toggle();
-          }}
-        >
-          {liked && <FilledHeart />}
-          {!liked && <OutlinedHeart />}
-        </div>
-        <span>{numberCompact(likesCount)}</span>
-      </div>
-    );
-  }
-);
 
 export default Comment;

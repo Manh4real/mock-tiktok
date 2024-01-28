@@ -47,8 +47,8 @@ function Search() {
 
   // page title
   useEffect(() => {
-    const foo = pagesTitle[routes.search] as any;
-    document.title = foo(searchParams.get("q"));
+    const getPageTitle = pagesTitle[routes.search];
+    document.title = getPageTitle(searchParams.get("q") || "");
   }, [searchParams]);
 
   if (loading && results.length <= 0) return <Spinner />;

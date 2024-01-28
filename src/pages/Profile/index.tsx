@@ -7,19 +7,15 @@ import routes, { pagesTitle } from "_/config/routes";
 
 // icons
 import { IoMdShareAlt } from "react-icons/io";
-import { HiLockClosed } from "react-icons/hi";
 import { Spinner } from "_/components/icons";
 
 // components
 import Image from "_/components/Image";
-import ProfileVideos from "./ProfileVideos";
 import FollowSection from "./FollowSection";
 import FeedShare from "_/components/FeedShare";
 import EditButton from "./EditButton";
 import NotFoundProfileMessage from "./NotFoundProfileMessage";
-
-// hoc
-// import { withResetVideos } from "_/hoc";
+import VideoList from "./VideoList";
 
 // styles
 import styles from "./Profile.module.scss";
@@ -28,8 +24,7 @@ import styles from "./Profile.module.scss";
 import { numberCompact } from "_/utils";
 
 // types
-import { Account, Video } from "_/types";
-import { getLikedVideos } from "_/services/video";
+import { Account } from "_/types";
 
 // Redux
 import {
@@ -37,16 +32,8 @@ import {
   useIsLoggedIn,
 } from "_/features/currentUser/currentUserSlice";
 import { useAppDispatch } from "_/features/hooks";
-import {
-  resetVideos,
-  selectAllVideos,
-  setVideos,
-} from "_/features/videos/videosSlice";
-import { useSelector } from "react-redux";
 import { getAccount } from "_/features/accounts/accountsSlice";
-import { clearVideoId } from "_/features/currentVideo/currentVideoSlice";
-
-type PageTitleFunc = (name: string, username: string) => string;
+import { getAccountName } from "_/helpers";
 
 function Profile() {
   const params = useParams();
@@ -77,21 +64,12 @@ function Profile() {
       });
   }, [params.usernameParam, dispatch]);
 
-  //
-  // useEffect(() => {
-  //   dispatch(resetVideos());
-  //   dispatch(clearVideoId());
-  // }, [dispatch]);
-
   // page title
   useEffect(() => {
     if (!account) return;
 
-    const foo = pagesTitle[routes.profile] as PageTitleFunc;
-    document.title = foo(
-      `${account.first_name} ${account.last_name}`,
-      account.nickname
-    );
+    const getPageTitle = pagesTitle[routes.profile];
+    document.title = getPageTitle(getAccountName(account), account.nickname);
   }, [account]);
 
   if (loading)
@@ -102,7 +80,7 @@ function Profile() {
     );
   if (!account) return <NotFoundProfileMessage />;
 
-  const accountName = `${account.first_name} ${account.last_name}`;
+  const accountName = getAccountName(account);
 
   return (
     <div className={styles["container"]}>
@@ -167,92 +145,5 @@ function Profile() {
     </div>
   );
 }
-
-//============================================================================
-
-const cachedVideos = new Map<"liked" | "videos", Video[]>([]);
-
-const VideoList = ({ account }: { account: Account }) => {
-  const currentUserInfo = useCurrentUserInfo();
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [active, setActive] = useState<"videos" | "liked">("videos");
-
-  // Redux
-  const videos = useSelector(selectAllVideos);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    setLoading(true);
-    dispatch(resetVideos());
-    dispatch(clearVideoId());
-
-    if (active === "videos") {
-      dispatch(setVideos(account.videos));
-
-      cachedVideos.set("videos", account.videos);
-      setLoading(false);
-    } else if (active === "liked") {
-      if (!currentUserInfo) return;
-      if (currentUserInfo.id !== account.id) return;
-
-      //
-      const cachedLikedVideos = cachedVideos.get("liked");
-
-      if (cachedLikedVideos) {
-        dispatch(setVideos(cachedLikedVideos));
-
-        setLoading(false);
-      } else {
-        getLikedVideos(account.id)
-          .then((result) => {
-            dispatch(setVideos(result.data));
-
-            cachedVideos.set("liked", result.data);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
-    }
-  }, [account.id, account.videos, active, currentUserInfo, dispatch]);
-
-  return (
-    <>
-      <div className={styles["tabs"]}>
-        <button
-          className={clsx({ [styles["active"]]: active === "videos" })}
-          onClick={() => {
-            if (active !== "videos") setActive("videos");
-          }}
-        >
-          Videos
-        </button>
-        <button
-          disabled={currentUserInfo?.id !== account.id}
-          className={clsx("flex-center", {
-            [styles["active"]]: active === "liked",
-          })}
-          onClick={() => {
-            if (!currentUserInfo) return;
-            if (currentUserInfo.id !== account.id) return;
-
-            if (active !== "liked") setActive("liked");
-          }}
-        >
-          <HiLockClosed />
-          <span>Liked</span>
-        </button>
-      </div>
-      <main className={styles["main"]}>
-        <ProfileVideos
-          loading={loading}
-          accountId={account.id}
-          videos={videos}
-        />
-      </main>
-    </>
-  );
-};
 
 export default React.memo(Profile);

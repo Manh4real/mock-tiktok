@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
@@ -7,28 +6,19 @@ import styles from "./PageCommentSection.module.scss";
 
 // utils
 import { fromNow } from "_/config/moment";
-import { numberCompact } from "_/utils";
 
 // icons
-import { OutlinedHeart, FilledHeart } from "_/components/icons";
 
 // components
 import Image from "_/components/Image";
 import AccountPopup from "_/components/AccountPopup";
 import More from "../CommentSection/More";
 
-// hoc
-import { withLoginModal } from "_/hoc";
-
-// hooks
-import { useLikeComment } from "_/hooks";
-
 // types
 import { Comment as CommentInterface } from "_/types";
-import { WithLoginModal } from "_/hoc/withLoginModal";
 
 // Redux
-import { useIsLoggedIn } from "_/features/currentUser/currentUserSlice";
+import ReactionsCount from "../CommentSection/components/ReactionCount";
 
 interface Props {
   authorId: number;
@@ -72,6 +62,8 @@ const Comment = ({ authorId, comment }: Props) => {
         >
           <span>{fromNow(comment.created_at)}</span>
           <ReactionsCount
+            flexRow={true}
+            authorId={comment.user.id}
             commentId={comment.id}
             isLiked={comment.is_liked}
             likes_count={comment.likes_count}
@@ -88,51 +80,5 @@ const Comment = ({ authorId, comment }: Props) => {
     </div>
   );
 };
-
-interface ReactionsCountProps extends WithLoginModal {
-  commentId: number;
-  likes_count: number;
-  isLiked: boolean;
-}
-const ReactionsCount = withLoginModal(
-  ({
-    commentId,
-    likes_count,
-    isLiked,
-    showLoginModal,
-  }: ReactionsCountProps) => {
-    const isLoggedIn = useIsLoggedIn();
-
-    const [liked, toggle, likesCount] = useLikeComment(
-      isLiked,
-      commentId,
-      likes_count
-    );
-
-    return (
-      <div
-        className={clsx("flex-align-center", styles["reactions-count"], {
-          [styles["is--liked"]]: liked,
-        })}
-      >
-        <div
-          className={clsx("flex-center", styles["like-icon"])}
-          onClick={() => {
-            if (!isLoggedIn) {
-              showLoginModal();
-              return;
-            }
-
-            toggle();
-          }}
-        >
-          {liked && <FilledHeart />}
-          {!liked && <OutlinedHeart />}
-        </div>
-        <span style={{ marginLeft: 5 }}>{numberCompact(likesCount)}</span>
-      </div>
-    );
-  }
-);
 
 export default Comment;

@@ -1,9 +1,7 @@
 export interface VoiceRefObject {
-    muted: boolean;
-    // savedVolume: number;
-    // handleVolumeChange: () => void
+  muted: boolean;
 }
 export interface VideoTimeRefObject {
-    handleTimeUpdate: () => void;
-    resetTime: () => void
+  handleTimeUpdate: () => void;
+  resetTime: () => void;
 }

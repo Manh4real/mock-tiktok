@@ -26,7 +26,7 @@ body {
   font-family: "Outfit", sans-serif;
 
   overflow-y: overlay;
-  
+
   &::-webkit-scrollbar {
     width: 8px;
     background: transparent;
@@ -157,6 +157,9 @@ html *::-webkit-scrollbar-track {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.flex-row {
+  flex-direction: row;
 }
 
 .scroll-snap-ymandatory {

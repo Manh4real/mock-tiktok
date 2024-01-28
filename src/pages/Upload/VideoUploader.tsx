@@ -3,7 +3,6 @@ import clsx from "clsx";
 
 // icons
 import { FiUploadCloud } from "react-icons/fi";
-import { BiCheckCircle } from "react-icons/bi";
 
 // styles
 import styles from "./Upload.module.scss";
@@ -11,6 +10,7 @@ import { ValidationType } from "_/validation/Validation";
 
 // components
 import UploadVideo from "./UploadVideo";
+import VideoName from "./components/VideoName";
 
 // hoc
 import { withFileValidation } from "_/hoc";
@@ -132,43 +132,6 @@ const VideoUploader = ({
           {errorMessage}
         </p>
       )}
-    </div>
-  );
-};
-
-//======================================================================
-const VideoName = ({
-  content,
-  onClick,
-}: {
-  content: string;
-  onClick: () => void;
-}) => {
-  return (
-    <div className={clsx("flex-space-between", styles["video__title"])}>
-      <div className={clsx("flex-align-center", "text-overflow-elipse")}>
-        <span
-          className={clsx("flex-center")}
-          style={{ marginRight: 3, fontSize: 16, fill: "currentcolor" }}
-        >
-          <BiCheckCircle />
-        </span>
-        <span className={clsx("text-overflow-elipse")}>{content}</span>
-      </div>
-      <span
-        className="hover-underlined"
-        style={{
-          fontWeight: 500,
-          cursor: "pointer",
-          whiteSpace: "nowrap",
-          marginLeft: 10,
-        }}
-        onClick={() => {
-          onClick();
-        }}
-      >
-        Change video
-      </span>
     </div>
   );
 };

@@ -19,19 +19,7 @@ interface Props {
 }
 
 const ProfileVideos = ({ loading, videos }: Props) => {
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [videoList, setVideoList] = useState<Video[]>(videos);
   const videoList = videos;
-
-  // useEffect(() => {
-  //   // setLoading(true);
-  //   // const timeID = setTimeout(() => {
-  //   setVideoList(videos);
-  //   // setLoading(false);
-  //   // }, 2000);
-
-  //   // return () => clearTimeout(timeID);
-  // }, [videos]);
 
   const content = useMemo(() => {
     return videoList.map((video) => (

@@ -18,6 +18,7 @@ import { numberCompact } from "_/utils";
 // types
 import { Account as AccountInterface } from "_/types";
 import { Placement, Rect } from "@popperjs/core";
+import { getAccountName } from "_/helpers";
 
 interface Props {
   account: AccountInterface;
@@ -37,8 +38,7 @@ interface Props {
 }
 
 function AccountPopup({ offset, account, children }: Props) {
-  const accountName =
-    account.full_name || `${account.first_name} ${account.last_name}`;
+  const accountName = getAccountName(account);
 
   return (
     //

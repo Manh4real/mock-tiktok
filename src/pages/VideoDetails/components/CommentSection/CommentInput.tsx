@@ -86,6 +86,4 @@ const CommentInput = ({ video_uuid, showLoginModal }: Props) => {
   );
 };
 
-// ============================================================================
-
 export default React.memo(withLoginModal(CommentInput));

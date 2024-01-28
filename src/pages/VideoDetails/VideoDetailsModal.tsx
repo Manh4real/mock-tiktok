@@ -19,7 +19,6 @@ import NavButtons from "./NavButtons";
 import CopyLinkSection from "./CopyLinkSection";
 
 // icons
-// import { BsChevronLeft } from "react-icons/bs";
 import { Close, MusicNote } from "_/components/icons";
 
 // styles

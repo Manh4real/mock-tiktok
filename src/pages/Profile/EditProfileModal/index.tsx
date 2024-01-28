@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import clsx from "clsx";
-import { To, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 // components
 import Modal from "_/components/Modal";
@@ -26,6 +26,9 @@ import { Spinner } from "_/components/icons";
 import { useAppDispatch } from "_/features/hooks";
 import { updateCurrentUser } from "_/features/currentUser/currentUserSlice";
 import { show } from "_/features/alert/alertSlice";
+
+// helpers
+import { getProfilePathIfChanged, prepareEditSubmitBody } from "./helpers";
 
 // types
 interface Props extends ModalProps {
@@ -70,24 +73,7 @@ const Form = ({ account, handleClose }: Props) => {
 
     setLoading(true);
 
-    console.log(isAllowed);
-
-    const name = isAllowed.name.value.split(" ");
-    const lastName = name.slice(1).join("");
-    const photoFile = isAllowed.photo.value;
-
-    const textBody = {
-      nickname: isAllowed.username.value,
-      first_name: name[0],
-      last_name: lastName,
-      bio: isAllowed.bio.value,
-    };
-    const body = photoFile
-      ? {
-          ...textBody,
-          avatar: photoFile,
-        }
-      : textBody;
+    const body = prepareEditSubmitBody(isAllowed);
 
     dispatch(updateCurrentUser(body))
       .unwrap()
@@ -95,16 +81,10 @@ const Form = ({ account, handleClose }: Props) => {
         if (!result) return;
 
         dispatch(show({ message: "Updated profile." }));
-
         handleClose(e); // close modal
 
         // reload page if updated nickname
-        navigate(
-          result.nickname === account.nickname
-            ? (0 as To)
-            : "/@" + result.nickname,
-          { replace: true }
-        );
+        navigate(getProfilePathIfChanged(result, account), { replace: true });
       })
       .catch(() => {
         dispatch(
@@ -160,15 +140,6 @@ const Form = ({ account, handleClose }: Props) => {
     },
     [setIsAllowed]
   );
-
-  // ⚠️ call API or pass through props
-  // const [account, setAccount] = useState<Account>();
-
-  // useEffect(() => {
-  //   getCurrentUser().then((acc) => {
-  //     setAccount(acc);
-  //   });
-  // }, []);
 
   if (!account) return null;
 
